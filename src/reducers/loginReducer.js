@@ -21,7 +21,7 @@ const reducer = (state = initialState, action) => {
             }
         }
         case "SUBMIT": {
-            let l=JSON.parse(localStorage.getItem(state.userName))
+            let l=JSON.parse(localStorage.getItem(state.userName));
             if(!l){
                 console.log("p1")
                 return{
@@ -34,6 +34,15 @@ const reducer = (state = initialState, action) => {
                 if(l.password===state.password)
                 {
                     console.log("p3")
+                    if(l.role==="admin"){
+                        return{
+                            ...state,
+                            uSuccess:true,
+                            pSuccess:true,
+                            success:true,
+                            role:l.role,
+                        }
+                    }
                     if(l.accept)
                     {
                         console.log("p4")
@@ -41,7 +50,8 @@ const reducer = (state = initialState, action) => {
                             ...state,
                             uSuccess:true,
                             pSuccess:true,
-                            success:true
+                            success:true,
+                            role:l.role,
                         }
                     }
                     else{

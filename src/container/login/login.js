@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Form, Input, Button, Checkbox } from 'antd'
+import { Form, Input, Button, Checkbox, Switch } from 'antd';
+// import { Switch } from 'react-router-dom';
+import { Redirect } from 'react-router';
+import Home from '../admin/home'
 class Login extends Component {
     componentDidMount() {
 
@@ -8,23 +11,29 @@ class Login extends Component {
     componentDidUpdate(prevProps, prevState) {
 
     }
-    onFinish = async(values) => {
+    onFinish = async (values) => {
         console.log('Success:', values);
         console.log("submitted")
         await this.props.onSubmit();
-        if(!this.props.uSuccess){
+        if (!this.props.uSuccess) {
             alert("username doesnot exist");
             return;
         }
-        if(!this.props.pSuccess){
+        if (!this.props.pSuccess) {
             alert("password incorrect");
             return;
         }
-        if(!this.props.success){
+        if (!this.props.success) {
             alert("admin didn't accept");
             return;
         }
         alert("successfully logged in");
+        // if (this.props.role === "admin") {
+        //     console.log("entered if")
+        //         <Route to = "/admin" >
+        //             <Home></Home> 
+        //     </Route >
+        //  }
     };
 
     onFinishFailed = errorInfo => {
@@ -53,64 +62,79 @@ class Login extends Component {
             },
         };
         return (
-            <div className="container"
-             style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "100px",
-                marginRight: "500px"
-            }}
-            >
+            <div>
+                {this.props.success ? (
+                    this.props.role === "admin" ?
+                        (
+                            <Redirect to="/admin"></Redirect>
+                        )
+                        :
+                        (
+                            <Redirect to="/user"></Redirect>
+                        )
 
-                <Form
-                    {...layout}
-                    name="basic"
-                    initialValues={{
-                        remember: true,
-                    }}
-                    onFinish={this.onFinish}
-                    onFinishFailed={this.onFinishFailed}
-                >
-                    <h1>Sign In</h1>
-                    <Form.Item
-                        onChange={this.handleNameChange}
-                        label="Username"
-                        name="username"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your username!',
-                            },
-                        ]}
-                        
-                    >
-                        <Input />
-                    </Form.Item>
+                ) : (
+                        <div className="container"
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                marginTop: "100px",
+                                marginRight: "500px"
+                            }}
+                        >
 
-                    <Form.Item
-                        label="Password"
-                        name="password"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input your password!',
-                            },
-                        ]}
-                        onChange={this.handlePasswordChange}
-                    >
-                        <Input.Password />
-                    </Form.Item>
+                            <Form
+                                {...layout}
+                                name="basic"
+                                initialValues={{
+                                    remember: true,
+                                }}
+                                onFinish={this.onFinish}
+                                onFinishFailed={this.onFinishFailed}
+                            >
+                                <h1>Sign In</h1>
+                                <Form.Item
+                                    onChange={this.handleNameChange}
+                                    label="Username"
+                                    name="username"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please input your username!',
+                                        },
+                                    ]}
 
-                    <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-                        <Checkbox>Remember me</Checkbox>
-                    </Form.Item>
+                                >
+                                    <Input />
+                                </Form.Item>
 
-                    <Form.Item {...tailLayout}>
-                        <Button type="primary" htmlType="submit" >Submit</Button>
-                    </Form.Item>
-                </Form>
+                                <Form.Item
+                                    label="Password"
+                                    name="password"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please input your password!',
+                                        },
+                                    ]}
+                                    onChange={this.handlePasswordChange}
+                                >
+                                    <Input.Password />
+                                </Form.Item>
+
+                                <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+                                    <Checkbox>Remember me</Checkbox>
+                                </Form.Item>
+
+                                <Form.Item {...tailLayout}>
+                                    <Button type="primary" htmlType="submit" >Submit</Button>
+                                </Form.Item>
+                            </Form>
+                        </div>)}
+
             </div>
+
         );
     }
 }
@@ -126,9 +150,9 @@ const mapDispatchToProps = dispatch => {
                 type: "PASSWORDCHANGE",
                 payload: value
             }),
-            onSubmit:()=>
+        onSubmit: () =>
             dispatch({
-                type:"SUBMIT"
+                type: "SUBMIT"
             })
     };
 };
@@ -139,5 +163,6 @@ const mapStateToProps = (state) => ({
     success: state.loginReducer.success,
     uSuccess: state.loginReducer.uSuccess,
     pSuccess: state.loginReducer.pSuccess,
+    role: state.loginReducer.role,
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

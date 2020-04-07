@@ -5,8 +5,10 @@ import './App.css';
 import SignUp from './container/signup/signup';
 import { BrowserRouter as Router,Route } from 'react-router-dom';
 import Login from './container/login/login';
-
+import Home from './container/admin/home';
+import UserHome from './container/user/userHome';
 import {  withRouter } from "react-router-dom";
+
 class App extends Component {
   render() {
 
@@ -16,8 +18,9 @@ class App extends Component {
         <Router>
           <Route path="/" exact component={SignUp}></Route>
           <Route path="/login" exact component={Login}></Route>
+          <Route path="/admin" exact component={Home}></Route>
+          <Route path="/user" exact component={UserHome}></Route>
         </Router>
-       
       </div>
     );
   }
