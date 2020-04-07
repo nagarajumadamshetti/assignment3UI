@@ -8,7 +8,7 @@ import Login from './container/login/login';
 import Home from './container/admin/home';
 import UserHome from './container/user/userHome';
 import {  withRouter } from "react-router-dom";
-
+import UserPageAtAdmin from './container/admin/userPageAtAdmin';
 class App extends Component {
   render() {
 
@@ -16,10 +16,11 @@ class App extends Component {
     return (
       <div className="App">
         <Router>
-          <Route path="/" exact component={SignUp}></Route>
-          <Route path="/login" exact component={Login}></Route>
-          <Route path="/admin" exact component={Home}></Route>
-          <Route path="/user" exact component={UserHome}></Route>
+          <Route path="/" exact component={SignUp}/>
+          <Route path="/login" exact component={Login}/>
+          <Route path="/admin" exact component={Home}/>
+          <Route path="/user" exact component={UserHome}/>
+          <Route path="/admin/userList/:id" exact  component={UserPageAtAdmin}/>
         </Router>
       </div>
     );

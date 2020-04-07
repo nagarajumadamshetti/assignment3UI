@@ -48,9 +48,17 @@ const reducer = (state = initialState, action) => {
             }
         }
         case "SET": {
+
             return {
                 ...state,
                 localStorageData: localStorage.setItem(state.userName, JSON.stringify(action.payload))
+            }
+        }
+        case "GETUSERSLIST":{
+            console.log(state.localStorageData);
+            return{
+                ...state,
+                userList:(JSON.parse(localStorage.getItem("admin"))).users
             }
         }
         case "ACCEPT": {
@@ -65,9 +73,10 @@ const reducer = (state = initialState, action) => {
                 l3.accept=true;
                 localStorage.setItem(l2[0],JSON.stringify(l3))
                 console.log(l2)
-                l.users=(l.users.concat(...l.users,l2))
+                l.users=(l.users.concat(l2))
                 console.log(l.users);
                 localStorage.setItem("admin",JSON.stringify(l))
+                state.localStorageData=l
                 return {
                     ...state,
                     localStorageData: l,
@@ -82,9 +91,9 @@ const reducer = (state = initialState, action) => {
             let l = JSON.parse(localStorage.getItem("admin"));
             if (action.payload.value === true) {
                 console.log("entered decline if")
-                l.requests.splice(action.payload.index, 1);
+                let l2=l.requests.splice(action.payload.index, 1);
                 // l.requests.splice(action.payload.index, 1);
-                
+                 localStorage.removeItem(l2[0])
                 localStorage.setItem("admin",JSON.stringify(l))
                 return {
                     ...state,

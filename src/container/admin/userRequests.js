@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Checkbox } from 'antd';
 import { connect } from "react-redux";
-// const { Column, ColumnGroup } = Table;
 import { Table } from 'reactstrap';
 class UserRequests extends Component {
     componentDidMount() {
@@ -37,31 +36,35 @@ class UserRequests extends Component {
         return (<div>
             <h1>User Requests</h1>
             {console.log("entered p3")}
-            <Table bordered >
-                <thead>
-                    <tr>
-                        <th>Accept</th>
-                        <th>Decline</th>
-                        <th>User Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        this.props.requests ? (
-                            this.props.requests.map((el, key) => {
-                                return (
-                                    <tr>
-                                        {/* <th scope="row">1</th> */}
-                                        <td><Checkbox onChange={this.onAcceptChange} id={key}></Checkbox></td>
-                                        <td><Checkbox onChange={this.onDeclineChange} id={key}></Checkbox></td>
-                                        <td>{el}</td>
-                                    </tr>
-                                )
-                            })
-                        ) : null
-                    }
-                </tbody>
-            </Table>
+
+            {
+                this.props.requests ? (<div>
+                    <Table dark bordered  >
+                        <thead>
+                            <tr>
+                                <th>Accept</th>
+                                <th>Decline</th>
+                                <th>User Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.props.requests.map((el, key) => {
+                                    return (
+                                        <tr>
+                                            {/* <th scope="row">1</th> */}
+                                            <td><Checkbox onChange={this.onAcceptChange} id={key}></Checkbox></td>
+                                            <td><Checkbox onChange={this.onDeclineChange} id={key}></Checkbox></td>
+                                            <td>{el}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </Table>
+                </div>) : null
+            }
+
         </div>);
     }
 }
