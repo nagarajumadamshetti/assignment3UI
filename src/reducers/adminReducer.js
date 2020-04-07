@@ -1,11 +1,12 @@
 const initialState = {
-    userName: 'adf',
+    userName: '',
     password: '',
     role: '',
     email: '',
     phone: '',
     localStorageData: '',
-    success: ''
+    success: '',
+    requests: '',
 }
 
 const reducer = (state = initialState, action) => {
@@ -37,10 +38,13 @@ const reducer = (state = initialState, action) => {
                 password: ''
             }
         }
-        case "GET": {
+        case "GETREQUESTS": {
+            let l = JSON.parse(localStorage.getItem("admin"))
+
             return {
                 ...state,
-                localStorageData: JSON.parse(localStorage.getItem(state.userName))
+                localStorageData: JSON.parse(localStorage.getItem(state.userName)),
+                requests: l.requests
             }
         }
         case "SET": {
@@ -49,98 +53,47 @@ const reducer = (state = initialState, action) => {
                 localStorageData: localStorage.setItem(state.userName, JSON.stringify(action.payload))
             }
         }
-        case "EMAIL": {
-
+        case "ACCEPT": {
+            console.log("entered accept")
+            let l = JSON.parse(localStorage.getItem("admin"));
+            if (action.payload.value === true) {
+                console.log("entered accept if")
+                let l2=l.requests.splice(action.payload.index, 1);
+                // l.requests.splice(action.payload.index, 1);
+                console.log(l.requests)
+                let l3=JSON.parse(localStorage.getItem(l2[0]))
+                l3.accept=true;
+                localStorage.setItem(l2[0],JSON.stringify(l3))
+                console.log(l2)
+                l.users=(l.users.concat(...l.users,l2))
+                console.log(l.users);
+                localStorage.setItem("admin",JSON.stringify(l))
+                return {
+                    ...state,
+                    localStorageData: l,
+                }
+            }
             return {
                 ...state,
-                email: action.payload
+                localStorageData:l
             }
         }
-        case "PHONE": {
-
+        case "DECLINE": {
+            let l = JSON.parse(localStorage.getItem("admin"));
+            if (action.payload.value === true) {
+                console.log("entered decline if")
+                l.requests.splice(action.payload.index, 1);
+                // l.requests.splice(action.payload.index, 1);
+                
+                localStorage.setItem("admin",JSON.stringify(l))
+                return {
+                    ...state,
+                    localStorageData: l,
+                }
+            }
             return {
                 ...state,
-                phone: action.payload
-            }
-        }
-        case "ROLE": {
-
-            return {
-                ...state,
-                role: action.payload
-            }
-        }
-        case "VALIDATE": {
-            console.log("entered p0")
-            if (!state.userName) {
-                console.log("entered p1");
-                return {
-                    ...state,
-                    success: false
-                }
-            }
-            if (!state.email) {
-                console.log("entered p4")
-                return {
-                    ...state,
-                    success: false
-                }
-            }
-            console.log("enterd p1-1")
-            if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(state.email)) {
-                console.log("entered p2")
-                return {
-                    ...state,
-                    success: false
-                }
-            }
-            if (!/^\d{10}$/.test(state.phone)) {
-                console.log("entered p3");
-                return {
-                    ...state,
-                    success: false
-                }
-            }
-            
-            if (state.userName.length < 4) {
-                console.log("entered p5");
-                return {
-                    ...state,
-                    success: false
-                }
-            }
-            if (state.userName.length > 30) {
-                console.log("entered p6");
-                return {
-                    ...state,
-                    success: false
-                }
-            }
-            if (!/^[A-Z0-9_-]{3,30}$/i.test(state.username)) {
-                console.log("entered p7");
-                return {
-                    ...state,
-                    success: false
-                }
-            } // Add uniqueness
-            if (!state.password) {
-                console.log("entered p8");
-                return {
-                    ...state,
-                    success: false
-                }
-            }
-            if (state.password.length < 8) {
-                console.log("entered p9");
-                return {
-                    ...state,
-                    success: false
-                }
-            }
-            console.log("entered p10");
-            return {
-                ...state,
-                success: true
+                localStorageData:l
             }
         }
         default: return state;

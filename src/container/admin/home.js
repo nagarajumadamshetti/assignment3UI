@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Menu, Button } from 'antd';
+import { Menu, Button, Drawer } from 'antd';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import UserList from './userList';
+import UserRequests from './userRequests';
 import {
     AppstoreOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
-    PieChartOutlined,
-    DesktopOutlined,
+    InstagramOutlined,
+    UserOutlined,
     ContainerOutlined,
     MailOutlined,
 } from '@ant-design/icons';
@@ -15,6 +18,19 @@ const { SubMenu } = Menu;
 class Home extends Component {
     state = {
         collapsed: false,
+        visible: false,
+        placement: 'left'
+    };
+    showDrawer = () => {
+        this.setState({
+            visible: true,
+
+        });
+    };
+    onClose = () => {
+        this.setState({
+            visible: false,
+        });
     };
     toggleCollapsed = () => {
         this.setState({
@@ -29,27 +45,35 @@ class Home extends Component {
     }
     render() {
         return (
-            <div style={{ width: 256 }}>
-                <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}>
-                    {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}
-                </Button>
-                <Menu
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    mode="inline"
-                    theme="dark"
-                    inlineCollapsed={this.state.collapsed}
-                >
-                    <Menu.Item key="1">
-                        <PieChartOutlined />
-                        <span>User List</span>
-                    </Menu.Item>
-                    <Menu.Item key="2">
-                        <DesktopOutlined />
-                        <span>Requests</span>
-                    </Menu.Item>
-                </Menu>
+            <div>
+                <Router>
+                    <Button type="primary" onClick={this.showDrawer} style={{ marginRight: 1300 }}>Menu</Button>
+                    <Drawer
+                        title="Basic Drawer"
+                        placement="left"
+                        closable={false}
+                        onClose={this.onClose}
+                        visible={this.state.visible}
+                    >
+                        <Link to="/admin/userList"><InstagramOutlined />UserLists</Link>
+                        <br></br>
+                        <br></br>
+                        <Link to="/admin/userRequests"><UserOutlined />Requests</Link>
+                    </Drawer>
+                    <Switch>
+                        {console.log("entered switch")}
+                        <Route path="/admin/userList" >
+                            {console.log("entered switch1")}
+                            <UserList />
+                        </Route>
+                        <Route path="/admin/userRequests" >
+                            {console.log("entered s2")}
+                            <UserRequests />
+                        </Route>
+                    </Switch>
+                </Router>
             </div>
+
         );
     }
 }
