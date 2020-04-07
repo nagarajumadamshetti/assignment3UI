@@ -44,11 +44,6 @@ const reducer = (state = initialState, action) => {
             }
         }
         case "SET": {
-            if (state.role === "user") {
-                let l = JSON.parse(localStorage.getItem("admin"));
-                l.requests.push(state.userName);
-                localStorage.setItem("admin", JSON.stringify(l));
-            }
             return {
                 ...state,
                 localStorageData: localStorage.setItem(state.userName, JSON.stringify(action.payload))
@@ -106,7 +101,7 @@ const reducer = (state = initialState, action) => {
                     success: false
                 }
             }
-
+            
             if (state.userName.length < 4) {
                 console.log("entered p5");
                 return {

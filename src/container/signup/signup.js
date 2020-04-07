@@ -3,6 +3,8 @@ import "antd/dist/antd.css";
 import { Button } from 'antd';
 import { connect } from "react-redux";
 // import UserHome from './user/userHome';
+import {Router,Link } from 'react-router-dom';
+
 class SignUp extends React.Component {
     state = {
         submit: false,
@@ -15,23 +17,42 @@ class SignUp extends React.Component {
         this.props.onPasswordChange(e.target.value)
     }
     handleSubmit = async () => {
-        if (this.props.userName !== null && this.props.password !== null) {
+        if ((this.props.userName !== null||this.props.userName !== "") && (this.props.password !== null||this.props.password !== "")) {
             let obj = {
-                username:this.props.username,
+                username: this.props.username,
                 password: this.props.password,
-             }
+                email:this.props.email,
+                role:this.props.role,
+                phone:this.props.phone,
+                posts:[],
+                accept:false,
+                followers:[],
+                following:[]
+            }
             await this.props.validate();
             console.log(this.props.success);
             console.log(this.props.userName);
-            if(!this.props.success){
+            if (!this.props.success) {
                 alert("not valid");
                 return;
             }
             await this.props.getItem();
-            if (!this.props.localStorageData) {
-                // this.props.setItem(obj)
+            if (!this.props.localStorageData&&this.props.role!=="admin") {
+                this.props.setItem(obj)
             }
-            alert("signin successful", 1000);
+            else{
+                obj={
+                    username: this.props.username,
+                password: this.props.password,
+                email:this.props.email,
+                role:this.props.role,
+                phone:this.props.phone,
+                users:[],//accepted users
+                requests:[]//new users
+                }
+                this.props.setItem(obj)
+            }
+            alert("signup successful", 1000);
             this.setState({ submit: true, toggle: false })
         }
         else {
@@ -60,15 +81,28 @@ class SignUp extends React.Component {
                     <div className="container">
                         <h1 >Sign Up</h1>
                         <form>
-                            <input type="text"  placeholder="username" onChange={this.handleChange}  />
+                            <input type="text" placeholder="username" onChange={this.handleChange} />
+                            <br></br>
+                            <br></br>
                             <input type="password" className="form-control" placeholder="password" onChange={this.handlePassword} value={this.props.password} />
+                            <br></br>
+                            <br></br>
                             <input type="tel" className="form-control" placeholder="phone number" onChange={this.handlePhone} value={this.props.phone} />
+                            <br></br>
+                            <br></br>
                             <input type="email" className="form-control" placeholder="email" onChange={this.handleEmail} value={this.props.email} />
+                            <br></br>
+                            <br></br>
                             <select onChange={this.handleRole} value={this.props.role} >
                                 <option value="admin">Admin</option>
                                 <option value="user">User</option>
                             </select>
+                            <br></br>
+                            <br></br>
                             <Button onClick={this.handleSubmit} type="primary" size="middle">signUn</Button>
+                            <br></br>
+                            <br></br>
+                            Already a user <Link to="/login" >Login Here</Link>
                         </form>
                     </div>
 
@@ -108,20 +142,20 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: "VALIDATE",
             }),
-            setEmail:(value)=>
+        setEmail: (value) =>
             dispatch({
-                type:"EMAIL",
-                payload:value
+                type: "EMAIL",
+                payload: value
             }),
-            setRole:(value)=>
+        setRole: (value) =>
             dispatch({
-                type:"ROLE",
-                payload:value
+                type: "ROLE",
+                payload: value
             }),
-            setPhone:(value)=>
+        setPhone: (value) =>
             dispatch({
-                type:"PHONE",
-                payload:value
+                type: "PHONE",
+                payload: value
             }),
     };
 };
@@ -129,9 +163,9 @@ const mapStateToProps = (state) => ({
     userName: state.signUpReducer.userName,
     password: state.signUpReducer.password,
     localStorageData: state.signUpReducer.localStorageData,
-    phone:state.signUpReducer.phone,
-    role:state.signUpReducer.role,
-    email:state.signUpReducer.email,
-    success:state.signUpReducer.success
+    phone: state.signUpReducer.phone,
+    role: state.signUpReducer.role,
+    email: state.signUpReducer.email,
+    success: state.signUpReducer.success
 })
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
