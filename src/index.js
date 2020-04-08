@@ -14,13 +14,13 @@ const store = createStore(reducer);
 const history = createBrowserHistory();
 ReactDOM.render(
   
-    <Provider store={store}>
-      {/* <BrowserRouter> */}
-      <Router history={history}>
-      <App />
-      </Router>
-      {/* </BrowserRouter> */}
-    </Provider>
+    // <Provider store={store}>
+      // {/* <BrowserRouter> */}
+      // {/* <Router history={history}> */}
+      //       {/* </Router> */}
+      // {/* </BrowserRouter> */}
+    // </Provider>
+<App />
 
   ,
   document.getElementById('root')

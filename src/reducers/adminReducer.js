@@ -1,4 +1,4 @@
-const initialState = {
+let initialState = {
     userName: '',
     password: '',
     role: '',
@@ -7,10 +7,18 @@ const initialState = {
     localStorageData: '',
     success: '',
     requests: '',
+    toggle:false
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case "TOGGLEUSER":{
+            state.toggle=!state.toggle
+            return{
+                ...state,
+                toggle:state.toggle
+            }
+        }
         case "USERNAMECHANGE": {
             return {
                 ...state,
@@ -55,7 +63,7 @@ const reducer = (state = initialState, action) => {
             }
         }
         case "GETUSERSLIST":{
-            console.log(state.localStorageData);
+            // console.log(state.localStorageData);
             return{
                 ...state,
                 userList:(JSON.parse(localStorage.getItem("admin"))).users
@@ -108,4 +116,5 @@ const reducer = (state = initialState, action) => {
         default: return state;
     }
 }
+
 export default reducer;

@@ -27,6 +27,7 @@ class Login extends Component {
             alert("admin didn't accept");
             return;
         }
+        alert(this.props.role)
         alert("successfully logged in");
         // if (this.props.role === "admin") {
         //     console.log("entered if")
@@ -61,18 +62,14 @@ class Login extends Component {
                 span: 16,
             },
         };
+        // let role=this.props.role
         return (
             <div>
                 {this.props.success ? (
                     this.props.role === "admin" ?
-                        (
-                            <Redirect to="/admin"></Redirect>
-                        )
+                        <Redirect to="/admin"></Redirect>
                         :
-                        (
-                            <Redirect to="/user"></Redirect>
-                        )
-
+                        <Redirect to="/user"></Redirect>
                 ) : (
                         <div className="container"
                             style={{

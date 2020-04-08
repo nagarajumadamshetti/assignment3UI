@@ -13,7 +13,7 @@ import {
     ContainerOutlined,
     MailOutlined,
 } from '@ant-design/icons';
-
+import SideDrawer from '../SideDrawer/sideDrawer';
 const { SubMenu } = Menu;
 class Home extends Component {
     state = {
@@ -46,8 +46,10 @@ class Home extends Component {
     render() {
         return (
             <div>
-                <Router>
-                    <Button type="primary" onClick={this.showDrawer} style={{ marginRight: 1300 }}>Menu</Button>
+                {console.log("entered admin home=========")}
+                <SideDrawer role={"admin"}></SideDrawer>
+                {/* <Router> */}
+                    {/* <Button type="primary" onClick={this.showDrawer} style={{ marginRight: 1300 }}>Menu</Button>
                     <Drawer
                         title="Basic Drawer"
                         placement="left"
@@ -62,16 +64,18 @@ class Home extends Component {
                     </Drawer>
                     <Switch>
                         {console.log("entered switch")}
-                        <Route path="/admin/userList" >
+                        <Route path="/admin/userList"  component={UserList} /> */}
+                        {/* <Route path="/admin/userList" >
                             {console.log("entered switch1")}
                             <UserList />
-                        </Route>
-                        <Route path="/admin/userRequests" >
+                        </Route> */}
+                        {/* <Route path="/admin/userRequests" component={UserRequests}></Route> */}
+                        {/* <Route path="/admin/userRequests" >
                             {console.log("entered s2")}
                             <UserRequests />
-                        </Route>
-                    </Switch>
-                </Router>
+                        </Route> */}
+                    {/* </Switch> */}
+                {/* </Router> */}
             </div>
 
         );
@@ -79,58 +83,10 @@ class Home extends Component {
 }
 const mapDispatchToProps = dispatch => {
     return {
-        onNameChange: (value) =>
-            dispatch({
-                type: "USERNAMECHANGE",
-                payload: value
-            }),
-        onPasswordChange: (value) =>
-            dispatch({
-                type: "PASSWORDCHANGE",
-                payload: value
-            }),
-        onLogout: () =>
-            dispatch({
-                type: "LOGOUT",
-            }),
-        getItem: () =>
-            dispatch({
-                type: "GET",
-                // payload: this.props.userName
-            }),
-        setItem: (obj) =>
-            dispatch({
-                type: "SET",
-                payload: obj
-            }),
-        validate: () =>
-            dispatch({
-                type: "VALIDATE",
-            }),
-        setEmail: (value) =>
-            dispatch({
-                type: "EMAIL",
-                payload: value
-            }),
-        setRole: (value) =>
-            dispatch({
-                type: "ROLE",
-                payload: value
-            }),
-        setPhone: (value) =>
-            dispatch({
-                type: "PHONE",
-                payload: value
-            }),
+        
     };
 };
 const mapStateToProps = (state) => ({
-    userName: state.signUpReducer.userName,
-    password: state.signUpReducer.password,
-    localStorageData: state.signUpReducer.localStorageData,
-    phone: state.signUpReducer.phone,
-    role: state.signUpReducer.role,
-    email: state.signUpReducer.email,
-    success: state.signUpReducer.success
+    
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

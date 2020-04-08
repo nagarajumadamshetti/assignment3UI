@@ -22,6 +22,8 @@ const reducer = (state = initialState, action) => {
         }
         case "SUBMIT": {
             let l=JSON.parse(localStorage.getItem(state.userName));
+            state.role=l.role
+            console.log(state.role)
             if(!l){
                 console.log("p1")
                 return{
@@ -35,17 +37,21 @@ const reducer = (state = initialState, action) => {
                 {
                     console.log("p3")
                     if(l.role==="admin"){
+                        localStorage.setItem("role","admin")
                         return{
                             ...state,
                             uSuccess:true,
                             pSuccess:true,
                             success:true,
                             role:l.role,
+                            
                         }
                     }
-                    if(l.accept)
+                    else if(l.accept)
                     {
+                        console.log(l.role)
                         console.log("p4")
+                        localStorage.setItem("role","user")
                         return{
                             ...state,
                             uSuccess:true,
