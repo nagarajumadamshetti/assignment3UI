@@ -1,34 +1,48 @@
 let initialState = {
     userName: '',
     password: '',
-    userPosts:'',
-
+    userPosts: '',
+    description: '',
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case "GETUSERPOSTS":{
-            state.userPosts=(JSON.parse(localStorage.getItem(state.userName))).posts
-            return{
+        case "GETUSERPOSTS": {
+            state.userPosts = (JSON.parse(localStorage.getItem(action.payload))).posts
+            return {
                 ...state
             }
         }
-        case "SETUSERNAME":{
-            state.userName=action.payload;
-            return{
+        case "SETUSERNAME": {
+            state.userName = action.payload;
+            return {
                 ...state,
-                userName:state.userName
+                userName: state.userName
             }
         }
-        case "UPLOADNEWPOST":{
-            let l=JSON.parse(localStorage.getItem(state.userName))
-            state.userPosts=state.userPosts.concat(action.payload)
-            l.posts=state.userPosts
-            localStorage.setItem(state.userName,JSON.stringify(l))
+        case "NEWDESCRIPTION": {
+            console.log("entered new descriprion")
             console.log(action.payload)
-            return{
+            state.description = action.payload;
+            console.log(state.description)
+            return {
                 ...state,
-                userPosts:state.userPosts,
+                description: state.description
+            }
+        }
+        case "UPLOADNEWPOST": {
+            let l = JSON.parse(localStorage.getItem(state.userName))
+            console.log(state.description)
+            let d = { ...action.payload, description: state.description, likeCounter: [] }
+            state.userPosts.push(d)
+            // state.userPosts=state.userPosts.push(d)
+            l.posts = state.userPosts
+            localStorage.setItem(state.userName, JSON.stringify(l))
+            console.log(action.payload);
+            state.description = ''
+            return {
+                ...state,
+                userPosts: state.userPosts,
             }
         }
         default: return state;

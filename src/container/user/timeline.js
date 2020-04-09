@@ -8,12 +8,12 @@ import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 const { Meta } = Card;
 function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
+    // return new Promise((resolve, reject) => {
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(file);
+    //     reader.onload = () => resolve(reader.result);
+    //     reader.onerror = error => reject(error);
+    // });
 }
 class Timeline extends Component {
     constructor(props) {
@@ -28,17 +28,17 @@ class Timeline extends Component {
         }
     }
     componentDidMount() {
-        this.props.getUserPosts();
+        this.props.getUserPosts(this.props.userName);
     }
     handlePreview = async file => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
+        // if (!file.url && !file.preview) {
+        //     file.preview = await getBase64(file.originFileObj);
+        // }
 
-        this.setState({
-            previewImage: file.url || file.preview,
-            previewVisible: true,
-        });
+        // this.setState({
+        //     previewImage: file.url || file.preview,
+        //     previewVisible: true,
+        // });
     };
 
     handleCancel = () => this.setState({ previewVisible: false });
@@ -49,17 +49,24 @@ class Timeline extends Component {
         let formData = new FormData();
 
         await fileList.forEach(file => {
+            // file={...file,}
+            console.log(file)
+            file = { ...file, description: this.state.newStageName }
             formData.append('files[]', file);
         });
 
         this.setState({
             uploading: true,
+
         });
         console.log(formData);
         console.log(fileList)
         console.log(this.props.userName)
+        // await this.props.uploadPost(formData);
+        console.log(this.state.newStageName)
+        await this.props.uploadDescription(this.state.newStageName);
         await this.props.uploadPost(fileList);
-        await this.props.getUserPosts();
+        await this.props.getUserPosts(this.state.userName);
         //axios call here
         // You can use any AJAX library you like
         // reqwest({
@@ -84,6 +91,7 @@ class Timeline extends Component {
         await this.setState({
             fileList: [],
             uploading: false,
+            newStageName: null,
         });
         message.success('upload successfully.');
 
@@ -112,7 +120,10 @@ class Timeline extends Component {
             toggleAddNewStage: !this.state.toggleAddNewStage,
         })
     }
-    handleChange = ({ fileList }) => this.setState({ fileList });
+    handleChange = ({ fileList }) => {
+        this.setState({ fileList });
+        console.log("entered handle change");
+    };
     render() {
         {/* <h1>{this.props.match.params.id}</h1> */ }
         const uploading = this.state.uploading;
@@ -133,7 +144,9 @@ class Timeline extends Component {
                 });
             },
             beforeUpload: file => {
+                console.log("df")
                 this.setState(state => ({
+
                     fileList: [...this.state.fileList, file],
                 }));
                 return false;
@@ -152,89 +165,45 @@ class Timeline extends Component {
                     maxHeight: '150px'
                 }}
                 >
-                    <Upload {...props} onChange={this.handleChange}>
-                        <AntButton style={{ type: "picture" }}>
-                            <UploadOutlined /> Select File
-                     </AntButton>
-                    </Upload>
-                    <AntButton
-                        type="primary"
-                        onClick={this.handleUpload}
-                        disabled={fileList.length === 0}
-                        loading={uploading}
-                        style={{ marginTop: 16 }}
-                    >
-                        {uploading ? 'Uploading' : 'Start Upload'}
-                    </AntButton>
-                    <AntModal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                        <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                    </AntModal>
-                    {/* <Button outline color="info" onClick={this.handleAddNewStageToggler}> Add new Stage</Button>
-                <Modal isOpen={this.state.toggleAddNewStage} toggle={this.state.toggleAddNewStage} backdrop="static" >
 
-                    <ModalHeader toggle={this.state.toggleAddNewStage}>Add A NEW STAGE</ModalHeader>
-                    <ModalBody>
-                        <Form>
-                            <FormGroup>
-                                <Label for="newStage">Stage Name</Label>
-                                <Input type="text" id="newStage" onChange={this.newStageNameHandler} placeholder="enter new stage name"></Input>
-                            </FormGroup>
+                    <Button outline color="info" onClick={this.handleAddNewStageToggler}> Add new Post</Button>
+                    <Modal isOpen={this.state.toggleAddNewStage} toggle={this.state.toggleAddNewStage} backdrop="static" >
 
-                        </Form>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button outline color="primary" onClick={this.handleSubmitNewStage}>Add Stage</Button>{' '}
-                        <Button outline color="secondary" onClick={this.handleNotSubmit}>Cancel</Button>
-                    </ModalFooter>
-                </Modal> */}
+                        <ModalHeader toggle={this.state.toggleAddNewStage}>Add A NEW STAGE</ModalHeader>
+                        <ModalBody>
+                            <Form>
+                                <FormGroup>
+                                    <Label for="newStage">Stage Name</Label>
+                                    <Input type="text" id="newStage" value={this.state.newStageName} onChange={this.newStageNameHandler} placeholder="enter description"></Input>
+                                </FormGroup>
+                                <FormGroup>
+                                    <Upload {...props} onChange={this.handleChange}>
+                                        <AntButton style={{ type: "picture" }}>
+                                            <UploadOutlined /> Select File
+                                        </AntButton>
+                                    </Upload>
+                                    <AntButton
+                                        type="primary"
+                                        onClick={this.handleUpload}
+                                        disabled={fileList.length === 0}
+                                        loading={uploading}
+                                        style={{ marginTop: 16 }}
+                                    >
+                                        {uploading ? 'Uploading' : 'Start Upload'}
+                                    </AntButton>
+                                    <AntModal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                                        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                                    </AntModal>
+                                </FormGroup>
+                            </Form>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button outline color="primary" onClick={this.handleSubmitNewStage}>Done</Button>{' '}
+                            <Button outline color="secondary" onClick={this.handleNotSubmit}>Cancel</Button>
+                        </ModalFooter>
+                    </Modal>
                 </Container>
-                {this.props.userPosts ? (
-                    <Container
-                        style={{
-                            border: '2px solid black',
-                            overflowY: 'scroll',
-                            width: '70%',
-                            float: 'center',
-                            position: 'center',
-                            textAlign: 'center'
-                            // maxHeight: '250px'
-                        }}
-                    >
-                        {
-                            this.props.userPosts.map((el, key) => {
-                                return (
 
-                                    // <div className="site-card-wrapper">
-
-                                    <Row >
-
-                                        {/* //gutter={16} */}
-                                        {/* <Col  > */}
-                                        {/* //span={8} */}
-
-                                        <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }} >
-
-                                            <img
-                                                alt="example"
-                                                src={`${el.thumbUrl}`}
-                                            />
-
-
-                                            <Meta title={`${el.name}`} description="www.instagram.com" />
-                                        </Card>
-
-                                        <br></br>
-                                        <br></br>
-                                        {/* </Col> */}
-                                    </Row>
-
-                                    // {/* </div> */}
-
-                                )
-                            })
-                        }
-                    </Container>
-                ) : null}
 
             </div>
         );
@@ -243,19 +212,25 @@ class Timeline extends Component {
 const mapStateToProps = state => ({
     userName: state.userReducer.userName,
     userPosts: state.userReducer.userPosts,
+    description: state.userReducer.description
 })
 const mapDispatchToProps = dispatch => {
     return {
-        getUserPosts: () =>
+        getUserPosts: (value) =>
             dispatch({
                 type: "GETUSERPOSTS",
-
+                payload: value
             }),
         uploadPost: (value) =>
             dispatch({
                 type: "UPLOADNEWPOST",
                 payload: value
-            })
+            }),
+        uploadDescription: (value) =>
+            dispatch({
+                type: "NEWDESCRIPTION",
+                payload: value
+            }),
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(Timeline));
