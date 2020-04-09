@@ -51,10 +51,11 @@ class SideDrawer extends Component {
     }
     hideUserLinks = () => {
         console.log("entered hide user links")
-        if(this.state.visible===this.props.toggle)
-        this.props.onChangeToggle();
+        if (this.state.visible === this.props.toggle)
+            this.props.onChangeToggle();
         // this.setState({ toggle: !this.state.toggle })
     }
+    
     render() {
         return (
             <div>
@@ -80,13 +81,13 @@ class SideDrawer extends Component {
                             :
                             (
                                 <div>
-                                    <Link to="/user/profile"><InstagramOutlined />Profile</Link>
+                                    <Link to={`/user/${this.props.loggedUserName}/profile`}><InstagramOutlined />Profile</Link>
                                     <br></br>
                                     <br></br>
-                                    <Link to="/user/search"><UserOutlined />Search</Link>
+                                    <Link to={`/user/${this.props.loggedUserName}/search`}><UserOutlined />Search</Link>
                                     <br></br>
                                     <br></br>
-                                    <Link to="/user/timeline"><ContainerOutlined />Timeline</Link>
+                                    <Link to={`/user/${this.props.loggedUserName}/timeline`}><ContainerOutlined />Timeline</Link>
                                 </div>
                             )}
                 </Drawer>
@@ -94,9 +95,9 @@ class SideDrawer extends Component {
                     {/* {console.log("entered switch")} */}
                     <Route path="/admin/userList" component={UserList} />
                     <Route path="/admin/userRequests" component={UserRequests}></Route>
-                    <Route path="/user/profile" component={Profile}></Route>
-                    <Route path="/user/search" component={Search}></Route>
-                    <Route path="/user/timeline" component={Timeline}></Route>
+                    <Route path="/user/:id/profile" component={Profile}></Route>
+                    <Route path="/user/:id/search" component={Search}></Route>
+                    <Route path="/user/:id/timeline" component={Timeline}></Route>
                     {/* <Route path="/admin/userList/:id" exact component={UserPageAtAdmin}/> */}
                 </Switch>
             </div>
@@ -105,14 +106,15 @@ class SideDrawer extends Component {
 }
 const mapStateToProps = state => ({
     userList: state.adminReducer.userList,
-    toggle:state.adminReducer.toggle
+    toggle: state.adminReducer.toggle,
+    loggedUserName:state.loginReducer.userName
 })
 const mapDispatchToProps = dispatch => {
     return {
-        onChangeToggle:()=>
-        dispatch({
-            type:"TOGGLEUSER"
-        })
+        onChangeToggle: () =>
+            dispatch({
+                type: "TOGGLEUSER"
+            }),
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(SideDrawer));

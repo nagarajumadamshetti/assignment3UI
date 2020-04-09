@@ -23,6 +23,7 @@ const reducer = (state = initialState, action) => {
         case "SUBMIT": {
             let l=JSON.parse(localStorage.getItem(state.userName));
             state.role=l.role
+            
             console.log(state.role)
             if(!l){
                 console.log("p1")

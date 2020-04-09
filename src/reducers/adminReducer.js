@@ -7,11 +7,19 @@ let initialState = {
     localStorageData: '',
     success: '',
     requests: '',
-    toggle:false
+    toggle:false,
+    userData:''
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case "GETUSERDATA":{
+
+            return{
+                ...state,
+              
+            }
+        }
         case "TOGGLEUSER":{
             state.toggle=!state.toggle
             return{

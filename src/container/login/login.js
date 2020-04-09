@@ -29,6 +29,7 @@ class Login extends Component {
         }
         alert(this.props.role)
         alert("successfully logged in");
+        this.props.setUserName(this.props.userName);
         // if (this.props.role === "admin") {
         //     console.log("entered if")
         //         <Route to = "/admin" >
@@ -69,7 +70,7 @@ class Login extends Component {
                     this.props.role === "admin" ?
                         <Redirect to="/admin"></Redirect>
                         :
-                        <Redirect to="/user"></Redirect>
+                        <Redirect to={`/user/${this.props.userName}`}></Redirect>
                 ) : (
                         <div className="container"
                             style={{
@@ -150,7 +151,12 @@ const mapDispatchToProps = dispatch => {
         onSubmit: () =>
             dispatch({
                 type: "SUBMIT"
-            })
+            }),
+        setUserName: (value) =>
+            dispatch({
+                type: "SETUSERNAME",
+                payload: value
+            }),
     };
 };
 const mapStateToProps = (state) => ({

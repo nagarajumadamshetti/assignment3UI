@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SideDrawer from '../SideDrawer/sideDrawer';
+import { connect } from "react-redux";
 class UserHome extends Component {
     render() {
         return (
@@ -11,4 +12,21 @@ class UserHome extends Component {
         );
     }
 }
-export default UserHome;
+const mapStateToProps = state => ({
+    userList: state.adminReducer.userList,
+    toggle:state.adminReducer.toggle
+})
+const mapDispatchToProps = dispatch => {
+    return {
+        onGetList: () =>
+            dispatch({
+                type: "GETUSERSLIST"
+            }),
+        onChangeToggle:()=>
+        dispatch({
+            type:"TOGGLEUSER"
+        })
+    }
+}
+export default (connect(mapStateToProps, mapDispatchToProps)(UserHome));
+// export default UserHome;
