@@ -19,6 +19,7 @@ import UserRoutes from './RouteContainer/userRoutes';
 import SideDrawer from './container/SideDrawer/sideDrawer';
 import { Provider } from 'react-redux';
 import reducer from './reducers/index';
+import Logout from './container/Logout/logout';
 import { createStore } from 'redux';
 const store = createStore(reducer);
 class App extends Component {
@@ -33,9 +34,12 @@ class App extends Component {
             <Switch>
 
               {/* <Route path="/admin/userList/:id" exact component={UserPageAtAdmin}/> */}
-              <Route path="/" exact component={SignUp} />
               <Route path="/login" exact component={Login} />
+              <Route path="/" exact component={SignUp} />
+              {/* <Logout/> */}
+              {/* <Route component={Logout}/> */}
               <Route component={SideDrawer}/>
+
               {/* User path="/user" exact */}
               {/* <Route  component={UserHome} /> */}
               <Route path="/user/profile" component={Profile}></Route>

@@ -39,7 +39,7 @@ class UserRequests extends Component {
 
             {
                 this.props.requests ? (<div>
-                    <Table dark bordered  >
+                    <Table dark bordered striped >
                         <thead>
                             <tr>
                                 <th>Accept</th>
@@ -51,7 +51,7 @@ class UserRequests extends Component {
                             {
                                 this.props.requests.map((el, key) => {
                                     return (
-                                        <tr>
+                                        <tr key={key}>
                                             {/* <th scope="row">1</th> */}
                                             <td><Checkbox onChange={this.onAcceptChange} id={key}></Checkbox></td>
                                             <td><Checkbox onChange={this.onDeclineChange} id={key}></Checkbox></td>

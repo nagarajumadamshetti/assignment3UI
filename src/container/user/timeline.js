@@ -8,12 +8,12 @@ import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 const { Meta } = Card;
 function getBase64(file) {
-    // return new Promise((resolve, reject) => {
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(file);
-    //     reader.onload = () => resolve(reader.result);
-    //     reader.onerror = error => reject(error);
-    // });
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
 }
 class Timeline extends Component {
     constructor(props) {
@@ -31,14 +31,14 @@ class Timeline extends Component {
         this.props.getUserPosts(this.props.userName);
     }
     handlePreview = async file => {
-        // if (!file.url && !file.preview) {
-        //     file.preview = await getBase64(file.originFileObj);
-        // }
+        if (!file.url && !file.preview) {
+            file.preview = await getBase64(file.originFileObj);
+        }
 
-        // this.setState({
-        //     previewImage: file.url || file.preview,
-        //     previewVisible: true,
-        // });
+        this.setState({
+            previewImage: file.url || file.preview,
+            previewVisible: true,
+        });
     };
 
     handleCancel = () => this.setState({ previewVisible: false });
@@ -65,8 +65,11 @@ class Timeline extends Component {
         // await this.props.uploadPost(formData);
         console.log(this.state.newStageName)
         await this.props.uploadDescription(this.state.newStageName);
+        console.log("p1");
         await this.props.uploadPost(fileList);
-        await this.props.getUserPosts(this.state.userName);
+        console.log("p2");
+        await this.props.getUserPosts(this.props.userName);
+        console.log("p3");
         //axios call here
         // You can use any AJAX library you like
         // reqwest({

@@ -8,7 +8,14 @@ let initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case "GETUSERPOSTS": {
-            state.userPosts = (JSON.parse(localStorage.getItem(action.payload))).posts
+
+            let l = JSON.parse(localStorage.getItem(action.payload))
+            if(l){
+                state.userPosts=l.posts
+            }
+            else{
+                state.userPosts=null;
+            }
             return {
                 ...state
             }

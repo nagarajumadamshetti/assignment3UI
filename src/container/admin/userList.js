@@ -44,17 +44,18 @@ class UserList extends Component {
                         {this.props.userList ? (
                             this.props.userList.map((el, key) => {
                                 return (
-                                    <div>
+                                    <div key={key}>
                                         {/* <Link to={`/admin/userList/${el}`} >{el}</Link> */}
-                                        <Link onClick={this.hideUserLinks} to={{
+                                        <br/>
+                                         <Link onClick={this.hideUserLinks}  to={{
                                             pathname: `/admin/userList/${el}`,
                                             // state: {
-                                            //     data: el
+                                            //     data: key
                                             // },
                                         }}>
                                             {el}
-                                        </Link>
-                                        <br></br>
+                                        </Link> 
+                                        {/* <br></br> */}
                                     </div>
                                 )
                             })

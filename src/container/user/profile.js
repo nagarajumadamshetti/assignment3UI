@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, } from 'reactstrap';
 import { Button } from 'reactstrap';
 import { Upload, Button as AntButton, Carousel, message, Modal as AntModal, Card, Col, Row } from 'antd';
-import { UploadOutlined, LikeOutlined ,HeartTwoTone} from '@ant-design/icons';
+import { UploadOutlined, LikeOutlined, HeartTwoTone } from '@ant-design/icons';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 const { Meta } = Card;
@@ -34,6 +34,11 @@ class Profile extends Component {
         //     this.props.getUserPosts();
         // }
     }
+    handleLikePost=(e)=>{
+        e.preventDefault();
+        console.log(e.target.id);
+        // console.log(e.target.value)
+    }
     render() {
         return (
             <div>
@@ -51,27 +56,26 @@ class Profile extends Component {
                             float: 'center',
                             position: 'center',
                             textAlign: 'center',
-                            alignItems:'center',
-                            alignContent:'center',
+                            alignItems: 'center',
+                            alignContent: 'center',
                             // maxHeight: '250px'
                         }}
                     >
                         {
                             this.props.userPosts.map((el, key) => {
-                                return (<div>
+                                return (<div key={key}>
                                     {/* <Carousel autoplay> */}
                                     <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
-                                     actions={[
-                                        <HeartTwoTone className="TwoTone" key="like" value={el.likeCount} />,
-
-                                      ]} >
+                                        actions={[
+                                                <HeartTwoTone className="TwoTone" key="like" value={el.likeCount} onClick={this.handleLikePost} id={key}/>
+                                        ]} >
                                         {console.log(el)}
                                         <Carousel autoplay>
                                             {
                                                 Object.keys(el).map((el2, key2) => {
-                                                    if (el2 !== "description"&& el2!=="likeCount")
+                                                    if (el2 !== "description" && el2 !== "likeCounter")
                                                         return (
-                                                            <div>
+                                                            <div key={key2}>
                                                                 <img
                                                                     alt="example"
                                                                     src={`${el[el2].thumbUrl}`}
@@ -108,7 +112,7 @@ const mapDispatchToProps = dispatch => {
         getUserPosts: (value) =>
             dispatch({
                 type: "GETUSERPOSTS",
-                payload:value
+                payload: value
             }),
 
     }

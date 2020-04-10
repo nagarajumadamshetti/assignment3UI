@@ -22,6 +22,13 @@ const reducer = (state = initialState, action) => {
         }
         case "SUBMIT": {
             let l=JSON.parse(localStorage.getItem(state.userName));
+            if(!l){
+                // alert("userdoesnot exist")
+                return{
+                    ...state,
+                    uSuccess:false
+                }                
+            }
             state.role=l.role
             
             console.log(state.role)

@@ -6,7 +6,9 @@ import { Redirect } from 'react-router';
 import Home from '../admin/home'
 class Login extends Component {
     componentDidMount() {
-
+        console.log("entered login cdm")
+        this.props.onNameChange('');
+        this.props.onPasswordChange('');
     }
     componentDidUpdate(prevProps, prevState) {
 

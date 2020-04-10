@@ -19,7 +19,7 @@ import UserHome from '../user/userHome';
 import Profile from '../user/profile';
 import Search from '../user/search';
 import Timeline from '../user/timeline';
-
+import Logout from '../Logout/logout';
 class SideDrawer extends Component {
 
     state = {
@@ -43,23 +43,28 @@ class SideDrawer extends Component {
             collapsed: !this.state.collapsed,
         });
     };
-    componentDidMount() {
-
+    componentDidMount=async()=> {
+        // await this.props.setUserName(null);
     }
     componentDidUpdate(prevProps, prevState) {
 
+    }
+    componentWillUnmount() {
+        console.log("sidedrawer cwum");
     }
     hideUserLinks = () => {
         console.log("entered hide user links")
         if (this.state.visible === this.props.toggle)
             this.props.onChangeToggle();
         // this.setState({ toggle: !this.state.toggle })
+
     }
     
     render() {
         return (
             <div>
                 <h1></h1>
+
                 <Button type="primary" onClick={this.showDrawer} style={{ marginRight: 1300 }}>Menu</Button>
                 <Drawer
                     title="Basic Drawer"
@@ -91,13 +96,17 @@ class SideDrawer extends Component {
                                 </div>
                             )}
                 </Drawer>
+                {/* <Logout/> */}
+                <Route exact component={Logout}/>
                 <Switch>
                     {/* {console.log("entered switch")} */}
+  
                     <Route path="/admin/userList" component={UserList} />
                     <Route path="/admin/userRequests" component={UserRequests}></Route>
                     <Route path="/user/:id/profile" component={Profile}></Route>
                     <Route path="/user/:id/search" component={Search}></Route>
                     <Route path="/user/:id/timeline" component={Timeline}></Route>
+
                     {/* <Route path="/admin/userList/:id" exact component={UserPageAtAdmin}/> */}
                 </Switch>
             </div>
@@ -114,6 +123,11 @@ const mapDispatchToProps = dispatch => {
         onChangeToggle: () =>
             dispatch({
                 type: "TOGGLEUSER"
+            }),
+            setUserName: (value) =>
+            dispatch({
+                type: "SETUSERNAME",
+                payload: value
             }),
     }
 }

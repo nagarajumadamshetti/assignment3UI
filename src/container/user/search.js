@@ -1,23 +1,138 @@
-import React,{Component} from 'react';
-import {Container} from 'reactstrap';
+import React, { Component } from 'react';
+// import { Layout, Menu, Breadcrumb } from 'antd';
+// import { connect } from "react-redux";
+// const { Header, Content, Footer } = Layout;
 import { connect } from "react-redux";
-class Search extends Component{
-    componentDidMount() {
-        
+import { Upload, Button, message, Modal as AntModal, Carousel, Card, Col, Row } from 'antd';
+import { Container } from 'reactstrap';
+import { Input } from 'antd';
+
+import { DownloadOutlined, HeartTwoTone, LikeOutlined } from '@ant-design/icons';
+const { Meta } = Card;
+const { Search } = Input;
+class SearchPost extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchValue: '',
+            display: false,
+        }
     }
-    componentDidUpdate(prevProps, prevState) {
-        
+    componentDidMount = async () => {
+        // this.props.setUserName(this.state.searchValue)
+        await this.props.getUserPosts(this.state.searchValue);
     }
-    render(){
-        return(
+    newSearch = (e) => {
+        e.preventDefault();
+        this.setState({ searchValue: e.target.value });
+    }
+    handleSearch = async () => {
+        await this.props.getUserPosts(this.state.searchValue);
+        this.setState({
+            display: true,
+        });
+    }
+    render() {
+        return (
             <div>
-                <h1>search page</h1>
-                <Container >
-                    <h1>{this.props.match.params.id}</h1>
-                </Container>
-            </div>
-        );
+                <Input placeholder="Search user" onChange={this.newSearch} />
+                <Button outline color="primary" onClick={this.handleSearch}>Done</Button>
+                {this.state.display ? (
+                    this.props.userPosts ? (
+                        <Container
+                            style={{
+                                border: '2px solid black',
+                                overflowY: 'scroll',
+                                width: '70%',
+                                float: 'center',
+                                position: 'center',
+                                textAlign: 'center',
+                                alignItems: 'center',
+                                alignContent: 'center',
+                                // maxHeight: '250px'
+                            }}
+                        >
+                            {
+                                this.props.userPosts.map((el, key) => {
+                                    return (<div>
+                                        {/* <Carousel autoplay> */}
+                                        <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
+                                            actions={[
+                                                <HeartTwoTone className="TwoTone" key="like" value={el.likeCount} />,
+
+                                            ]} >
+                                            {console.log(el)}
+                                            <Carousel autoplay>
+                                                {
+                                                    Object.keys(el).map((el2, key2) => {
+                                                        if (el2 !== "description" && el2 !== "likeCounter")
+                                                            return (
+                                                                <div>
+                                                                    <img
+                                                                        alt="example"
+                                                                        src={`${el[el2].thumbUrl}`}
+                                                                    />
+
+                                                                </div>
+                                                            )
+                                                    })
+                                                }
+                                            </Carousel>
+                                            {console.log(el.description)}
+                                            <Meta title={el.description} description="www.instagram.com" />
+                                            {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
+                                        </Card>
+
+                                        {/* </Carousel> */}
+                                    </div>
+
+                                    )
+                                })
+                            }
+                        </Container>
+                    ) : (<div>
+                        UserNot found</div>)
+                ) :
+                    null
+                }
+            </div>);
     }
 }
+const mapStateToProps = state => ({
+    userName: state.userReducer.userName,
+    userPosts: state.userReducer.userPosts,
+})
+const mapDispatchToProps = dispatch => {
+    return {
+        getUserPosts: (value) =>
+            dispatch({
+                type: "GETUSERPOSTS",
+                payload: value,
+            }),
 
-export default Search;
+    }
+}
+export default (connect(mapStateToProps, mapDispatchToProps)(SearchPost));
+// import React,{Component} from 'react';
+// import {Container} from 'reactstrap';
+// import { connect } from "react-redux";
+// class Search extends Component{
+//     componentDidMount() {
+
+//     }
+//     componentDidUpdate(prevProps, prevState) {
+
+//     }
+//     render(){
+//         return(
+//             <div>
+//                 <h1>search page</h1>
+//                 <Container >
+//                     <h1>{this.props.match.params.id}</h1>
+//                 </Container>
+//             </div>
+//         );
+//     }
+// }
+
+// export default Search;
