@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Form, Input, Button, Checkbox, Switch } from 'antd';
+import { Form, Input, Button, Checkbox, Switch,message } from 'antd';
 // import { Switch } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import Logout from '../Logout/logout';
+import { BrowserRouter as Router, Route, Link,  } from 'react-router-dom';
 import Home from '../admin/home'
 class Login extends Component {
     componentDidMount() {
@@ -18,19 +20,19 @@ class Login extends Component {
         console.log("submitted")
         await this.props.onSubmit();
         if (!this.props.uSuccess) {
-            alert("username doesnot exist");
+            message.warning("username doesnot exist");
             return;
         }
         if (!this.props.pSuccess) {
-            alert("password incorrect");
+            message.warn("password incorrect");
             return;
         }
         if (!this.props.success) {
-            alert("admin didn't accept");
+            message.warning("admin didn't accept");
             return;
         }
-        alert(this.props.role)
-        alert("successfully logged in");
+
+        message.success("successfully logged in");
         this.props.setUserName(this.props.userName);
         // if (this.props.role === "admin") {
         //     console.log("entered if")
@@ -132,7 +134,7 @@ class Login extends Component {
                                 </Form.Item>
                             </Form>
                         </div>)}
-
+                        {/* <Route exact component={Logout}/> */}
             </div>
 
         );

@@ -4,6 +4,7 @@ import { Button } from 'reactstrap';
 import { Upload, Button as AntButton, Carousel, message, Modal as AntModal, Card, Col, Row } from 'antd';
 import { UploadOutlined, LikeOutlined, HeartTwoTone } from '@ant-design/icons';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
+import UserInfo from './userInfo';
 import { connect } from "react-redux";
 const { Meta } = Card;
 function getBase64(file) {
@@ -34,7 +35,7 @@ class Profile extends Component {
         //     this.props.getUserPosts();
         // }
     }
-    handleLikePost=(e)=>{
+    handleLikePost = (e) => {
         e.preventDefault();
         console.log(e.target.id);
         // console.log(e.target.value)
@@ -42,11 +43,6 @@ class Profile extends Component {
     render() {
         return (
             <div>
-                <h1>profile page</h1>
-                <Container >
-                    {/* <h1>{this.props.match.params.id}</h1> */}
-                    <h1>{this.props.userName}</h1>
-                </Container>
                 {this.props.userPosts ? (
                     <Container
                         style={{
@@ -61,13 +57,14 @@ class Profile extends Component {
                             // maxHeight: '250px'
                         }}
                     >
+                        <UserInfo from={"profile"} name={this.props.userName}></UserInfo>
                         {
                             this.props.userPosts.map((el, key) => {
                                 return (<div key={key}>
                                     {/* <Carousel autoplay> */}
                                     <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
                                         actions={[
-                                                <HeartTwoTone className="TwoTone" key="like" value={el.likeCount} onClick={this.handleLikePost} id={key}/>
+                                            <HeartTwoTone className="TwoTone" key="like" value={el.likeCount} onClick={this.handleLikePost} id={key} />
                                         ]} >
                                         {console.log(el)}
                                         <Carousel autoplay>

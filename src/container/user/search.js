@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { Upload, Button, message, Modal as AntModal, Carousel, Card, Col, Row } from 'antd';
 import { Container } from 'reactstrap';
 import { Input } from 'antd';
+import UserInfo from './userInfo';
 
 import { DownloadOutlined, HeartTwoTone, LikeOutlined } from '@ant-design/icons';
 const { Meta } = Card;
@@ -36,7 +37,7 @@ class SearchPost extends Component {
         return (
             <div>
                 <Input placeholder="Search user" onChange={this.newSearch} />
-                <Button outline color="primary" onClick={this.handleSearch}>Done</Button>
+                <Button  type="primary" onClick={this.handleSearch}>Search</Button>
                 {this.state.display ? (
                     this.props.userPosts ? (
                         <Container
@@ -52,9 +53,12 @@ class SearchPost extends Component {
                                 // maxHeight: '250px'
                             }}
                         >
+
+                            <UserInfo from={"search"} name={this.state.searchValue}></UserInfo>
                             {
                                 this.props.userPosts.map((el, key) => {
-                                    return (<div>
+                                    return (
+                                    <div key={key}>
                                         {/* <Carousel autoplay> */}
                                         <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
                                             actions={[
@@ -90,8 +94,11 @@ class SearchPost extends Component {
                                 })
                             }
                         </Container>
-                    ) : (<div>
-                        UserNot found</div>)
+                    ) : (
+                            <div>
+                                UserNot found
+                            </div>
+                        )
                 ) :
                     null
                 }
@@ -109,30 +116,6 @@ const mapDispatchToProps = dispatch => {
                 type: "GETUSERPOSTS",
                 payload: value,
             }),
-
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(SearchPost));
-// import React,{Component} from 'react';
-// import {Container} from 'reactstrap';
-// import { connect } from "react-redux";
-// class Search extends Component{
-//     componentDidMount() {
-
-//     }
-//     componentDidUpdate(prevProps, prevState) {
-
-//     }
-//     render(){
-//         return(
-//             <div>
-//                 <h1>search page</h1>
-//                 <Container >
-//                     <h1>{this.props.match.params.id}</h1>
-//                 </Container>
-//             </div>
-//         );
-//     }
-// }
-
-// export default Search;

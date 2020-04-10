@@ -115,10 +115,10 @@ class Timeline extends Component {
         })
     }
     handleSubmitNewStage = () => {
-        if (this.state.newStageName === null || this.state.newStageName === "") {
-            alert("enter Valid stage name");
-            return;
-        }
+        // if (this.state.newStageName === null || this.state.newStageName === "") {
+            // alert("enter Valid stage name");
+            // return;
+        // }
         this.setState({
             toggleAddNewStage: !this.state.toggleAddNewStage,
         })
@@ -168,7 +168,6 @@ class Timeline extends Component {
                     maxHeight: '150px'
                 }}
                 >
-
                     <Button outline color="info" onClick={this.handleAddNewStageToggler}> Add new Post</Button>
                     <Modal isOpen={this.state.toggleAddNewStage} toggle={this.state.toggleAddNewStage} backdrop="static" >
 
@@ -206,8 +205,6 @@ class Timeline extends Component {
                         </ModalFooter>
                     </Modal>
                 </Container>
-
-
             </div>
         );
     }
