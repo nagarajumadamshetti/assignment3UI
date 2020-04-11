@@ -19,7 +19,7 @@ class Timeline extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            newStageName: null,
+            newStageName: '',
             toggleAddNewStage: false,
             fileList: [],
             uploading: false,
@@ -111,7 +111,7 @@ class Timeline extends Component {
     handleNotSubmit = () => {
         this.setState({
             toggleAddNewStage: !this.state.toggleAddNewStage,
-            newStageName: null
+            newStageName: ''
         })
     }
     handleSubmitNewStage = () => {
@@ -169,14 +169,14 @@ class Timeline extends Component {
                 }}
                 >
                     <Button outline color="info" onClick={this.handleAddNewStageToggler}> Add new Post</Button>
-                    <Modal isOpen={this.state.toggleAddNewStage} toggle={this.state.toggleAddNewStage} backdrop="static" >
+                    <Modal isOpen={this.state.toggleAddNewStage} toggle={()=>this.state.toggleAddNewStage} backdrop="static" >
 
-                        <ModalHeader toggle={this.state.toggleAddNewStage}>Add A NEW STAGE</ModalHeader>
+                        <ModalHeader toggle={()=>this.state.toggleAddNewStage}>Add A NEW STAGE</ModalHeader>
                         <ModalBody>
                             <Form>
                                 <FormGroup>
                                     <Label for="newStage">Stage Name</Label>
-                                    <Input type="text" id="newStage" value={this.state.newStageName} onChange={this.newStageNameHandler} placeholder="enter description"></Input>
+                                    <Input type="text" id="newStage"  onChange={this.newStageNameHandler} placeholder="enter description"></Input>
                                 </FormGroup>
                                 <FormGroup>
                                     <Upload {...props} onChange={this.handleChange}>

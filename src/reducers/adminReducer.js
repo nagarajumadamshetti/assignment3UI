@@ -56,7 +56,7 @@ const reducer = (state = initialState, action) => {
         }
         case "GETREQUESTS": {
             let l = JSON.parse(localStorage.getItem("admin"))
-
+            state.requests=l.requests
             return {
                 ...state,
                 localStorageData: JSON.parse(localStorage.getItem(state.userName)),

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Comment } from 'antd';
-import { Menu, Button, Drawer } from 'antd';
+import { Menu, Button, Drawer, notification, Divider } from 'antd';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import UserList from '../admin/userList';
-import UserRequests from '../admin/userRequests';
+import UserRequests from '../../../userRequests';
 import { connect } from "react-redux";
+import '@ant-design/icons';
+
 import UserPageAtAdmin from '../admin/userPageAtAdmin';
 import {
     AppstoreOutlined,
@@ -14,12 +16,18 @@ import {
     UserOutlined,
     ContainerOutlined,
     MailOutlined,
+    MenuOutlined,
+    RadiusUprightOutlined,
 } from '@ant-design/icons';
+import 'antd/dist/antd.css';
 import UserHome from '../user/userHome';
 import Profile from '../user/profile';
 import Search from '../user/search';
 import Timeline from '../user/timeline';
+import FollowRequests from '../user/followRequest';
+
 import Logout from '../Logout/logout';
+
 class SideDrawer extends Component {
 
     state = {
@@ -43,8 +51,36 @@ class SideDrawer extends Component {
             collapsed: !this.state.collapsed,
         });
     };
-    componentDidMount=async()=> {
-        // await this.props.setUserName(null);
+    componentDidMount = async () => {
+        console.log(this.props.loggedUserName)
+        // await this.props.setUserName(this.props.loggedUserName);
+        console.log(this.props.userName);
+        // console.log(this.props.loggedUserName)
+        // console.log(this.props.userName)
+        if (localStorage.getItem("role") === "user") {
+            await this.props.onGetFollowRequests(this.props.loggedUserName);
+            this.props.followRequests.map((el, key) => {
+                return (
+                    notification.open({
+                        message: 'New follow Request  ',
+                        description:
+                            `from ${el}`,
+                        // icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+                    }))
+            })
+        }
+        else {
+            await this.props.onGetSignUpRequests();
+            this.props.signUpRequests.map((el, key) => {
+                return (
+                    notification.open({
+                        message: 'New Sign Up Request  ',
+                        description:
+                            `from ${el}`,
+                        // icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+                    }))
+            })
+        }
     }
     componentDidUpdate(prevProps, prevState) {
 
@@ -52,14 +88,16 @@ class SideDrawer extends Component {
     componentWillUnmount() {
         console.log("sidedrawer cwum");
     }
-    hideUserLinks = () => {
+    hideUserLinks = async () => {
         console.log("entered hide user links")
-        if (this.state.visible === this.props.toggle)
+        if (this.state.visible === this.props.toggle) {
             this.props.onChangeToggle();
-        // this.setState({ toggle: !this.state.toggle })
+            await this.props.setUserName("admin");
+            console.log(this.props.userName)
+        }       // this.setState({ toggle: !this.state.toggle })
 
     }
-    
+
     render() {
         return (
             <div>
@@ -81,6 +119,19 @@ class SideDrawer extends Component {
                                     <br></br>
                                     <br></br>
                                     <Link to="/admin/userRequests"><UserOutlined />Requests</Link>
+                                    {/* {
+                                        this.props.signUpRequests ?
+                                            this.props.signUpRequests.map((el, key) => {
+                                                return (
+                                                    notification.open({
+                                                        message: 'New Sign Up Request  ',
+                                                        description:
+                                                            `from ${el}`,
+                                                        // icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+                                                    }))
+                                            })
+                                            : null
+                                    } */}
                                 </div>
                             )
                             :
@@ -93,20 +144,36 @@ class SideDrawer extends Component {
                                     <br></br>
                                     <br></br>
                                     <Link to={`/user/${this.props.loggedUserName}/timeline`}><ContainerOutlined />Timeline</Link>
+                                    <br></br>
+                                    <br></br>
+                                    <Link to={`/user/${this.props.loggedUserName}/followRequests`}><MenuOutlined />FollowRequests</Link>
+                                    {/* {
+                                        this.props.followRequests ?
+                                            this.props.followRequests.map((el, key) => {
+                                                return (
+                                                    notification.open({
+                                                        message: 'New follow Request  ',
+                                                        description:
+                                                            `from ${el}`,
+                                                        // icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+                                                    }))
+                                            })
+                                            : null
+                                    } */}
                                 </div>
                             )}
                 </Drawer>
                 {/* <Logout/> */}
-                <Route exact component={Logout}/>
+                <Route exact component={Logout} />
                 <Switch>
                     {/* {console.log("entered switch")} */}
-  
+
                     <Route path="/admin/userList" component={UserList} />
                     <Route path="/admin/userRequests" component={UserRequests}></Route>
                     <Route path="/user/:id/profile" component={Profile}></Route>
                     <Route path="/user/:id/search" component={Search}></Route>
                     <Route path="/user/:id/timeline" component={Timeline}></Route>
-
+                    <Route path="/user/:id/followRequests" component={FollowRequests}></Route>
                     {/* <Route path="/admin/userList/:id" exact component={UserPageAtAdmin}/> */}
                 </Switch>
             </div>
@@ -116,7 +183,10 @@ class SideDrawer extends Component {
 const mapStateToProps = state => ({
     userList: state.adminReducer.userList,
     toggle: state.adminReducer.toggle,
-    loggedUserName:state.loginReducer.userName
+    signUpRequests: state.adminReducer.requests,
+    loggedUserName: state.loginReducer.userName,
+    userName: state.userReducer.userName,
+    followRequests: state.userReducer.followRequests
 })
 const mapDispatchToProps = dispatch => {
     return {
@@ -124,11 +194,20 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: "TOGGLEUSER"
             }),
-            setUserName: (value) =>
+        setUserName: (value) =>
             dispatch({
                 type: "SETUSERNAME",
                 payload: value
             }),
+        onGetFollowRequests: (value) =>
+            dispatch({
+                type: "GETFOLLOWREQUESTS",
+                payload: value,
+            }),
+        onGetSignUpRequests: () =>
+            dispatch({
+                type: "GETREQUESTS"
+            })
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(SideDrawer));

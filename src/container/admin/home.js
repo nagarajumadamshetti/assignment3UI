@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Menu, Button, Drawer } from 'antd';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import UserList from './userList';
-import UserRequests from './userRequests';
+import UserRequests from '../../../userRequests';
 import {
     AppstoreOutlined,
     MenuUnfoldOutlined,

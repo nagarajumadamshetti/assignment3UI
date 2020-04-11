@@ -6,6 +6,6 @@ import userReducer from './userReducer'
 export default combineReducers({
     signUpReducer,
     adminReducer,
+    userReducer,
     loginReducer,
-    userReducer
 })

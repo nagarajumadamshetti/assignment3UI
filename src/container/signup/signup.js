@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 import { Button } from 'antd';
 import { connect } from "react-redux";
 // import UserHome from './user/userHome';
-import {Router,Link } from 'react-router-dom';
+import { Router, Link } from 'react-router-dom';
 
 class SignUp extends React.Component {
     state = {
@@ -17,17 +17,18 @@ class SignUp extends React.Component {
         this.props.onPasswordChange(e.target.value)
     }
     handleSubmit = async () => {
-        if ((this.props.userName !== null||this.props.userName !== "") && (this.props.password !== null||this.props.password !== "")) {
+        if ((this.props.userName !== null || this.props.userName !== "") && (this.props.password !== null || this.props.password !== "")) {
             let obj = {
                 username: this.props.username,
                 password: this.props.password,
-                email:this.props.email,
-                role:this.props.role,
-                phone:this.props.phone,
-                posts:[],
-                accept:false,
-                followers:[],
-                following:[]
+                email: this.props.email,
+                role: this.props.role,
+                phone: this.props.phone,
+                posts: [],
+                accept: false,
+                followers: [],
+                following: [],
+                followRequests:[],
             }
             await this.props.validate();
             console.log(this.props.success);
@@ -37,18 +38,19 @@ class SignUp extends React.Component {
                 return;
             }
             await this.props.getItem();
-            if (!this.props.localStorageData&&this.props.role!=="admin") {
+            if (!this.props.localStorageData && this.props.role !== "admin") {
                 this.props.setItem(obj)
             }
-            else{
-                obj={
+            else {
+
+                obj = {
                     username: this.props.username,
-                password: this.props.password,
-                email:this.props.email,
-                role:this.props.role,
-                phone:this.props.phone,
-                users:[],//accepted users
-                requests:[]//new users
+                    password: this.props.password,
+                    email: this.props.email,
+                    role: this.props.role,
+                    phone: this.props.phone,
+                    users: [],//accepted users
+                    requests: []//new users
                 }
                 this.props.setItem(obj)
             }

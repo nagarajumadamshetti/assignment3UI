@@ -1,5 +1,5 @@
 const initialState = {
-    userName: 'adsf',
+    userName: '',
     password: '',
     localStorageData: '',
     success: false
@@ -8,6 +8,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case "USERNAMECHANGE": {
+            state.userName=action.payload
             return {
                 ...state,
                 userName: action.payload
@@ -22,6 +23,7 @@ const reducer = (state = initialState, action) => {
         }
         case "SUBMIT": {
             let l=JSON.parse(localStorage.getItem(state.userName));
+        
             if(!l){
                 // alert("userdoesnot exist")
                 return{

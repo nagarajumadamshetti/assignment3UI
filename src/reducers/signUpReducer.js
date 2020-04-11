@@ -48,10 +48,11 @@ const reducer = (state = initialState, action) => {
                 let l = JSON.parse(localStorage.getItem("admin"));
                 l.requests.push(state.userName);
                 localStorage.setItem("admin", JSON.stringify(l));
+                state.localStorageData=localStorage.setItem(state.userName, JSON.stringify(action.payload))
             }
             return {
                 ...state,
-                localStorageData: localStorage.setItem(state.userName, JSON.stringify(action.payload))
+
             }
         }
         case "EMAIL": {

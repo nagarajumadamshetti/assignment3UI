@@ -29,10 +29,14 @@ class UserList extends Component {
         //   this.setState({ toggle: false })
         }
     }
-    hideUserLinks = () => {
+    hideUserLinks =async (e) => {
         console.log("entered hide user links")
+        console.log(e.target.id)
+        await this.props.setUserName(e.target.id)
+        console.log(this.props.userName)
         this.props.onChangeToggle();
         this.setState({ toggle: !this.state.toggle })
+        
     }
     render() {
         return (
@@ -47,7 +51,7 @@ class UserList extends Component {
                                     <div key={key}>
                                         {/* <Link to={`/admin/userList/${el}`} >{el}</Link> */}
                                         <br/>
-                                         <Link onClick={this.hideUserLinks}  to={{
+                                         <Link onClick={this.hideUserLinks} id={el} to={{
                                             pathname: `/admin/userList/${el}`,
                                             // state: {
                                             //     data: key
@@ -75,7 +79,8 @@ class UserList extends Component {
 }
 const mapStateToProps = state => ({
     userList: state.adminReducer.userList,
-    toggle:state.adminReducer.toggle
+    toggle:state.adminReducer.toggle,
+    userName:state.userReducer.userName,
 })
 const mapDispatchToProps = dispatch => {
     return {
@@ -86,7 +91,12 @@ const mapDispatchToProps = dispatch => {
         onChangeToggle:()=>
         dispatch({
             type:"TOGGLEUSER"
-        })
+        }),
+        setUserName: (value) =>
+        dispatch({
+            type: "SETUSERNAME",
+            payload: value
+        }),
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(UserList));

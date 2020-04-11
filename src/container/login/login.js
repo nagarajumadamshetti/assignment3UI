@@ -32,7 +32,7 @@ class Login extends Component {
             return;
         }
 
-        message.success("successfully logged in");
+        message.success("successfully logged in",1);
         this.props.setUserName(this.props.userName);
         // if (this.props.role === "admin") {
         //     console.log("entered if")

@@ -27,11 +27,26 @@ export default class Logout extends Component {
     render() {
         return (
             <div  >
-                <Button style={{ float: 'right' }} onClick={this.handleLogout}><LogoutOutlined /></Button>
+                <Button
+                 style={{ float: 'right' }} onClick={this.handleLogout}
+                 ><LogoutOutlined /></Button>
                 {this.state.logout ?
-                    (<div>
+                    (
+                    <div 
+                    // style={{top:'0', bottom:'0', left:'0', right:'0',OObjectPosition:'absolute' }}
+                    style={{ height: '100%', position: 'absolute', left: '0px', width: '100%', overflow: 'hidden'}}
+                    >
                         {console.log("heloo")}
-                    {<Spin tip="Loading..."><Skeleton active >{window.location.href='/login'}</Skeleton></Spin>}
+                    {
+                        <Spin tip="Loading...">
+                        {/* <Skeleton active > */}
+                            {window.location.href='/login'}
+                            
+                            {/* </Skeleton> */}
+                            
+                            </Spin>
+
+                            }
                         {/* {window.location.href='/login'} */}
                         {/* <Redirect to='/login' push={true}/> */}
                         {/* <Route  exact component={Login} /> */}

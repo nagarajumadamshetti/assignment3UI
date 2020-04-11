@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, } from 'reactstrap';
 import { Button } from 'reactstrap';
-import { Upload, Button as AntButton, Carousel, message, Modal as AntModal, Card, Col, Row } from 'antd';
+import { Upload, Button as AntButton, Carousel, message, Modal as AntModal, Card, Col, Row, Skeleton } from 'antd';
 import { UploadOutlined, LikeOutlined, HeartTwoTone } from '@ant-design/icons';
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
+import { PlusOutlined, LoadingOutlined, DeleteOutlined } from '@ant-design/icons';
 import UserInfo from './userInfo';
 import { connect } from "react-redux";
 const { Meta } = Card;
@@ -27,18 +27,37 @@ class Profile extends Component {
             previewVisible: false,
         }
     }
-    componentDidMount() {
-        this.props.getUserPosts(this.props.userName);
+    componentDidMount = async () => {
+        console.log(this.props.userName)
+
+        await this.props.getUserPosts(this.props.userName);
+
     }
     componentDidUpdate(prevProps, prevState) {
         // if (prevProps.userPosts !== this.props.userPosts) {
         //     this.props.getUserPosts();
         // }
     }
-    handleLikePost = (e) => {
+    handleLikePost = async(e) => {
         e.preventDefault();
         console.log(e.target.id);
+        let obj = {
+            key: e.target.id,
+            postUserName:this.props.userName,
+            presentUser:this.props.userName,
+        }
+        await this.props.onLikePost(obj);
+        await this.props.getUserPosts(this.props.userName);
         // console.log(e.target.value)
+    }
+    handleDeletePost = async (e) => {
+        e.preventDefault();
+        console.log(e.target.id)
+        let obj = {
+            key: e.target.id,
+        }
+        await this.props.onDeletePost(obj);
+        await this.props.getUserPosts(this.props.userName);
     }
     render() {
         return (
@@ -60,42 +79,45 @@ class Profile extends Component {
                         <UserInfo from={"profile"} name={this.props.userName}></UserInfo>
                         {
                             this.props.userPosts.map((el, key) => {
-                                return (<div key={key}>
-                                    {/* <Carousel autoplay> */}
-                                    <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
-                                        actions={[
-                                            <HeartTwoTone className="TwoTone" key="like" value={el.likeCount} onClick={this.handleLikePost} id={key} />
-                                        ]} >
-                                        {console.log(el)}
-                                        <Carousel autoplay>
-                                            {
-                                                Object.keys(el).map((el2, key2) => {
-                                                    if (el2 !== "description" && el2 !== "likeCounter")
-                                                        return (
-                                                            <div key={key2}>
-                                                                <img
-                                                                    alt="example"
-                                                                    src={`${el[el2].thumbUrl}`}
-                                                                />
+                                console.log("profile 75")
+                                return (
+                                    <div key={key}>
+                                        <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
+                                            actions={[
+                                            <AntButton onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key}/>{el.likeCounter.length}</AntButton>,
+                                                <AntButton
+                                                    onClick={this.handleDeletePost} id={key} color="danger"><DeleteOutlined /></AntButton>
 
-                                                            </div>
-                                                        )
-                                                })
-                                            }
-                                        </Carousel>
-                                        {console.log(el.description)}
-                                        <Meta title={el.description} description="www.instagram.com" />
-                                        {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
-                                    </Card>
+                                            ]} >
+                                            {console.log(el)}
+                                            <Carousel autoplay>
+                                                {
+                                                    Object.keys(el).map((el2, key2) => {
+                                                        if (el2 !== "description" && el2 !== "likeCounter")
+                                                            return (
+                                                                <div key={key2}>
+                                                                    <img
+                                                                        alt="example"
+                                                                        src={`${el[el2].thumbUrl}`}
+                                                                    />
+                                                                </div>
+                                                            )
+                                                    })
+                                                }
+                                            </Carousel>
+                                            {console.log(el.description)}
+                                            <Meta title={el.description} description="www.instagram.com" />
+                                            {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
+                                        </Card>
 
-                                    {/* </Carousel> */}
-                                </div>
+                                        {/* </Carousel> */}
+                                    </div>
 
                                 )
                             })
                         }
                     </Container>
-                ) : null}
+                ) : <Skeleton active ></Skeleton>}
             </div>
         );
     }
@@ -103,7 +125,8 @@ class Profile extends Component {
 const mapStateToProps = state => ({
     userName: state.userReducer.userName,
     userPosts: state.userReducer.userPosts,
-})
+    searchValue: state.userReducer.searchValue,
+});
 const mapDispatchToProps = dispatch => {
     return {
         getUserPosts: (value) =>
@@ -112,6 +135,21 @@ const mapDispatchToProps = dispatch => {
                 payload: value
             }),
 
+        onDeletePost: (value) =>
+            dispatch({
+                type: "DELETEUSERPOST",
+                payload: value,
+            }),
+            onLikePost: (value) =>
+            dispatch({
+                type: "LIKEUSERPOST",
+                payload: value,
+            }),
+        setUserName: (value) =>
+            dispatch({
+                type: "SETUSERNAME",
+                payload: value
+            }),
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(Profile));

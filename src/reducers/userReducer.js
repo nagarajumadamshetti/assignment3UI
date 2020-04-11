@@ -5,15 +5,114 @@ let initialState = {
     description: '',
     followers: '',
     following: '',
+    searchValue: '',
+    followRequests: '',
+    likeCounter: ''
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case "LIKEUSERPOST": {
+            let l = JSON.parse(localStorage.getItem(action.payload.postUserName))
+            console.log(action.payload.key)
+            console.log(action.payload.postUserName)
+            let index = action.payload.key
+            console.log(index)
+
+            console.log("object   :   " + l.posts[index].likeCounter);
+            let index2=l.posts[index].likeCounter.indexOf(action.payload.presentUser)
+            if(index2>-1){
+                l.posts[index].likeCounter.splice(index2,1);
+            }
+            else{
+                l.posts[index].likeCounter.push(action.payload.presentUser);
+            }
+            console.log(l.posts)
+            state.userPosts = l.posts
+            localStorage.setItem(action.payload.postUserName, JSON.stringify(l))
+            return {
+                ...state,
+            }
+        }
+        case "DELETEUSERPOST": {
+            let l = JSON.parse(localStorage.getItem(state.userName))
+            let index = action.payload.key
+            console.log(index)
+            l.posts.splice(index, 1)
+            console.log(l.posts)
+            state.userPosts = l.posts
+            localStorage.setItem(state.userName, JSON.stringify(l))
+            return {
+                ...state,
+            }
+        }
+        case "GETFOLLOWREQUESTS": {
+            let l = JSON.parse(localStorage.getItem(action.payload))
+            if (l)
+                state.followRequests = l.followRequests
+            return {
+                ...state,
+                localStorageData: JSON.parse(localStorage.getItem(action.payload)),
+            }
+        }
+        case "ACCEPTFOLLOW": {
+            console.log("entered accept")
+            let l = JSON.parse(localStorage.getItem(state.userName));
+            if (action.payload.value === true) {
+                console.log("entered accept if")
+                let l2 = l.followRequests.splice(action.payload.index, 1);
+                // l.requests.splice(action.payload.index, 1);
+                console.log(l.followRequests)
+
+                l.followers = (l.followers.concat(l2))
+                console.log(l.users);
+                let l3 = JSON.parse(localStorage.getItem(l2[0]))
+                l3.following.push(state.userName);
+                localStorage.setItem(state.userName, JSON.stringify(l))
+                localStorage.setItem(l2[0], JSON.stringify(l3))
+                state.localStorageData = l;
+                state.followRequests = l.followRequests;
+                state.followers = l.followers
+                return {
+                    ...state,
+                    localStorageData: l,
+                }
+            }
+            return {
+                ...state,
+                localStorageData: l
+            }
+        }
+        case "DECLINEFOLLOW": {
+            let l = JSON.parse(localStorage.getItem(state.userName));
+            if (action.payload.value === true) {
+                console.log("entered decline if")
+                let l2 = l.followRequests.splice(action.payload.index, 1);
+                // l.requests.splice(action.payload.index, 1);
+                // localStorage.removeItem(l2[0])
+                localStorage.setItem(state.userName, JSON.stringify(l))
+                state.followRequests = l.followRequests;
+                state.followers = l.followers
+                return {
+                    ...state,
+                    localStorageData: l,
+                }
+            }
+            return {
+                ...state,
+                localStorageData: l
+            }
+        }
+        case "SEARCHUSERNAME": {
+            state.searchValue = action.payload;
+            return {
+                ...state
+            }
+        }
         case "FOLLOWANDUNFOLLOW": {
             let searchedUser = JSON.parse(localStorage.getItem(action.payload));
-            if(!searchedUser)
-            {
-                return{
+            if (!searchedUser) {
+                return {
                     ...state
                 }
             }
@@ -37,13 +136,14 @@ const reducer = (state = initialState, action) => {
                     }
                 }
                 else {
-
-                    searchedUser.followers.push(state.userName)
-                    loggedUser.following.push(action.payload)
+                    searchedUser.followRequests.push(state.userName);
+                    // localStorage.setItem("admin", JSON.stringify(l));
+                    // searchedUser.followers.push(state.userName)
+                    // loggedUser.following.push(action.payload)
                 }
                 console.log(searchedUser.followers)
                 state.followers = searchedUser.followers;
-                state.following = searchedUser.following
+                state.following = searchedUser.following;
             }
             else {
                 state.followers = [];
@@ -71,7 +171,8 @@ const reducer = (state = initialState, action) => {
             }
         }
         case "GETUSERPOSTS": {
-
+            console.log(state.userName)
+            console.log(action.payload)
             let l = JSON.parse(localStorage.getItem(action.payload))
             if (l) {
                 state.userPosts = l.posts
@@ -80,14 +181,19 @@ const reducer = (state = initialState, action) => {
                 state.userPosts = null;
             }
             return {
-                ...state
+                ...state,
+                userPosts: state.userPosts,
+                userName: state.userName,
             }
         }
         case "SETUSERNAME": {
+            console.log("entered set user name")
+            console.log(action.payload)
             state.userName = action.payload;
+            console.log(state.userName)
             return {
                 ...state,
-                userName: state.userName
+                // userName: state.userName
             }
         }
         case "NEWDESCRIPTION": {
@@ -115,7 +221,10 @@ const reducer = (state = initialState, action) => {
                 userPosts: state.userPosts,
             }
         }
-        default: return state;
+        default: {
+            console.log("entered default user reducer")
+            return state
+        }
     }
 }
 
