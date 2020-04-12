@@ -1,9 +1,10 @@
 import React from 'react';
 import "antd/dist/antd.css";
-import { Button } from 'antd';
+import { Button, Form, Input, Drawer, Dropdown, Menu,message } from 'antd';
 import { connect } from "react-redux";
+import { DownOutlined } from '@ant-design/icons';
 // import UserHome from './user/userHome';
-import { Router, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class SignUp extends React.Component {
     state = {
@@ -28,13 +29,13 @@ class SignUp extends React.Component {
                 accept: false,
                 followers: [],
                 following: [],
-                followRequests:[],
+                followRequests: [],
             }
             await this.props.validate();
             console.log(this.props.success);
             console.log(this.props.userName);
             if (!this.props.success) {
-                alert("not valid");
+                message.error("not valid");
                 return;
             }
             await this.props.getItem();
@@ -54,11 +55,11 @@ class SignUp extends React.Component {
                 }
                 this.props.setItem(obj)
             }
-            alert("signup successful", 1000);
+            message.success("signup successful");
             this.setState({ submit: true, toggle: false })
         }
         else {
-            alert("enter username and password", 3000);
+            message.warn("enter username and password", 3000);
             // this.props.onSubmit()
         }
     }
@@ -74,38 +75,102 @@ class SignUp extends React.Component {
         this.props.setPhone(e.target.value);
     }
     handleRole = (e) => {
-        this.props.setRole(e.target.value);
+        this.props.setRole(e);
     }
+
     render() {
+        const formItemLayout = {
+            labelCol: {
+                xs: {
+                    span: 24,
+                },
+                sm: {
+                    span: 5,
+                },
+            },
+            wrapperCol: {
+                xs: {
+                    span: 24,
+                },
+                sm: {
+                    span: 12,
+                },
+            },
+        };
+        const menu = (
+            <Menu >
+                <Menu.Item key="0" value="admin" id="admin" onClick={() => this.handleRole("admin")} >
+                    Admin
+              </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item key="1" value="user" id="user" onClick={() => this.handleRole("user")}>
+                    User
+              </Menu.Item>
+            </Menu>
+        );
         return (
             <div>
                 {this.state.toggle ? <div>
                     <div className="container">
-                        <h1 >Sign Up</h1>
-                        <form>
-                            <input type="text" placeholder="username" onChange={this.handleChange} />
-                            <br></br>
-                            <br></br>
-                            <input type="password" className="form-control" placeholder="password" onChange={this.handlePassword} value={this.props.password} />
-                            <br></br>
-                            <br></br>
-                            <input type="tel" className="form-control" placeholder="phone number" onChange={this.handlePhone} value={this.props.phone} />
-                            <br></br>
-                            <br></br>
-                            <input type="email" className="form-control" placeholder="email" onChange={this.handleEmail} value={this.props.email} />
-                            <br></br>
-                            <br></br>
-                            <select onChange={this.handleRole} value={this.props.role} >
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
-                            </select>
-                            <br></br>
-                            <br></br>
-                            <Button onClick={this.handleSubmit} type="primary" size="middle">signUn</Button>
-                            <br></br>
-                            <br></br>
-                            Already a user <Link to="/login" >Login Here</Link>
-                        </form>
+                        <Form {...formItemLayout}>
+                            <h1>Sign Up</h1>
+                            <Form.Item
+                                onChange={this.handleChange}
+                                label="Username"
+                                validateStatus={this.props.userNameValidated}
+                                help="Should be between 4 to 30 characters"
+                                hasFeedback
+                            >
+                                <Input id="success" />
+                            </Form.Item>
+                            <Form.Item
+                                onChange={this.handlePassword}
+                                value={this.props.password}
+                                label="Password"
+                                validateStatus={this.props.passwordValidated}
+                                help="Atleast 8 characters"
+                                hasFeedback
+                            >
+                                <Input id="success" />
+                            </Form.Item>
+                            <Form.Item
+                                onChange={this.handleEmail}
+                                value={this.props.email}
+                                label="Email"
+                                validateStatus={this.props.emailValidated}
+                                help="Should contain characters "
+                                hasFeedback
+                            >
+                                <Input id="success" />
+                            </Form.Item>
+                            <Form.Item
+                                onChange={this.handlePhone}
+                                value={this.props.phone}
+                                label="Phonenumber"
+                                validateStatus={this.props.phoneValidated}
+                                help="Should be length of 10 only numbers allowed"
+                                hasFeedback
+                            >
+                                <Input id="success" />
+                            </Form.Item>
+                            <Form.Item label="Role">
+                                <Dropdown overlay={menu} >
+                                    <Button >
+                                        {
+                                            this.props.roleValidated === "success" ?
+                                                (this.props.role)
+                                                :
+                                                (<div>Role  <DownOutlined/></div>)
+                                        }
+                                    </Button>
+                                </Dropdown>
+                            </Form.Item>
+                            <Form.Item>
+                                <Button onClick={this.handleSubmit} type="primary" size="middle">signUp</Button><br></br><br></br>
+                                Already have an account<Link to="/login">Login Here</Link>
+                            </Form.Item>
+                        </Form>
+
                     </div>
 
                 </div> : null}
@@ -168,6 +233,11 @@ const mapStateToProps = (state) => ({
     phone: state.signUpReducer.phone,
     role: state.signUpReducer.role,
     email: state.signUpReducer.email,
-    success: state.signUpReducer.success
+    success: state.signUpReducer.success,
+    userNameValidated: state.signUpReducer.userNameValidated,
+    passwordValidated: state.signUpReducer.passwordValidated,
+    emailValidated: state.signUpReducer.emailValidated,
+    phoneValidated: state.signUpReducer.phoneValidated,
+    roleValidated: state.signUpReducer.roleValidated,
 })
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

@@ -66,7 +66,7 @@ class Login extends Component {
         };
         // let role=this.props.role
         return (
-            <div>
+            <div >
                 {this.props.success ? (
                     this.props.role === "admin" ?
                         <Redirect to="/admin"></Redirect>

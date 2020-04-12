@@ -13,6 +13,9 @@ import {
     UserOutlined,
     ContainerOutlined,
     MenuOutlined,
+    SmileOutlined,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import Profile from '../user/profile';
@@ -21,6 +24,7 @@ import Timeline from '../user/timeline';
 import FollowRequests from '../user/followRequest';
 
 import Logout from '../Logout/logout';
+import { resolveOnChange } from 'antd/lib/input/Input';
 
 class SideDrawer extends Component {
 
@@ -45,27 +49,35 @@ class SideDrawer extends Component {
             collapsed: !this.state.collapsed,
         });
     };
+    sleep = async (time) => {
+        await new Promise((resolve) => { setTimeout(resolve, time) })
+    }
     componentDidMount = async () => {
         console.log(this.props.loggedUserName)
-        // await this.props.setUserName(this.props.loggedUserName);
+        await this.props.setUserName(this.props.loggedUserName);
         console.log(this.props.userName);
         // console.log(this.props.loggedUserName)
         // console.log(this.props.userName)
         if (localStorage.getItem("role") === "user") {
             await this.props.onGetFollowRequests(this.props.loggedUserName);
-            this.props.followRequests.map((el, key) => {
-                return (
-                    notification.open({
-                        message: 'New follow Request  ',
-                        description:
-                            `from ${el}`,
-                        // icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-                    }))
-            })
+            if (this.props.followRequests)
+
+                await this.props.followRequests.map(async (el, key) => {
+                    return await this.sleep(2000).then(() =>
+                        notification.open({
+                            message: 'New follow Request  ',
+                            description:
+                                `from ${el}`,
+                            icon: <SmileOutlined style={{ color: '#308ee9' }} />,
+                        })
+                    );
+
+                })
         }
         else {
             await this.props.onGetSignUpRequests();
             this.props.signUpRequests.map((el, key) => {
+                // setTimeout(500);
                 return (
                     notification.open({
                         message: 'New Sign Up Request  ',
@@ -95,9 +107,13 @@ class SideDrawer extends Component {
     render() {
         return (
             <div>
-                <h1></h1>
-
-                <Button type="primary" onClick={this.showDrawer} style={{ marginRight: 1300 }}>Menu</Button>
+                <Button type="primary" onClick={this.showDrawer} style={{ marginRight: 1300 }}>
+                    {
+                        this.props.toggle ?
+                            <MenuFoldOutlined /> :
+                            <MenuUnfoldOutlined />
+                    }
+                </Button>
                 <Drawer
                     title="Basic Drawer"
                     placement="left"
