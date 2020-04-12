@@ -1,18 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Menu, Button, Drawer } from 'antd';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import UserList from './userList';
-import UserRequests from '../../../userRequests';
-import {
-    AppstoreOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    InstagramOutlined,
-    UserOutlined,
-    ContainerOutlined,
-    MailOutlined,
-} from '@ant-design/icons';
+import { Menu,} from 'antd';
 import SideDrawer from '../SideDrawer/sideDrawer';
 const { SubMenu } = Menu;
 class Home extends Component {

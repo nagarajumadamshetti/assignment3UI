@@ -1,26 +1,20 @@
 import React, { Component } from 'react';
-import { Comment } from 'antd';
-import { Menu, Button, Drawer, notification, Divider } from 'antd';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+
+import { Button, Drawer, notification, } from 'antd';
+import { Route, Link, Switch } from 'react-router-dom';
 import UserList from '../admin/userList';
-import UserRequests from '../../../userRequests';
+import UserRequests from '../admin/userRequests'
 import { connect } from "react-redux";
 import '@ant-design/icons';
 
-import UserPageAtAdmin from '../admin/userPageAtAdmin';
+
 import {
-    AppstoreOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
     InstagramOutlined,
     UserOutlined,
     ContainerOutlined,
-    MailOutlined,
     MenuOutlined,
-    RadiusUprightOutlined,
 } from '@ant-design/icons';
 import 'antd/dist/antd.css';
-import UserHome from '../user/userHome';
 import Profile from '../user/profile';
 import Search from '../user/search';
 import Timeline from '../user/timeline';

@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Form, Input, Button, Checkbox, Switch,message } from 'antd';
+import { Form, Input, Button, Checkbox,message } from 'antd';
 // import { Switch } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import Logout from '../Logout/logout';
-import { BrowserRouter as Router, Route, Link,  } from 'react-router-dom';
-import Home from '../admin/home'
 class Login extends Component {
     componentDidMount() {
         console.log("entered login cdm")

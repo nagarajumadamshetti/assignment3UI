@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { LogoutOutlined } from '@ant-design/icons';
-import { Button,Skeleton,Spin } from 'antd';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Redirect } from 'react-router';
-import Login from '../login/login'
+import { Button,Spin } from 'antd';
 export default class Logout extends Component {
     constructor(props) {
         super(props);
@@ -28,8 +25,8 @@ export default class Logout extends Component {
         return (
             <div  >
                 <Button
-                 style={{ float: 'right' }} onClick={this.handleLogout}
-                 ><LogoutOutlined /></Button>
+                 style={{ float: 'right' }}type="primary" onClick={this.handleLogout}
+                 ><LogoutOutlined />LOGOUT</Button>
                 {this.state.logout ?
                     (
                     <div 

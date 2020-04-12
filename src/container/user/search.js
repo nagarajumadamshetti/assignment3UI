@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-// import { Layout, Menu, Breadcrumb } from 'antd';
-// import { connect } from "react-redux";
-// const { Header, Content, Footer } = Layout;
 import { connect } from "react-redux";
-import { Upload, Button, message, Modal as AntModal, Carousel, Card, Col, Row } from 'antd';
+import {  Button, Carousel, Card,  } from 'antd';
 import { Container } from 'reactstrap';
 import { Input, Skeleton } from 'antd';
 import UserInfo from './userInfo';
 
-import { DownloadOutlined, HeartTwoTone, LikeOutlined } from '@ant-design/icons';
+import {  HeartTwoTone, } from '@ant-design/icons';
 const { Meta } = Card;
 const { Search } = Input;
 class SearchPost extends Component {
@@ -40,13 +37,13 @@ class SearchPost extends Component {
             display: true,
         });
     }
-    handleLikePost = async(e) => {
+    handleLikePost = async (e) => {
         e.preventDefault();
         console.log(e.target.id);
         let obj = {
             key: e.target.id,
-            postUserName:this.props.searchValue,
-            presentUser:this.props.userName,
+            postUserName: this.props.searchValue,
+            presentUser: this.props.userName,
         }
         await this.props.onLikePost(obj);
         await this.props.getUserPosts(this.props.searchValue)
@@ -82,8 +79,8 @@ class SearchPost extends Component {
                                             {/* <Carousel autoplay> */}
                                             <Card hoverable title={this.props.searchValue} bordered={true} style={{ width: 240 }}
                                                 actions={[
-                                                    <Button onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key}/>{el.likeCounter.length}</Button>,
-                                          
+                                                    <Button onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likeCounter.length}</Button>,
+
                                                 ]} >
                                                 {console.log(el)}
                                                 <Carousel autoplay>

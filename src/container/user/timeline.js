@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, } from 'reactstrap';
 import { Button } from 'reactstrap';
-import { Upload, Button as AntButton, message, Modal as AntModal, Card, Col, Row } from 'antd';
+import { Upload, Button as AntButton, message, Modal as AntModal, Card,  } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import { connect } from "react-redux";
 const { Meta } = Card;
@@ -128,7 +127,6 @@ class Timeline extends Component {
         console.log("entered handle change");
     };
     render() {
-        {/* <h1>{this.props.match.params.id}</h1> */ }
         const uploading = this.state.uploading;
         const fileList = this.state.fileList;
         const previewVisible = this.state.previewVisible;

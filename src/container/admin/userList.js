@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import {  Route, Link, } from 'react-router-dom';
 import UserPageAtAdmin from './userPageAtAdmin'
-const t = false;
 class UserList extends Component {
     constructor(props) {
         super(props);

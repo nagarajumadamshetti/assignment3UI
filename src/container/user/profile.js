@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, } from 'reactstrap';
-import { Button } from 'reactstrap';
-import { Upload, Button as AntButton, Carousel, message, Modal as AntModal, Card, Col, Row, Skeleton } from 'antd';
-import { UploadOutlined, LikeOutlined, HeartTwoTone } from '@ant-design/icons';
-import { PlusOutlined, LoadingOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Container } from 'reactstrap';
+import {  Button as AntButton, Carousel,   Card, Skeleton } from 'antd';
+import {  HeartTwoTone } from '@ant-design/icons';
+import {  DeleteOutlined } from '@ant-design/icons';
 import UserInfo from './userInfo';
 import { connect } from "react-redux";
 const { Meta } = Card;
@@ -86,7 +85,7 @@ class Profile extends Component {
                                             actions={[
                                             <AntButton onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key}/>{el.likeCounter.length}</AntButton>,
                                                 <AntButton
-                                                    onClick={this.handleDeletePost} id={key} color="danger"><DeleteOutlined /></AntButton>
+                                                    onClick={this.handleDeletePost} id={key} color="danger" type="danger"><DeleteOutlined /></AntButton>
 
                                             ]} >
                                             {console.log(el)}
