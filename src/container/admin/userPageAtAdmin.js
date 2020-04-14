@@ -29,7 +29,7 @@ class UserPageAtAdmin extends Component {
     }
 }
 const mapStateToProps = state => ({
-    userName: state.userReducer.userName,
+    userName: state.loginReducer.userName,
 })
 const mapDispatchToProps = dispatch => {
     return {

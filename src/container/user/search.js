@@ -75,7 +75,7 @@ class SearchPost extends Component {
 
                                 <UserInfo from={"search"} name={this.state.searchValue}></UserInfo>
                                 {
-                                    (this.props.followers.find(el => el === this.props.userName)||this.props.searchValue===this.props.userName) ?
+                                    (this.props.followers.find(el => el === this.props.userName) || this.props.searchValue === this.props.userName) ?
                                         this.props.userPosts.map((el, key) => {
                                             return (
                                                 <div key={key}>

@@ -1,9 +1,10 @@
 import React from 'react';
 import "antd/dist/antd.css";
-import { Button, Form, Input, Drawer, Dropdown, Menu,message } from 'antd';
+import { Button, Form, Input, Drawer, Dropdown, Menu, message } from 'antd';
 import { connect } from "react-redux";
 import { DownOutlined } from '@ant-design/icons';
 // import UserHome from './user/userHome';
+import axios from '../../axios';
 import { Link } from 'react-router-dom';
 
 class SignUp extends React.Component {
@@ -20,16 +21,16 @@ class SignUp extends React.Component {
     handleSubmit = async () => {
         if ((this.props.userName !== null || this.props.userName !== "") && (this.props.password !== null || this.props.password !== "")) {
             let obj = {
-                username: this.props.username,
+                userName: this.props.userName,
                 password: this.props.password,
                 email: this.props.email,
                 role: this.props.role,
                 phone: this.props.phone,
-                posts: [],
-                accept: false,
-                followers: [],
-                following: [],
-                followRequests: [],
+                // posts: [],
+                accepted: false,
+                // followers: [],
+                // following: [],
+                // followRequests: [],
             }
             await this.props.validate();
             console.log(this.props.success);
@@ -38,23 +39,24 @@ class SignUp extends React.Component {
                 message.error("not valid");
                 return;
             }
-            await this.props.getItem();
-            if (!this.props.localStorageData && this.props.role !== "admin") {
-                this.props.setItem(obj)
-            }
-            else {
-
-                obj = {
-                    username: this.props.username,
-                    password: this.props.password,
-                    email: this.props.email,
-                    role: this.props.role,
-                    phone: this.props.phone,
-                    users: [],//accepted users
-                    requests: []//new users
-                }
-                this.props.setItem(obj)
-            }
+            this.props.setItem(obj)
+            // await this.props.getItem();
+            // if (!this.props.localStorageData && this.props.role !== "admin") {
+            //     this.props.setItem(obj)
+            // }
+            // else {
+            //     console.log("admin is the present signup")
+            //     obj = {
+            //         username: this.props.username,
+            //         password: this.props.password,
+            //         email: this.props.email,
+            //         role: this.props.role,
+            //         phone: this.props.phone,
+            //         users: [],//accepted users
+            //         requests: []//new users
+            //     }
+            //     this.props.setItem(obj)
+            // }
             message.success("signup successful");
             this.setState({ submit: true, toggle: false })
         }
@@ -160,7 +162,7 @@ class SignUp extends React.Component {
                                             this.props.roleValidated === "success" ?
                                                 (this.props.role)
                                                 :
-                                                (<div>Role  <DownOutlined/></div>)
+                                                (<div>Role  <DownOutlined /></div>)
                                         }
                                     </Button>
                                 </Dropdown>
@@ -170,9 +172,7 @@ class SignUp extends React.Component {
                                 Already have an account<Link to="/login">Login Here</Link>
                             </Form.Item>
                         </Form>
-
                     </div>
-
                 </div> : null}
                 {/* {this.state.submit ? <UserHome logout={this.handleLogout}></UserHome> : null} */}
             </div>
@@ -200,11 +200,32 @@ const mapDispatchToProps = dispatch => {
                 type: "GET",
                 // payload: this.props.userName
             }),
-        setItem: (obj) =>
-            dispatch({
-                type: "SET",
-                payload: obj
-            }),
+        setItem: async (value) => {
+            axios.post('/signUp', {
+                userName: value.userName,
+                password: value.password,
+                role: value.role,
+                email: value.email,
+                accepted: false,
+                phone: value.phone,
+            }).then((res) => {
+                dispatch({
+                    type: "SUBMITSIGNUP",
+                    payload: res.data
+                })
+                if (res.data.success) {
+                    message.success("success in signup")
+                }
+                else {
+                    message.success("failed in signup")
+                }
+            }
+            ).catch((err) => {
+                console.log(err)
+                message.warn('error recieved from backend server');
+                return;
+            });
+        },
         validate: () =>
             dispatch({
                 type: "VALIDATE",

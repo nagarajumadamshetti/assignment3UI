@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, } from 'reactstrap';
 import { Button } from 'reactstrap';
-import { Upload, Button as AntButton, message, Modal as AntModal, Card,  } from 'antd';
+import { Upload, Button as AntButton, message, Modal as AntModal, Card, } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-
+import axios from '../../axios';
 import { connect } from "react-redux";
 const { Meta } = Card;
 function getBase64(file) {
@@ -115,8 +115,8 @@ class Timeline extends Component {
     }
     handleSubmitNewStage = () => {
         // if (this.state.newStageName === null || this.state.newStageName === "") {
-            // alert("enter Valid stage name");
-            // return;
+        // alert("enter Valid stage name");
+        // return;
         // }
         this.setState({
             toggleAddNewStage: !this.state.toggleAddNewStage,
@@ -167,14 +167,14 @@ class Timeline extends Component {
                 }}
                 >
                     <Button outline color="info" onClick={this.handleAddNewStageToggler}> Add new Post</Button>
-                    <Modal isOpen={this.state.toggleAddNewStage} toggle={()=>this.state.toggleAddNewStage} backdrop="static" >
+                    <Modal isOpen={this.state.toggleAddNewStage} toggle={() => this.state.toggleAddNewStage} backdrop="static" >
 
-                        <ModalHeader toggle={()=>this.state.toggleAddNewStage}>Add A NEW STAGE</ModalHeader>
+                        <ModalHeader toggle={() => this.state.toggleAddNewStage}>Add A NEW STAGE</ModalHeader>
                         <ModalBody>
                             <Form>
                                 <FormGroup>
                                     <Label for="newStage">Stage Name</Label>
-                                    <Input type="text" id="newStage"  onChange={this.newStageNameHandler} placeholder="enter description"></Input>
+                                    <Input type="text" id="newStage" onChange={this.newStageNameHandler} placeholder="enter description"></Input>
                                 </FormGroup>
                                 <FormGroup>
                                     <Upload {...props} onChange={this.handleChange}>
@@ -219,11 +219,13 @@ const mapDispatchToProps = dispatch => {
                 type: "GETUSERPOSTS",
                 payload: value
             }),
-        uploadPost: (value) =>
+        uploadPost: async (value) => {
+
             dispatch({
                 type: "UPLOADNEWPOST",
                 payload: value
-            }),
+            })
+        },
         uploadDescription: (value) =>
             dispatch({
                 type: "NEWDESCRIPTION",

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Form, Input, Button, Checkbox,message } from 'antd';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 // import { Switch } from 'react-router-dom';
+import axios from '../../axios';
 import { Redirect } from 'react-router';
 class Login extends Component {
     componentDidMount() {
         console.log("entered login cdm")
-        this.props.onNameChange('');
-        this.props.onPasswordChange('');
+        // this.props.onNameChange('');
+        // this.props.onPasswordChange('');
     }
     componentDidUpdate(prevProps, prevState) {
 
@@ -15,7 +16,10 @@ class Login extends Component {
     onFinish = async (values) => {
         console.log('Success:', values);
         console.log("submitted")
-        await this.props.onSubmit();
+        await this.props.onSubmitLogin({
+            userName: this.props.userName,
+            password: this.props.password
+        });
         if (!this.props.uSuccess) {
             message.warning("username doesnot exist");
             return;
@@ -29,7 +33,7 @@ class Login extends Component {
             return;
         }
 
-        message.success("successfully logged in",1);
+        message.success("successfully logged in", 1);
         this.props.setUserName(this.props.userName);
         // if (this.props.role === "admin") {
         //     console.log("entered if")
@@ -131,7 +135,7 @@ class Login extends Component {
                                 </Form.Item>
                             </Form>
                         </div>)}
-                        {/* <Route exact component={Logout}/> */}
+                {/* <Route exact component={Logout}/> */}
             </div>
 
         );
@@ -149,10 +153,22 @@ const mapDispatchToProps = dispatch => {
                 type: "PASSWORDCHANGE",
                 payload: value
             }),
-        onSubmit: () =>
-            dispatch({
-                type: "SUBMIT"
-            }),
+        onSubmitLogin: async (value) => {
+            await axios.post('/login', {
+                userName: value.userName,
+                password: value.password
+            })
+                .then((res) => {
+                    dispatch({
+                        type: "SUBMITLOGIN",
+                        payload: res.data
+                    })
+                })
+                .catch((err) => {
+                    console.log(err);
+                    message.error("error at onSubmitLogin diapatcher");
+                })
+        },
         setUserName: (value) =>
             dispatch({
                 type: "SETUSERNAME",

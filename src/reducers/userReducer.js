@@ -186,16 +186,6 @@ const reducer = (state = initialState, action) => {
                 userName: state.userName,
             }
         }
-        case "SETUSERNAME": {
-            console.log("entered set user name")
-            console.log(action.payload)
-            state.userName = action.payload;
-            console.log(state.userName)
-            return {
-                ...state,
-                // userName: state.userName
-            }
-        }
         case "NEWDESCRIPTION": {
             console.log("entered new descriprion")
             console.log(action.payload)

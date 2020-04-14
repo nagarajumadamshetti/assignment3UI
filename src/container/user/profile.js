@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import {  Button as AntButton, Carousel,   Card, Skeleton } from 'antd';
+import { Button as AntButton, Carousel, Card, Skeleton } from 'antd';
 
-import {  HeartTwoTone } from '@ant-design/icons';
-import {  DeleteOutlined } from '@ant-design/icons';
+import { HeartTwoTone } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import UserInfo from './userInfo';
 import { connect } from "react-redux";
 const { Meta } = Card;
@@ -38,13 +38,13 @@ class Profile extends Component {
         //     this.props.getUserPosts();
         // }
     }
-    handleLikePost = async(e) => {
+    handleLikePost = async (e) => {
         e.preventDefault();
         console.log(e.target.id);
         let obj = {
             key: e.target.id,
-            postUserName:this.props.userName,
-            presentUser:this.props.userName,
+            postUserName: this.props.userName,
+            presentUser: this.props.userName,
         }
         await this.props.onLikePost(obj);
         await this.props.getUserPosts(this.props.userName);
@@ -84,7 +84,7 @@ class Profile extends Component {
                                     <div key={key}>
                                         <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
                                             actions={[
-                                            <AntButton onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key}/>{el.likeCounter.length}</AntButton>,
+                                                <AntButton onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likeCounter.length}</AntButton>,
                                                 <AntButton
                                                     onClick={this.handleDeletePost} id={key} color="danger" type="danger"><DeleteOutlined /></AntButton>
 
@@ -140,7 +140,7 @@ const mapDispatchToProps = dispatch => {
                 type: "DELETEUSERPOST",
                 payload: value,
             }),
-            onLikePost: (value) =>
+        onLikePost: (value) =>
             dispatch({
                 type: "LIKEUSERPOST",
                 payload: value,

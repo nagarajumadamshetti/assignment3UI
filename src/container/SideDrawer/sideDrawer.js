@@ -76,16 +76,20 @@ class SideDrawer extends Component {
         }
         else {
             await this.props.onGetSignUpRequests();
-            this.props.signUpRequests.map((el, key) => {
-                // setTimeout(500);
-                return (
-                    notification.open({
-                        message: 'New Sign Up Request  ',
-                        description:
-                            `from ${el}`,
-                        // icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-                    }))
-            })
+            console.log(this.props.signUpRequests)
+            if (this.props.signUpRequests) {
+                console.log(this.props.signUpRequests)
+                this.props.signUpRequests.map((el, key) => {
+                    // setTimeout(500);
+                    return (
+                        notification.open({
+                            message: 'New Sign Up Request  ',
+                            description:
+                                `from ${el["userName"]}`,
+                            // icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+                        }))
+                })
+            }
         }
     }
     componentDidUpdate(prevProps, prevState) {
@@ -195,7 +199,7 @@ const mapStateToProps = state => ({
     toggle: state.adminReducer.toggle,
     signUpRequests: state.adminReducer.requests,
     loggedUserName: state.loginReducer.userName,
-    userName: state.userReducer.userName,
+    userName: state.loginReducer.userName,
     followRequests: state.userReducer.followRequests
 })
 const mapDispatchToProps = dispatch => {
@@ -216,7 +220,7 @@ const mapDispatchToProps = dispatch => {
             }),
         onGetSignUpRequests: () =>
             dispatch({
-                type: "GETREQUESTS"
+                type: "GETSIGNUPREQUESTS"
             })
     }
 }

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import {  Route, Link, } from 'react-router-dom';
+import { Route, Link, } from 'react-router-dom';
 import UserPageAtAdmin from './userPageAtAdmin'
+import axios from '../../axios'
+import { message } from 'antd'
 class UserList extends Component {
     constructor(props) {
         super(props);
@@ -23,18 +25,18 @@ class UserList extends Component {
     componentDidUpdate = async (prevProps, prevState) => {
         if (prevState.toggle === true) {
             // this.props.onGetList();
-        // await this.hideUserLinks()  
-        //   this.setState({ toggle: false })
+            // await this.hideUserLinks()  
+            //   this.setState({ toggle: false })
         }
     }
-    hideUserLinks =async (e) => {
+    hideUserLinks = async (e) => {
         console.log("entered hide user links")
         console.log(e.target.id)
         await this.props.setUserName(e.target.id)
         console.log(this.props.userName)
         this.props.onChangeToggle();
         this.setState({ toggle: !this.state.toggle })
-        
+
     }
     render() {
         return (
@@ -48,15 +50,16 @@ class UserList extends Component {
                                 return (
                                     <div key={key}>
                                         {/* <Link to={`/admin/userList/${el}`} >{el}</Link> */}
-                                        <br/>
-                                         <Link onClick={this.hideUserLinks} id={el} to={{
-                                            pathname: `/admin/userList/${el}`,
+                                        <br />
+                                        {console.log(el)}
+                                        <Link onClick={this.hideUserLinks} id={el.userName} to={{
+                                            pathname: `/admin/userList/${el.userName}`,
                                             // state: {
                                             //     data: key
                                             // },
                                         }}>
-                                            {el}
-                                        </Link> 
+                                            {el.userName}
+                                        </Link>
                                         {/* <br></br> */}
                                     </div>
                                 )
@@ -77,24 +80,34 @@ class UserList extends Component {
 }
 const mapStateToProps = state => ({
     userList: state.adminReducer.userList,
-    toggle:state.adminReducer.toggle,
-    userName:state.userReducer.userName,
+    toggle: state.adminReducer.toggle,
+    userName: state.loginReducer.userName,
 })
 const mapDispatchToProps = dispatch => {
     return {
-        onGetList: () =>
+        onGetList: async () => {
+            await axios.get('/admin/userList')
+                .then((res) => {
+                    console.log(res.data.users)
+                    dispatch({
+                        type: "GETUSERSLIST",
+                        payload: res.data.users
+                    })
+                })
+                .catch((err) => {
+                    console.log(err);
+                    message.error("error at get user list dispatch")
+                })
+        },
+        onChangeToggle: () =>
             dispatch({
-                type: "GETUSERSLIST"
+                type: "TOGGLEUSER"
             }),
-        onChangeToggle:()=>
-        dispatch({
-            type:"TOGGLEUSER"
-        }),
         setUserName: (value) =>
-        dispatch({
-            type: "SETUSERNAME",
-            payload: value
-        }),
+            dispatch({
+                type: "SETUSERNAME",
+                payload: value
+            }),
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(UserList));
