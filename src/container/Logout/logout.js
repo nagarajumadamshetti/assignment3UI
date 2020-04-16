@@ -19,6 +19,7 @@ export default class Logout extends Component {
     handleLogout = async (e) => {
         e.preventDefault();
         await localStorage.removeItem("role");
+        await localStorage.removeItem("token");
         this.setState({ logout: true })
     }
     render() {

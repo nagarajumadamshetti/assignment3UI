@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
-import { Button, Drawer, notification, } from 'antd';
+import { Button, Drawer, notification, message } from 'antd';
 import { Route, Link, Switch } from 'react-router-dom';
 import UserList from '../admin/userList';
 import UserRequests from '../admin/userRequests'
 import { connect } from "react-redux";
 import '@ant-design/icons';
 
+import axios from '../../axios';
 
 import {
     InstagramOutlined,
@@ -208,6 +209,7 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: "TOGGLEUSER"
             }),
+
         setUserName: (value) =>
             dispatch({
                 type: "SETUSERNAME",
@@ -218,10 +220,20 @@ const mapDispatchToProps = dispatch => {
                 type: "GETFOLLOWREQUESTS",
                 payload: value,
             }),
-        onGetSignUpRequests: () =>
-            dispatch({
-                type: "GETSIGNUPREQUESTS"
-            })
+        onGetSignUpRequests: async () => {
+            await axios.get('/admin/userRequests')
+                .then((res) => {
+                    console.log(res.data.users)
+                    dispatch({
+                        type: "GETSIGNUPREQUESTS",
+                        payload: res.data.users
+                    })
+                })
+                .catch((err) => {
+                    message.error("err at  get requests case 38")
+                    console.log(err)
+                })
+        },
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(SideDrawer));

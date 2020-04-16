@@ -76,6 +76,7 @@ class UserRequests extends Component {
 }
 const mapDispatchToProps = dispatch => {
     return {
+        
         onGetRequests: async () => {
             await axios.get('/admin/userRequests')
                 .then((res) => {

@@ -89,40 +89,6 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
             }
-            // if (state.role === "user") {
-            //     console.log("entered signup set in signup reducer")
-            //     let l = JSON.parse(localStorage.getItem("admin"));
-            //     l.requests.push(state.userName);
-            //     localStorage.setItem("admin", JSON.stringify(l));
-            //     state.localStorageData = localStorage.setItem(state.userName, JSON.stringify(action.payload))
-
-            //     axios.post('/signUp', {
-            //         userName:state.userName,
-            //         password:state.password,
-            //         role:state.role,
-            //         email:state.email,
-            //         accepted:state.accept,
-            //         phone:state.phone,
-            //     }).then((res) => {
-            //         if (res.data.success) {
-
-            //             message.success('signup success');
-            //         }
-            //         else {
-            //             message.error('Invalid credentials');
-            //             return;
-            //         }
-            //     }
-            //     ).catch((err) => {
-            //         console.log(err)
-            //         message.warn('error recieved from backend server');
-            //         return;
-            //     });
-            // }
-            // else{
-            //     localStorage.setItem(state.userName, JSON.stringify(action.payload));
-            // }
-
         }
         case "EMAIL": {
 

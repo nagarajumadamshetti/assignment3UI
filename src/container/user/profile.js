@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import { Button as AntButton, Carousel, Card, Skeleton } from 'antd';
+import { Button as AntButton, Carousel, Card, Skeleton, message } from 'antd';
+
+import axios from '../../axios';
 
 import { HeartTwoTone } from '@ant-design/icons';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -29,8 +31,8 @@ class Profile extends Component {
     }
     componentDidMount = async () => {
         console.log(this.props.userName)
-
-        await this.props.getUserPosts(this.props.userName);
+        let userName = this.props.userName
+        await this.props.getUserPosts(userName);
 
     }
     componentDidUpdate(prevProps, prevState) {
@@ -84,24 +86,24 @@ class Profile extends Component {
                                     <div key={key}>
                                         <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
                                             actions={[
-                                                <AntButton onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likeCounter.length}</AntButton>,
-                                                <AntButton
-                                                    onClick={this.handleDeletePost} id={key} color="danger" type="danger"><DeleteOutlined /></AntButton>
+                                                // <AntButton onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likeCounter.length}</AntButton>,
+                                                // <AntButton
+                                                // onClick={this.handleDeletePost} id={key} color="danger" type="danger"><DeleteOutlined /></AntButton>
 
                                             ]} >
                                             {console.log(el)}
                                             <Carousel autoplay>
                                                 {
-                                                    Object.keys(el).map((el2, key2) => {
-                                                        if (el2 !== "description" && el2 !== "likeCounter")
-                                                            return (
-                                                                <div key={key2}>
-                                                                    <img
-                                                                        alt="example"
-                                                                        src={`${el[el2].thumbUrl}`}
-                                                                    />
-                                                                </div>
-                                                            )
+                                                    (el.images).map((el2, key2) => {
+                                                        // if (el2 !== "lastModified" && el2 !== "post_id"&& el2 !== "image_id")
+                                                        return (
+                                                            <div key={key2}>
+                                                                <img
+                                                                    alt="example"
+                                                                    src={`${el2.imageUrl}`}
+                                                                />
+                                                            </div>
+                                                        )
                                                     })
                                                 }
                                             </Carousel>
@@ -123,17 +125,32 @@ class Profile extends Component {
     }
 }
 const mapStateToProps = state => ({
-    userName: state.userReducer.userName,
+    userName: state.loginReducer.userName,
     userPosts: state.userReducer.userPosts,
     searchValue: state.userReducer.searchValue,
 });
 const mapDispatchToProps = dispatch => {
     return {
-        getUserPosts: (value) =>
-            dispatch({
-                type: "GETUSERPOSTS",
-                payload: value
-            }),
+        getUserPosts: async (value) => {
+            console.log(value)
+            let id = value
+            await axios.get(`/getUserPosts/${id}`)
+                .then((res) => {
+                    console.log(res)
+                    if (res.data.success) {
+                        console.log(res.data.data.posts);
+                        dispatch({
+                            type: "GETUSERPOSTS",
+                            payload: res.data.data.posts
+                        })
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    message.error("error at profile page get user posts dispatcher")
+                })
+
+        },
 
         onDeletePost: (value) =>
             dispatch({

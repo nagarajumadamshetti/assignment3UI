@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Container } from 'reactstrap';
-import { Spin, Statistic, Row, Col, Button, Select, Menu, Dropdown, message } from 'antd';
+import { Spin, Statistic, Row, Col, Button, Select, Menu, Dropdown, message, Skeleton } from 'antd';
 import { LoadingOutlined, DownOutlined, UserOutlined } from '@ant-design/icons';
+import axios from '../../axios'
 const { Option } = Select;
 
 class UserInfo extends Component {
@@ -29,15 +30,16 @@ class UserInfo extends Component {
         }
     }
     handleUpdatingMenu = async () => {
+        console.log(this.props.followers)
         await this.setState({
             followers: (
                 <Menu >
                     {
                         this.props.followers.map((el, key) => {
                             return (
-                                <Menu.Item value={el} key={key} onClick={() => this.handleMenuClick(el)}>
+                                <Menu.Item value={el.followersUserName} key={key} onClick={() => this.handleMenuClick(el.followersUserName)}>
                                     <UserOutlined />
-                                    {el}
+                                    {el.followersUserName}
                                 </Menu.Item>
                             )
                         })
@@ -50,9 +52,9 @@ class UserInfo extends Component {
                     {
                         this.props.following.map((el, key) => {
                             return (
-                                <Menu.Item value={el} key={key} onClick={() => this.handleMenuClick(el)} >
+                                <Menu.Item value={el.followingUserName} key={key} onClick={() => this.handleMenuClick(el.followingUserName)} >
                                     <UserOutlined />
-                                    {el}
+                                    {el.followingUserName}
                                 </Menu.Item>
                             )
                         })
@@ -64,14 +66,14 @@ class UserInfo extends Component {
         console.log("user info cdm");
         await this.props.getUserFollowersAndFollowing(this.props.name);
         await this.handleUpdatingMenu();
-        await this.props.onGetFollowRequests(this.props.searchValue);
+        // await this.props.onGetFollowRequests(this.props.searchValue);
     }
     componentDidUpdate = async (prevProps, prevState) => {
         if ((prevProps.name !== this.props.name)) {
             console.log("entered userinfo cdu")
             await this.props.getUserFollowersAndFollowing(this.props.name);
             await this.handleUpdatingMenu();
-            await this.props.onGetFollowRequests(this.props.searchValue);
+            // await this.props.onGetFollowRequests(this.props.searchValue);
         }
         // if (prevProps.followRequests !== this.props.followRequests) {
         //     await this.props.onGetFollowRequests();
@@ -80,12 +82,20 @@ class UserInfo extends Component {
     handleFollow = async (myName) => {
         // e.preventDefault();
         console.log(myName)
-        await this.props.onGetFollowRequests(this.props.searchValue);
-        if(!this.props.followRequests.find(element => element === this.props.userName))
-        await this.props.followAndUnFollow(myName);
-        await this.props.getUserFollowersAndFollowing(this.props.name);
+        // await this.props.onGetFollowRequests(this.props.searchValue);
+        // if (!this.props.followRequests.find(element => element === this.props.userName))
+        if (!this.props.followers.find(element => element.followersUserName === this.props.userName)) {
+            await this.props.followAndUnFollow({ userName: myName, followed: false });
+            console.log("followed is false")
+        }
+        else {
+            await this.props.followAndUnFollow({ userName: myName, followed: true });
+        }
+        // await this.handleUpdatingMenu();
+        await this.props.getUserFollowersAndFollowing(this.props.searchValue);
+        console.log(this.props.followers);
         await this.handleUpdatingMenu();
-        await this.props.onGetFollowRequests(this.props.searchValue);
+        // await this.props.onGetFollowRequests(this.props.searchValue);
 
     }
     onChange = (value) => {
@@ -106,8 +116,6 @@ class UserInfo extends Component {
     render() {
         return (
             <div>
-                {console.log(this.props.followRequests)}
-                {console.log("hello")}
                 <Container style={{ border: '2px solid' }}>
                     {this.props.searchValue}
                     {this.props.followers && this.props.following ? (
@@ -134,24 +142,25 @@ class UserInfo extends Component {
                                     (this.props.from === "search" && (this.props.userName !== this.props.searchValue)) ? (
                                         <Button style={{ marginTop: 16 }} type="primary" onClick={() => this.handleFollow(this.props.searchValue)}>
                                             {
-                                                this.props.followers.find(element => element === this.props.userName)
+                                                this.props.followers.find(element => element.followersUserName === this.props.userName)
+                                                // false
                                                     ?
                                                     "Unfolow"
                                                     :
-                                                    // "fo"            
-                                                    (this.props.followRequests ? (this.props.followRequests.find(element => element === this.props.userName) ? "Requested" : "Follow") : <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />)
-
+                                                    "Follow"
+                                                // (this.props.followRequests ? (this.props.followRequests.find(element => element === this.props.userName) ? "Requested" : "Follow") : <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />)
                                             }
                                         </Button>
-
                                     )
                                         :
-                                        null
+                                        <Skeleton active></Skeleton>
+                                        
                                 }
                             </Col>
                         </Row>
-                    ) :
-                        null
+                    ) 
+                     :
+                        null 
                     }
 
                 </Container>
@@ -160,7 +169,7 @@ class UserInfo extends Component {
     }
 }
 const mapStateToProps = state => ({
-    userName: state.userReducer.userName,
+    userName: state.loginReducer.userName,
     followers: state.userReducer.followers,
     following: state.userReducer.following,
     searchValue: state.userReducer.searchValue,
@@ -168,16 +177,88 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => {
     return {
-        getUserFollowersAndFollowing: (value) =>
-            dispatch({
-                type: "GETUSERFOLLOWERSANDFOLLOWING",
-                payload: value
-            }),
-        followAndUnFollow: (value) =>
-            dispatch({
-                type: "FOLLOWANDUNFOLLOW",
-                payload: value
-            }),
+        getUserFollowersAndFollowing: async (value) => {
+            let id=value
+            message.info("entered get followers and following")
+           await  axios.get(`/getFollowersAndFollowing/${id}`)
+                .then((res) => {
+                    console.log(res)
+                    if (res.data.success) {
+                        message.success("success is true")
+                        dispatch({
+                            type: "GETUSERFOLLOWERSANDFOLLOWING",
+                            payload: {
+                                following: (res.data.following[0].following),
+                                followers: (res.data.followers[0].followers)
+                            }
+                        })
+                        message.success(" followers and following recieved")
+                    }
+                    else {
+                        message.warn(" followers and following NOT recieved")
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    message.error("error at info page get user follower and following dispatcher")
+                })
+
+        },
+        followAndUnFollow: async (v) => {
+            let value=v;
+            if (value.followed) {
+               await axios.post('/unFollow', {
+                    loggedUserIdToken: localStorage.getItem("token"),
+                    userName: value.userName
+                })
+                    .then((res) => {
+                        console.log(res)
+                        if (res.data.success) {
+                            dispatch({
+                                type: "FOLLOWANDUNFOLLOW",
+                                payload: {
+                                    following: (res.data.following),
+                                    followers: (res.data.followers)
+                                }
+                            })
+                            message.success(" followers and following recieved from unfollow")
+                        }
+                        else {
+                            message.warn(" followers and following NOT recieved")
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        message.error("error at user info  page follow and unfollow dispatcher")
+                    })
+            }
+            else {
+               await axios.post("/follow", {
+                    loggedUserIdToken: localStorage.getItem("token"),
+                    userName: value.userName
+                })
+                    .then((res) => {
+                        console.log(res)
+                        if (res.data.success) {
+                            dispatch({
+                                type: "FOLLOWANDUNFOLLOW",
+                                payload: {
+                                    following: (res.data.following),
+                                    followers: (res.data.followers)
+                                }
+                            })
+                            message.success(" followers and following recieved from follow")
+                        }
+                        else {
+                            message.warn(" followers and following NOT recieved")
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        message.error("error at user info  page follow and unfollow dispatcher")
+                    })
+            }
+        },
         onNewSearch: (value) =>
             dispatch({
                 type: "SEARCHUSERNAME",

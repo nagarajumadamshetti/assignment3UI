@@ -27,7 +27,7 @@ class Timeline extends Component {
         }
     }
     componentDidMount() {
-        this.props.getUserPosts(this.props.userName);
+        // this.props.getUserPosts(this.props.userName);
     }
     handlePreview = async file => {
         if (!file.url && !file.preview) {
@@ -65,9 +65,13 @@ class Timeline extends Component {
         console.log(this.state.newStageName)
         await this.props.uploadDescription(this.state.newStageName);
         console.log("p1");
-        await this.props.uploadPost(fileList);
+        await this.props.uploadPost({ 
+            fileList,
+            description:this.props.description 
+        });
         console.log("p2");
-        await this.props.getUserPosts(this.props.userName);
+        console.log(fileList)
+        // await this.props.getUserPosts(this.props.userName);
         console.log("p3");
         //axios call here
         // You can use any AJAX library you like
@@ -114,10 +118,6 @@ class Timeline extends Component {
         })
     }
     handleSubmitNewStage = () => {
-        // if (this.state.newStageName === null || this.state.newStageName === "") {
-        // alert("enter Valid stage name");
-        // return;
-        // }
         this.setState({
             toggleAddNewStage: !this.state.toggleAddNewStage,
         })
@@ -145,7 +145,7 @@ class Timeline extends Component {
                 });
             },
             beforeUpload: file => {
-                console.log("df")
+                console.log(file)
                 this.setState(state => ({
 
                     fileList: [...this.state.fileList, file],
@@ -220,11 +220,29 @@ const mapDispatchToProps = dispatch => {
                 payload: value
             }),
         uploadPost: async (value) => {
-
-            dispatch({
-                type: "UPLOADNEWPOST",
-                payload: value
+            console.log(value.fileList)
+            axios.post('/uploadNewPost', {
+                token: localStorage.getItem("token"),
+                description: value.description,
+                imageList: value.fileList
             })
+                .then((res) => {
+                    if (res.data.success) {
+                        message.success("successfully uploaded the post");
+                        dispatch({
+                            type: "UPLOADNEWPOST",
+                            payload: value.imageList
+                        })
+                    }
+                    else {
+                        message.warning("err uploading the post at BE");
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    message.error("err at upload post dispatcher");
+                })
+
         },
         uploadDescription: (value) =>
             dispatch({

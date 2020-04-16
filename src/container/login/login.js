@@ -35,6 +35,9 @@ class Login extends Component {
 
         message.success("successfully logged in", 1);
         this.props.setUserName(this.props.userName);
+        if (this.props.role === "user") {
+            this.props.setUserUserName(this.props.userName);
+        }
         // if (this.props.role === "admin") {
         //     console.log("entered if")
         //         <Route to = "/admin" >
@@ -174,6 +177,12 @@ const mapDispatchToProps = dispatch => {
                 type: "SETUSERNAME",
                 payload: value
             }),
+        setUserUserName: (value) => {
+            dispatch({
+                type: "SETUSERUSERNAME",
+                payload: value
+            })
+        },
     };
 };
 const mapStateToProps = (state) => ({
