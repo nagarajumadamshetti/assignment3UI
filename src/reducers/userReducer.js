@@ -9,6 +9,8 @@ let initialState = {
     followRequests: '',
     likeCounter: '',
     success: false,
+    timeline:'',
+    comments:'',
 }
 
 const reducer = (state = initialState, action) => {
@@ -74,6 +76,19 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
 
+            }
+        }
+        case "GETCOMMENTS": {
+            state.comments = action.payload;
+            return {
+                ...state,
+
+            }
+        }
+        case "GETTIMELINE": {
+            state.timeline = action.payload;
+            return {
+                ...state,
             }
         }
         case "NEWDESCRIPTION": {
