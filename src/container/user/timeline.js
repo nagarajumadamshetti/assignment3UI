@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, } from 'reactstrap';
 import { Button } from 'reactstrap';
-import { Upload, Button as AntButton, message, Modal as AntModal, Card, } from 'antd';
+import { Upload, Button as AntButton, message, Modal as AntModal, Card, Carousel, } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { HeartTwoTone, } from '@ant-design/icons';
 import axios from '../../axios';
+import Comments from './comments';
+
+
 import { connect } from "react-redux";
 const { Meta } = Card;
 function getBase64(file) {
@@ -26,8 +30,13 @@ class Timeline extends Component {
             previewVisible: false,
         }
     }
-    componentDidMount() {
-        // this.props.getUserPosts(this.props.userName);
+    componentDidMount = async () => {
+        await this.props.getTimeline(this.props.userName);
+    }
+    componentDidUpdate=async(prevProps, prevState)=> {
+        if (prevProps.comments !== this.props.comments) {
+           await this.props.getTimeline(this.props.userName);
+        }
     }
     handlePreview = async file => {
         if (!file.url && !file.preview) {
@@ -43,13 +52,9 @@ class Timeline extends Component {
     handleCancel = () => this.setState({ previewVisible: false });
     handleUpload = async () => {
         const { fileList } = this.state;
-        console.log(fileList)
-        console.log(this.state)
         let formData = new FormData();
 
         await fileList.forEach(file => {
-            // file={...file,}
-            console.log(file)
             file = { ...file, description: this.state.newStageName }
             formData.append('files[]', file);
         });
@@ -58,48 +63,22 @@ class Timeline extends Component {
             uploading: true,
 
         });
-        console.log(formData);
-        console.log(fileList)
-        console.log(this.props.userName)
-        // await this.props.uploadPost(formData);
-        console.log(this.state.newStageName)
+
         await this.props.uploadDescription(this.state.newStageName);
-        console.log("p1");
-        await this.props.uploadPost({ 
+
+        await this.props.uploadPost({
             fileList,
-            description:this.props.description 
+            description: this.props.description
         });
-        console.log("p2");
-        console.log(fileList)
-        // await this.props.getUserPosts(this.props.userName);
-        console.log("p3");
-        //axios call here
-        // You can use any AJAX library you like
-        // reqwest({
-        //     url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-        //     method: 'post',
-        //     processData: false,
-        //     data: formData,
-        //     success: () => {
-        //       this.setState({
-        //         fileList: [],
-        //         uploading: false,
-        //       });
-        //       message.success('upload successfully.');
-        //     },
-        //     error: () => {
-        //       this.setState({
-        //         uploading: false,
-        //       });
-        //       message.error('upload failed.');
-        //     },
-        //   });
+
+
+
         await this.setState({
             fileList: [],
             uploading: false,
             newStageName: null,
         });
-        message.success('upload successfully.');
+
 
     }
     handleAddNewStageToggler = (e) => {
@@ -124,8 +103,18 @@ class Timeline extends Component {
     }
     handleChange = ({ fileList }) => {
         this.setState({ fileList });
-        console.log("entered handle change");
+
     };
+    handleLikePost = async (e) => {
+        e.preventDefault();
+        console.log(e.target.id);
+        let obj = {
+            postId: e.target.id,
+        }
+        await this.props.onLikePost(obj);
+        await this.props.getTimeline(this.props.userName);
+
+    }
     render() {
         const uploading = this.state.uploading;
         const fileList = this.state.fileList;
@@ -145,7 +134,7 @@ class Timeline extends Component {
                 });
             },
             beforeUpload: file => {
-                console.log(file)
+
                 this.setState(state => ({
 
                     fileList: [...this.state.fileList, file],
@@ -157,7 +146,7 @@ class Timeline extends Component {
         };
         return (
             <div>
-                {/* <h1>timeline page</h1> */}
+
                 <Container style={{
                     border: '2px solid black',
                     display: 'flex',
@@ -203,6 +192,55 @@ class Timeline extends Component {
                         </ModalFooter>
                     </Modal>
                 </Container>
+                <br />
+                <Container
+                    style={{
+                        border: '2px solid black',
+                        // display: 'flex',
+                        overflowY: 'scroll',
+                        // width: '70%',
+                        height: '950px',
+                        // maxHeight: '950px'
+                    }}
+                >
+                    {this.props.timeline ?
+                        this.props.timeline.map((el, key) => {
+                            return (
+                                <div key={key} style={{ width: 240 }}>
+
+                                    <Card hoverable title={el.userName} bordered={true} style={{ width: 240 }}
+                                        actions={[
+                                            <Button onClick={this.handleLikePost} id={el.id} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.Likes.length}</Button>,
+
+                                        ]} >
+
+                                        <Carousel autoplay>
+                                            {
+                                                (el.Images).map((el2, key2) => {
+
+                                                    return (
+                                                        <div key={key2}>
+                                                            <img
+                                                                alt="example"
+                                                                src={`${el2.imageUrl}`}
+                                                            />
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </Carousel>
+
+                                        <Meta title={el.description} description="www.instagram.com" />
+
+                                    </Card>
+                                    <Comments postId={el.id}/>
+
+                                </div>
+
+                            )
+                        })
+                        : null}
+                </Container>
             </div>
         );
     }
@@ -210,17 +248,38 @@ class Timeline extends Component {
 const mapStateToProps = state => ({
     userName: state.userReducer.userName,
     userPosts: state.userReducer.userPosts,
-    description: state.userReducer.description
+    description: state.userReducer.description,
+    timeline: state.userReducer.timeline,
+    comments: state.userReducer.comments,
 })
 const mapDispatchToProps = dispatch => {
     return {
+        getTimeline: async (value) => {
+            let id = localStorage.getItem("token");
+            await axios.get(`/timeline/${id}`)
+                .then((res) => {
+                    if (res.data.success) {
+                        console.log(res.data.posts)
+                        dispatch({
+                            type: "GETTIMELINE",
+                            payload: res.data.posts
+                        })
+                    }
+                    else {
+                        message.warn("timeline not recieved")
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        },
         getUserPosts: (value) =>
             dispatch({
                 type: "GETUSERPOSTS",
                 payload: value
             }),
         uploadPost: async (value) => {
-            console.log(value.fileList)
+
             axios.post('/uploadNewPost', {
                 token: localStorage.getItem("token"),
                 description: value.description,
@@ -239,7 +298,7 @@ const mapDispatchToProps = dispatch => {
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+
                     message.error("err at upload post dispatcher");
                 })
 
@@ -249,6 +308,26 @@ const mapDispatchToProps = dispatch => {
                 type: "NEWDESCRIPTION",
                 payload: value
             }),
+
+        onLikePost: async (value) => {
+            await axios.post('/likeOrUnlikePost', {
+                loggedUserIdToken: localStorage.getItem("token"),
+                postId: value.postId
+            })
+                .then((res) => {
+                    if (res.data.success) {
+
+                        // dispatch({
+                        //     type: "LIKEUSERPOST",
+                        //     payload: res.data.likes,
+                        // })
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+
+        },
     }
 }
 export default (connect(mapStateToProps, mapDispatchToProps)(Timeline));

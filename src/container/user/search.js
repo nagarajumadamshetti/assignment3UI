@@ -5,6 +5,8 @@ import { Container } from 'reactstrap';
 import { Input, Skeleton } from 'antd';
 import UserInfo from './userInfo';
 import axios from '../../axios';
+import Comments from './comments';
+
 
 import { HeartTwoTone, } from '@ant-design/icons';
 const { Meta } = Card;
@@ -26,7 +28,7 @@ class SearchPost extends Component {
     componentDidUpdate = async (prevProps, prevState) => {
         if (prevProps.searchValue !== this.props.searchValue) {
             let searchName = this.props.searchValue;
-            console.log(searchName)
+            // console.log(searchName)
             await this.props.getUserPosts(searchName)
         }
     }
@@ -38,13 +40,14 @@ class SearchPost extends Component {
     }
     handleSearch = async () => {
         let searchName = this.props.searchValue;
-        console.log(searchName)
-        await this.props.getUserPosts(searchName)
-        console.log(this.props.posts)
+        // console.log(searchName)
+        await this.props.getUserPosts(this.props.searchValue)
+        // console.log(this.props.userPosts)
         await this.props.getUserFollowersAndFollowing(this.props.searchValue);
         searchName = this.props.searchValue;
-        console.log(searchName)
+        // console.log(searchName)
         await this.props.getUserPosts(searchName)
+
         this.setState({
             display: true,
         });
@@ -53,13 +56,11 @@ class SearchPost extends Component {
         e.preventDefault();
         console.log(e.target.id);
         let obj = {
-            key: e.target.id,
-            postUserName: this.props.searchValue,
-            presentUser: this.props.userName,
+            postId: e.target.id,
         }
         await this.props.onLikePost(obj);
         let searchName = this.props.searchValue;
-        console.log(searchName)
+        // console.log(searchName)
         await this.props.getUserPosts(searchName)
         // await this.props.getUserPosts(this.props.userName);
         // console.log(e.target.value)
@@ -70,8 +71,8 @@ class SearchPost extends Component {
                 <Input placeholder="Search user" onChange={this.newSearch} />
                 <Button type="primary" onClick={this.handleSearch}>Search</Button>
                 {
-                    this.state.display ? (
-                        this.props.userPosts ? (
+                    this.state.display && this.props.success ? (
+                        this.props.userPosts && this.props.success ? (
                             <Container
                                 style={{
                                     border: '2px solid black',
@@ -86,19 +87,19 @@ class SearchPost extends Component {
                                 }}
                             >
 
-                                <UserInfo from={"search"} name={this.state.searchValue}></UserInfo>
+                                <UserInfo from={"search"} name={this.props.searchValue}></UserInfo>
                                 {
-                                    // (this.props.followers.find(el => el.followersUserName === this.props.userName) || this.props.searchValue === this.props.userName) ?
+                                    (this.props.followers.find(el => el.followersUserName === this.props.userName) || this.props.searchValue === this.props.userName) ?
                                         this.props.userPosts.map((el, key) => {
                                             return (
-                                                <div key={key}>
+                                                <div key={key} style={{ width: 240 }}>
                                                     {/* <Carousel autoplay> */}
                                                     <Card hoverable title={this.props.searchValue} bordered={true} style={{ width: 240 }}
                                                         actions={[
-                                                            // <Button onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likeCounter.length}</Button>,
+                                                            <Button onClick={this.handleLikePost} id={el.postId} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likes.length}</Button>,
 
                                                         ]} >
-                                                        {console.log(el)}
+                                                        {/* {console.log(el)} */}
                                                         <Carousel autoplay>
                                                             {
                                                                 (el.images).map((el2, key2) => {
@@ -114,17 +115,17 @@ class SearchPost extends Component {
                                                                 })
                                                             }
                                                         </Carousel>
-                                                        {console.log(el.description)}
+
                                                         <Meta title={el.description} description="www.instagram.com" />
                                                         {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
                                                     </Card>
-
+                                                    <Comments postId={el.postId}/>
                                                     {/* </Carousel> */}
                                                 </div>
 
                                             )
-                                        }) 
-                                        // : null
+                                        })
+                                        : null
                                 }
                             </Container>
                         ) : (
@@ -133,7 +134,11 @@ class SearchPost extends Component {
                                 </div>
                             )
                     ) :
-                        <Skeleton active ></Skeleton>
+                        <div>
+                            UserNot found
+                            <Skeleton active ></Skeleton>
+                        </div>
+
                 }
             </div>);
     }
@@ -144,52 +149,80 @@ const mapStateToProps = state => ({
     searchValue: state.userReducer.searchValue,
     followRequests: state.userReducer.followRequests,
     followers: state.userReducer.followers,
+    success: state.userReducer.success
 })
 const mapDispatchToProps = dispatch => {
     return {
         getUserPosts: async (value) => {
-            console.log(value)
+            // console.log(value)
             let id = value
 
             await axios.get(`/getUserPosts/${id}`)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     if (res.data.success) {
-                        message.success("success is true")
-                        console.log(res.data.data[0].posts);
+                        // message.success("success is true")
+                        // console.log(res.data.data[0].posts);
                         dispatch({
                             type: "GETUSERPOSTS",
                             payload: res.data.data[0].posts
                         })
+                        dispatch({
+                            type: "SETGETUSERSUCCESS",
+                            payload: true
+                        })
                     }
-                    else{
-                        message.error(" success is false")
+                    else {
+                        dispatch({
+                            type: "SETGETUSERSUCCESS",
+                            payload: false
+                        })
+                        // message.error(" success is false at search get user posts")
                     }
                 })
                 .catch((err) => {
                     console.log(err);
-                    message.error("error at search page get user posts dispatcher")
+                    // message.error("error at search page get user posts dispatcher")
                 })
 
         },
-        onNewSearch: (value) =>
+        onNewSearch: (value) => {
             dispatch({
                 type: "SEARCHUSERNAME",
                 payload: value,
-            }),
-        onLikePost: (value) =>
+            })
             dispatch({
-                type: "LIKEUSERPOST",
-                payload: value,
-            }),
-        getUserFollowersAndFollowing: async (value) => {
-            let id=value
-            message.info("entered get followers and following")
-           await  axios.get(`/getFollowersAndFollowing/${id}`)
+                type: "SETGETUSERSUCCESS",
+                payload: false
+            })
+        },
+        onLikePost: async (value) => {
+            await axios.post('/likeOrUnlikePost', {
+                loggedUserIdToken:localStorage.getItem("token"),
+                postId:value.postId
+            })
                 .then((res) => {
-                    console.log(res)
                     if (res.data.success) {
-                        message.success("success is true")
+
+                        dispatch({
+                            type: "LIKEUSERPOST",
+                            payload: res.data.likes,
+                        })
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+
+        },
+        getUserFollowersAndFollowing: async (value) => {
+            let id = value
+            // message.info("entered get followers and following")
+            await axios.get(`/getFollowersAndFollowing/${id}`)
+                .then((res) => {
+                    // console.log(res)
+                    if (res.data.success) {
+                        // message.success("success is true")
                         dispatch({
                             type: "GETUSERFOLLOWERSANDFOLLOWING",
                             payload: {
@@ -197,15 +230,23 @@ const mapDispatchToProps = dispatch => {
                                 followers: (res.data.followers[0].followers)
                             }
                         })
-                        message.success(" followers and following recieved")
+                        dispatch({
+                            type: "SETGETUSERSUCCESS",
+                            payload: true
+                        })
+                        // message.success(" followers and following recieved at search")
                     }
                     else {
-                        message.warn(" followers and following NOT recieved")
+                        dispatch({
+                            type: "SETGETUSERSUCCESS",
+                            payload: false
+                        })
+                        // message.warn(" followers and following NOT recieved at search")
                     }
                 })
                 .catch((err) => {
                     console.log(err);
-                    message.error("error at search page get user follower and following dispatcher")
+                    // message.error("error at search page get user follower and following dispatcher")
                 })
 
         },
