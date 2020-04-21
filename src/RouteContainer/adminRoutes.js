@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Home from '../container/admin/home';
-import UserList from '../container/admin/userList';
-import UserRequests from '../container/admin/userRequests';
+import Home from '../Components/admin/home'
+import UserList from '../Components/admin/userList';
+import UserRequests from '../Components/admin/userRequests';
 
 const adminRoutes = () => {
     return (

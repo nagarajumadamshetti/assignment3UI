@@ -68,7 +68,7 @@ class SideDrawer extends Component {
                         notification.open({
                             message: 'New follow Request  ',
                             description:
-                                `from ${el}`,
+                                `from ${el.followRequestUserName}`,
                             icon: <SmileOutlined style={{ color: '#308ee9' }} />,
                         })
                     );
@@ -215,11 +215,23 @@ const mapDispatchToProps = dispatch => {
                 type: "SETUSERNAME",
                 payload: value
             }),
-        onGetFollowRequests: (value) =>
-            dispatch({
-                type: "GETFOLLOWREQUESTS",
-                payload: value,
-            }),
+        onGetFollowRequests: async (value) => {
+            let v = value
+            await axios.get(`/getFollowRequests/${v}`)
+                .then((res) => {
+                    if (res.data.success) {
+                        dispatch({
+                            
+                            type: "GETFOLLOWREQUESTS",
+                            payload: res.data.followRequests,
+                        })
+                    }
+                })
+                .catch((err) => {
+                    // message.error("err at  get requests case 38")
+                    console.log(err)
+                })
+        },
         onGetSignUpRequests: async () => {
             await axios.get('/admin/userRequests')
                 .then((res) => {
