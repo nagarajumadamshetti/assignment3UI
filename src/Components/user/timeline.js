@@ -5,6 +5,9 @@ import { Upload, Button as AntButton, message, Modal as AntModal, Card, Carousel
 import { UploadOutlined } from '@ant-design/icons';
 import { HeartTwoTone, } from '@ant-design/icons';
 import axios from '../../axios';
+import Comments from './comments';
+
+
 import { connect } from "react-redux";
 const { Meta } = Card;
 function getBase64(file) {
@@ -29,6 +32,11 @@ class Timeline extends Component {
     }
     componentDidMount = async () => {
         await this.props.getTimeline(this.props.userName);
+    }
+    componentDidUpdate=async(prevProps, prevState)=> {
+        if (prevProps.comments !== this.props.comments) {
+           await this.props.getTimeline(this.props.userName);
+        }
     }
     handlePreview = async file => {
         if (!file.url && !file.preview) {
@@ -104,11 +112,8 @@ class Timeline extends Component {
             postId: e.target.id,
         }
         await this.props.onLikePost(obj);
-        let searchName = this.props.searchValue;
-        // console.log(searchName)
         await this.props.getTimeline(this.props.userName);
-        // await this.props.getUserPosts(this.props.userName);
-        // console.log(e.target.value)
+
     }
     render() {
         const uploading = this.state.uploading;
@@ -141,7 +146,7 @@ class Timeline extends Component {
         };
         return (
             <div>
-                {/* <h1>timeline page</h1> */}
+
                 <Container style={{
                     border: '2px solid black',
                     display: 'flex',
@@ -192,26 +197,27 @@ class Timeline extends Component {
                     style={{
                         border: '2px solid black',
                         // display: 'flex',
-                        // overflowY: 'scroll',
+                        overflowY: 'scroll',
                         // width: '70%',
-                        // maxHeight: '150px'
+                        height: '950px',
+                        // maxHeight: '950px'
                     }}
                 >
                     {this.props.timeline ?
                         this.props.timeline.map((el, key) => {
                             return (
-                                <div key={key}>
-                                    {/* <Carousel autoplay> */}
+                                <div key={key} style={{ width: 240 }}>
+
                                     <Card hoverable title={el.userName} bordered={true} style={{ width: 240 }}
                                         actions={[
                                             <Button onClick={this.handleLikePost} id={el.id} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.Likes.length}</Button>,
 
                                         ]} >
-                                        {/* {console.log(el)} */}
+
                                         <Carousel autoplay>
                                             {
                                                 (el.Images).map((el2, key2) => {
-                                                    // if (el2 !== "lastModified" && el2 !== "post_id"&& el2 !== "image_id")
+
                                                     return (
                                                         <div key={key2}>
                                                             <img
@@ -225,10 +231,10 @@ class Timeline extends Component {
                                         </Carousel>
 
                                         <Meta title={el.description} description="www.instagram.com" />
-                                        {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
-                                    </Card>
 
-                                    {/* </Carousel> */}
+                                    </Card>
+                                    <Comments postId={el.id}/>
+
                                 </div>
 
                             )
@@ -243,7 +249,8 @@ const mapStateToProps = state => ({
     userName: state.userReducer.userName,
     userPosts: state.userReducer.userPosts,
     description: state.userReducer.description,
-    timeline:state.userReducer.timeline
+    timeline: state.userReducer.timeline,
+    comments: state.userReducer.comments,
 })
 const mapDispatchToProps = dispatch => {
     return {
@@ -252,7 +259,7 @@ const mapDispatchToProps = dispatch => {
             await axios.get(`/timeline/${id}`)
                 .then((res) => {
                     if (res.data.success) {
-                        console.log(res.data.timeline)
+                        console.log(res.data.posts)
                         dispatch({
                             type: "GETTIMELINE",
                             payload: res.data.posts
@@ -301,7 +308,7 @@ const mapDispatchToProps = dispatch => {
                 type: "NEWDESCRIPTION",
                 payload: value
             }),
-            
+
         onLikePost: async (value) => {
             await axios.post('/likeOrUnlikePost', {
                 loggedUserIdToken: localStorage.getItem("token"),

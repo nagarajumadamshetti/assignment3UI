@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Profile from '../user/profile';
+
 class UserPageAtAdmin extends Component {
     constructor(props) {
         super(props);

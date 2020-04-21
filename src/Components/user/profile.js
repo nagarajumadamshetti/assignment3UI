@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import { Button as AntButton, Carousel, Card, Skeleton, message } from 'antd';
+import { Button as AntButton, Carousel, Card, Skeleton, message, Pagination } from 'antd';
 
 import axios from '../../axios';
 
 import { HeartTwoTone } from '@ant-design/icons';
 import { DeleteOutlined } from '@ant-design/icons';
 import UserInfo from './userInfo';
+import Comments from './comments';
 import { connect } from "react-redux";
 const { Meta } = Card;
 function getBase64(file) {
@@ -30,23 +31,21 @@ class Profile extends Component {
         }
     }
     componentDidMount = async () => {
-        console.log(this.props.userName)
+        // console.log(this.props.userName)
         let userName = this.props.userName
-        await this.props.getUserPosts(userName);
+        await this.props.getUserPosts(this.props.userName);
 
     }
     componentDidUpdate(prevProps, prevState) {
-        // if (prevProps.userPosts !== this.props.userPosts) {
-        //     this.props.getUserPosts();
-        // }
+        if (prevProps.comments !== this.props.comments) {
+            this.props.getUserPosts(this.props.userName);
+        }
     }
     handleLikePost = async (e) => {
         e.preventDefault();
-        console.log(e.target.id);
+        // console.log(e.target.id);
         let obj = {
-            key: e.target.id,
-            postUserName: this.props.userName,
-            presentUser: this.props.userName,
+            postId: e.target.id,
         }
         await this.props.onLikePost(obj);
         await this.props.getUserPosts(this.props.userName);
@@ -54,9 +53,9 @@ class Profile extends Component {
     }
     handleDeletePost = async (e) => {
         e.preventDefault();
-        console.log(e.target.id)
+        // console.log(e.target.id)
         let obj = {
-            key: e.target.id,
+            postId: e.target.id,
         }
         await this.props.onDeletePost(obj);
         await this.props.getUserPosts(this.props.userName);
@@ -81,17 +80,17 @@ class Profile extends Component {
                         <UserInfo from={"profile"} name={this.props.userName}></UserInfo>
                         {
                             this.props.userPosts.map((el, key) => {
-                                console.log("profile 75")
+                                // console.log("profile 75")
                                 return (
-                                    <div key={key}>
+                                    <div key={key} style={{ width: 240 }}>
                                         <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
                                             actions={[
-                                                // <AntButton onClick={this.handleLikePost} id={key} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likeCounter.length}</AntButton>,
-                                                // <AntButton
-                                                // onClick={this.handleDeletePost} id={key} color="danger" type="danger"><DeleteOutlined /></AntButton>
+                                                <AntButton onClick={this.handleLikePost} id={el.postId} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likes.length}</AntButton>,
+                                                <AntButton
+                                                    onClick={this.handleDeletePost} id={el.postId} color="danger" type="danger"><DeleteOutlined /></AntButton>
 
                                             ]} >
-                                            {console.log(el)}
+                                            {/* {console.log(el)} */}
                                             <Carousel autoplay>
                                                 {
                                                     (el.images).map((el2, key2) => {
@@ -109,17 +108,19 @@ class Profile extends Component {
                                             </Carousel>
                                             {console.log(el.description)}
                                             <Meta title={el.description} description="www.instagram.com" />
-                                            {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
-                                        </Card>
-
-                                        {/* </Carousel> */}
+                                            
+                                            </Card>
+                                            <Comments postId={el.postId}/>
+                                        <br/>
                                     </div>
 
                                 )
                             })
                         }
+                        <Pagination defaultCurrent={1} total={50} />
                     </Container>
                 ) : <Skeleton active ></Skeleton>}
+
             </div>
         );
     }
@@ -128,40 +129,72 @@ const mapStateToProps = state => ({
     userName: state.loginReducer.userName,
     userPosts: state.userReducer.userPosts,
     searchValue: state.userReducer.searchValue,
+    comments: state.userReducer.comments,
 });
 const mapDispatchToProps = dispatch => {
     return {
         getUserPosts: async (value) => {
-            console.log(value)
+            // console.log(value)
             let id = value
+
             await axios.get(`/getUserPosts/${id}`)
                 .then((res) => {
-                    console.log(res)
                     if (res.data.success) {
-                        console.log(res.data.data.posts);
+                        // message.success("success is true")
+                        // console.log(res.data.data[0].posts);
                         dispatch({
                             type: "GETUSERPOSTS",
-                            payload: res.data.data.posts
+                            payload: res.data.data[0].posts
+                        })
+                    }
+                    else {
+                        // message.error(" success is false")
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                    // message.error("error at profile page get user posts dispatcher")
+                })
+
+        },
+
+        onDeletePost: async (value) => {
+            await axios.post('/deletePost', {
+                postId: value.postId
+            })
+                .then((res) => {
+                    if (res.data.success) {
+
+                        dispatch({
+                            type: "DELETEUSERPOST",
+                            payload: res.data.posts,
                         })
                     }
                 })
                 .catch((err) => {
                     console.log(err);
-                    message.error("error at profile page get user posts dispatcher")
                 })
 
         },
+        onLikePost: async (value) => {
+            await axios.post('/likeOrUnlikePost', {
+                loggedUserIdToken: localStorage.getItem("token"),
+                postId: value.postId
+            })
+                .then((res) => {
+                    if (res.data.success) {
 
-        onDeletePost: (value) =>
-            dispatch({
-                type: "DELETEUSERPOST",
-                payload: value,
-            }),
-        onLikePost: (value) =>
-            dispatch({
-                type: "LIKEUSERPOST",
-                payload: value,
-            }),
+                        dispatch({
+                            type: "LIKEUSERPOST",
+                            payload: res.data.likes,
+                        })
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+
+        },
         setUserName: (value) =>
             dispatch({
                 type: "SETUSERNAME",

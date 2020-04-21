@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import SignUp from './container/signup/signup';
-import Search from './container/user/search';
-import Profile from './container/user/profile';
-import Timeline from './container/user/timeline';
+import SignUp from './Components/signup/signup';
+import Search from './Components/user/search';
+import Profile from './Components/user/profile';
+import Timeline from './Components/user/timeline';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Login from './container/login/login';
-import UserList from './container/admin/userList'
-import UserRequests from './container/admin/userRequests';
-import SideDrawer from './container/SideDrawer/sideDrawer';
+import Login from './Components/login/login';
+import UserList from './Components/admin/userList'
+import UserRequests from './Components/admin/userRequests';
+import SideDrawer from './Components/SideDrawer/sideDrawer';
 import { Provider } from 'react-redux';
 import reducer from './reducers/index';
 import { createStore } from 'redux';

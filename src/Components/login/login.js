@@ -6,7 +6,7 @@ import axios from '../../axios';
 import { Redirect } from 'react-router';
 class Login extends Component {
     componentDidMount() {
-        console.log("entered login cdm")
+        // console.log("entered login cdm")
         // this.props.onNameChange('');
         // this.props.onPasswordChange('');
     }
@@ -14,8 +14,8 @@ class Login extends Component {
 
     }
     onFinish = async (values) => {
-        console.log('Success:', values);
-        console.log("submitted")
+        // console.log('Success:', values);
+        // console.log("submitted")
         await this.props.onSubmitLogin({
             userName: this.props.userName,
             password: this.props.password
@@ -33,7 +33,7 @@ class Login extends Component {
             return;
         }
 
-        message.success("successfully logged in", 1);
+        // message.success("successfully logged in", 1);
         this.props.setUserName(this.props.userName);
         if (this.props.role === "user") {
             this.props.setUserUserName(this.props.userName);
@@ -47,11 +47,11 @@ class Login extends Component {
     };
 
     onFinishFailed = errorInfo => {
-        console.log('Failed:', errorInfo);
+        // console.log('Failed:', errorInfo);
     };
     handleNameChange = (e) => {
         this.props.onNameChange(e.target.value);
-        console.log("name handler")
+        // console.log("name handler")
     }
     handlePasswordChange = (e) => {
         this.props.onPasswordChange(e.target.value);
