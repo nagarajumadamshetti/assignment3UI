@@ -5,7 +5,7 @@ const initialState = {
     success: false,
     // uSuccess:'',
     // pSuccess:'',
-    role:'',
+    role: '',
 }
 
 const reducer = (state = initialState, action) => {
@@ -14,29 +14,26 @@ const reducer = (state = initialState, action) => {
             state.userName = action.payload
             return {
                 ...state,
-                userName: action.payload
             }
         }
 
         case "SETUSERNAME": {
-            console.log("entered set user name")
-            console.log(action.payload)
             state.userName = action.payload;
-            console.log(state.userName)
             return {
                 ...state,
             }
         }
+
         case "PASSWORDCHANGE": {
+            state.password = action.payload
             return {
                 ...state,
-                password: action.payload
             }
         }
         case "SUBMITLOGIN": {
-            state.role=action.payload.role;
-            localStorage.setItem("role",state.role);
-            localStorage.setItem("token",action.payload.token);
+            state.role = action.payload.role;
+            localStorage.setItem("role", state.role);
+            localStorage.setItem("token", action.payload.token);
             return {
                 ...state,
                 uSuccess: action.payload.uSuccess,

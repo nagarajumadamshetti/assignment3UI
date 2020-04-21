@@ -3,7 +3,6 @@ import "antd/dist/antd.css";
 import { Button, Form, Input, Drawer, Dropdown, Menu, message } from 'antd';
 import { connect } from "react-redux";
 import { DownOutlined } from '@ant-design/icons';
-// import UserHome from './user/userHome';
 import axios from '../../axios';
 import { Link } from 'react-router-dom';
 
@@ -26,47 +25,28 @@ class SignUp extends React.Component {
                 email: this.props.email,
                 role: this.props.role,
                 phone: this.props.phone,
-                // posts: [],
                 accepted: false,
-                // followers: [],
-                // following: [],
-                // followRequests: [],
             }
+            console.log(this.props.success)
             await this.props.validate();
-            console.log(this.props.success);
-            console.log(this.props.userName);
+            console.log(this.props.success)
             if (!this.props.success) {
-                message.error("not valid");
+                message.error("not valid at 32");
                 return;
             }
             this.props.setItem(obj)
-            // await this.props.getItem();
-            // if (!this.props.localStorageData && this.props.role !== "admin") {
-            //     this.props.setItem(obj)
-            // }
-            // else {
-            //     console.log("admin is the present signup")
-            //     obj = {
-            //         username: this.props.username,
-            //         password: this.props.password,
-            //         email: this.props.email,
-            //         role: this.props.role,
-            //         phone: this.props.phone,
-            //         users: [],//accepted users
-            //         requests: []//new users
-            //     }
-            //     this.props.setItem(obj)
-            // }
             message.success("signup successful");
             this.setState({ submit: true, toggle: false })
         }
         else {
             message.warn("enter username and password", 3000);
-            // this.props.onSubmit()
         }
     }
     handleLogout = () => {
-        this.setState({ submit: false, toggle: true })
+        this.setState({
+            submit: false,
+            toggle: true
+        })
         this.props.onLogout()
         alert("logout successful", 1000);
     }
@@ -174,91 +154,8 @@ class SignUp extends React.Component {
                         </Form>
                     </div>
                 </div> : null}
-                {/* {this.state.submit ? <UserHome logout={this.handleLogout}></UserHome> : null} */}
             </div>
         );
     }
 }
-const mapDispatchToProps = dispatch => {
-    return {
-        onNameChange: (value) =>
-            dispatch({
-                type: "USERNAMECHANGE",
-                payload: value
-            }),
-        onPasswordChange: (value) =>
-            dispatch({
-                type: "PASSWORDCHANGE",
-                payload: value
-            }),
-        onLogout: () =>
-            dispatch({
-                type: "LOGOUT",
-            }),
-        getItem: () =>
-            dispatch({
-                type: "GET",
-                // payload: this.props.userName
-            }),
-        setItem: async (value) => {
-            axios.post('/signUp', {
-                userName: value.userName,
-                password: value.password,
-                role: value.role,
-                email: value.email,
-                accepted: false,
-                phone: value.phone,
-            }).then((res) => {
-                dispatch({
-                    type: "SUBMITSIGNUP",
-                    payload: res.data
-                })
-                if (res.data.success) {
-                    message.success("success in signup")
-                }
-                else {
-                    message.success("failed in signup")
-                }
-            }
-            ).catch((err) => {
-                console.log(err)
-                message.warn('error recieved from backend server');
-                return;
-            });
-        },
-        validate: () =>
-            dispatch({
-                type: "VALIDATE",
-            }),
-        setEmail: (value) =>
-            dispatch({
-                type: "EMAIL",
-                payload: value
-            }),
-        setRole: (value) =>
-            dispatch({
-                type: "ROLE",
-                payload: value
-            }),
-        setPhone: (value) =>
-            dispatch({
-                type: "PHONE",
-                payload: value
-            }),
-    };
-};
-const mapStateToProps = (state) => ({
-    userName: state.signUpReducer.userName,
-    password: state.signUpReducer.password,
-    localStorageData: state.signUpReducer.localStorageData,
-    phone: state.signUpReducer.phone,
-    role: state.signUpReducer.role,
-    email: state.signUpReducer.email,
-    success: state.signUpReducer.success,
-    userNameValidated: state.signUpReducer.userNameValidated,
-    passwordValidated: state.signUpReducer.passwordValidated,
-    emailValidated: state.signUpReducer.emailValidated,
-    phoneValidated: state.signUpReducer.phoneValidated,
-    roleValidated: state.signUpReducer.roleValidated,
-})
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+export default SignUp;

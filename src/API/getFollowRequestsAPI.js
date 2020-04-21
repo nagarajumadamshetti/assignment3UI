@@ -1,8 +1,9 @@
 import axios from '../axios';
-const getFollowRequestsAPI = async (value) => {
+const getFollowRequestsAPI = async (v) => {
     try {
-        let v = value;
-        return await axios.get(`/getFollowRequests/${v}`)
+        console.log(v)
+        let value=v;
+        return await axios.get(`/getFollowRequests/${value}`)
     } catch (error) {
         console.log(error)
     }

@@ -19,17 +19,15 @@ const reducer = (state = initialState, action) => {
         case "GETUSERDATA": {
             return {
                 ...state,
-
             }
         }
+
         case "TOGGLEUSER": {
             state.toggle = !state.toggle
             return {
                 ...state,
-                toggle: state.toggle
             }
         }
-
 
         case "GETSIGNUPREQUESTS": {
             state.requests = action.payload
@@ -39,23 +37,24 @@ const reducer = (state = initialState, action) => {
         }
 
         case "GETUSERSLIST": {
-            console.log(action.payload)
             state.userList=action.payload
             return {
                 ...state,
             }
         }
+
         case "ACCEPT": {
-            console.log("entered accept")
             return {
                 ...state,
             }
         }
+
         case "DECLINE": {
             return {
                 ...state,
             }
         }
+        
         default: return state;
     }
 }

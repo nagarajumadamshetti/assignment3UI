@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import { Route, Link, } from 'react-router-dom';
-import UserPageAtAdmin from './userPageAtAdmin'
+import UserPageAtAdmin from '../../Containers/adminContainers/userPageAtAdminContainer';
 import axios from '../../axios'
 import { message } from 'antd'
 class UserList extends Component {
@@ -11,8 +11,6 @@ class UserList extends Component {
         this.state = {
             toggle: false
         }
-        console.log(this.state.toggle)
-        console.log("entered userlist")
     }
     componentDidMount() {
 
@@ -31,10 +29,7 @@ class UserList extends Component {
         }
     }
     hideUserLinks = async (e) => {
-        console.log("entered hide user links")
-        console.log(e.target.id)
         await this.props.setUserName(e.target.id)
-        console.log(this.props.userName)
         this.props.onChangeToggle();
         this.setState({ toggle: !this.state.toggle })
 
@@ -42,73 +37,38 @@ class UserList extends Component {
     render() {
         return (
             <div>
-                {/* <Router> */}
-                {!this.props.toggle ? (
-                    <div>
-                        <h1>User List</h1>
-                        {this.props.userList ? (
-                            this.props.userList.map((el, key) => {
-                                return (
-                                    <div key={key}>
-                                        {/* <Link to={`/admin/userList/${el}`} >{el}</Link> */}
-                                        <br />
-                                        {console.log(el)}
-                                        <Link onClick={this.hideUserLinks} id={el.userName} to={{
-                                            pathname: `/admin/userList/${el.userName}`,
-                                            // state: {
-                                            //     data: key
-                                            // },
-                                        }}>
-                                            {el.userName}
-                                        </Link>
-                                        {/* <br></br> */}
-                                    </div>
+                {
+                    !this.props.toggle
+                        ?
+                        (
+                            <div>
+                                <h1>User List</h1>
+                                {this.props.userList ? (
+                                    this.props.userList.map((el, key) => {
+                                        return (
+                                            <div key={key}>
+                                                {/* <Link to={`/admin/userList/${el}`} >{el}</Link> */}
+                                                <br />
+                                                {console.log(el)}
+                                                <Link onClick={this.hideUserLinks} id={el.userName} to={{
+                                                    pathname: `/admin/userList/${el.userName}`,
+                                                }}>
+                                                    {el.userName}
+                                                </Link>
+                                            </div>
+                                        )
+                                    })
                                 )
-                            })
-                        ) : null}
-                    </div>
-                ) : (
-                        <div>
-                            <Route path="/admin/userList/:id" exact component={UserPageAtAdmin} />
-                        </div>
-                    )}
-
-
-                {/* </Router> */}
+                                    : null
+                                }
+                            </div>
+                        ) : (
+                            <div>
+                                <Route path="/admin/userList/:id" exact component={UserPageAtAdmin} />
+                            </div>
+                        )}
             </div>
         );
     }
 }
-const mapStateToProps = state => ({
-    userList: state.adminReducer.userList,
-    toggle: state.adminReducer.toggle,
-    userName: state.loginReducer.userName,
-})
-const mapDispatchToProps = dispatch => {
-    return {
-        onGetList: async () => {
-            await axios.get('/admin/userList')
-                .then((res) => {
-                    console.log(res.data.users)
-                    dispatch({
-                        type: "GETUSERSLIST",
-                        payload: res.data.users
-                    })
-                })
-                .catch((err) => {
-                    console.log(err);
-                    message.error("error at get user list dispatch")
-                })
-        },
-        onChangeToggle: () =>
-            dispatch({
-                type: "TOGGLEUSER"
-            }),
-        setUserName: (value) =>
-            dispatch({
-                type: "SETUSERNAME",
-                payload: value
-            }),
-    }
-}
-export default (connect(mapStateToProps, mapDispatchToProps)(UserList));
+export default UserList;

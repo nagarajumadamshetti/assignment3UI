@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Form, Input, Button, Checkbox, message } from 'antd';
-// import { Switch } from 'react-router-dom';
+
 import axios from '../../axios';
 import { Redirect } from 'react-router';
 class Login extends Component {
@@ -14,8 +14,7 @@ class Login extends Component {
 
     }
     onFinish = async (values) => {
-        // console.log('Success:', values);
-        // console.log("submitted")
+
         await this.props.onSubmitLogin({
             userName: this.props.userName,
             password: this.props.password
@@ -33,17 +32,10 @@ class Login extends Component {
             return;
         }
 
-        // message.success("successfully logged in", 1);
         this.props.setUserName(this.props.userName);
         if (this.props.role === "user") {
             this.props.setUserUserName(this.props.userName);
         }
-        // if (this.props.role === "admin") {
-        //     console.log("entered if")
-        //         <Route to = "/admin" >
-        //             <Home></Home> 
-        //     </Route >
-        //  }
     };
 
     onFinishFailed = errorInfo => {
@@ -71,7 +63,6 @@ class Login extends Component {
                 span: 16,
             },
         };
-        // let role=this.props.role
         return (
             <div >
                 {this.props.success ? (
@@ -137,61 +128,12 @@ class Login extends Component {
                                     <Button type="primary" htmlType="submit" >Submit</Button>
                                 </Form.Item>
                             </Form>
-                        </div>)}
-                {/* <Route exact component={Logout}/> */}
+                        </div>
+                    )
+                }
             </div>
 
         );
     }
 }
-const mapDispatchToProps = dispatch => {
-    return {
-        onNameChange: (value) =>
-            dispatch({
-                type: "USERNAMECHANGE",
-                payload: value
-            }),
-        onPasswordChange: (value) =>
-            dispatch({
-                type: "PASSWORDCHANGE",
-                payload: value
-            }),
-        onSubmitLogin: async (value) => {
-            await axios.post('/login', {
-                userName: value.userName,
-                password: value.password
-            })
-                .then((res) => {
-                    dispatch({
-                        type: "SUBMITLOGIN",
-                        payload: res.data
-                    })
-                })
-                .catch((err) => {
-                    console.log(err);
-                    message.error("error at onSubmitLogin diapatcher");
-                })
-        },
-        setUserName: (value) =>
-            dispatch({
-                type: "SETUSERNAME",
-                payload: value
-            }),
-        setUserUserName: (value) => {
-            dispatch({
-                type: "SETUSERUSERNAME",
-                payload: value
-            })
-        },
-    };
-};
-const mapStateToProps = (state) => ({
-    userName: state.loginReducer.userName,
-    password: state.loginReducer.password,
-    localStorageData: state.loginReducer.localStorageData,
-    success: state.loginReducer.success,
-    uSuccess: state.loginReducer.uSuccess,
-    pSuccess: state.loginReducer.pSuccess,
-    role: state.loginReducer.role,
-});
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;

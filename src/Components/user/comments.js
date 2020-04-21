@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import { Comment, Avatar, Form, Button, List, Input } from 'antd';
-import moment from 'moment';
-import axios from '../../axios';
-import { connect } from "react-redux";
 const { TextArea } = Input;
 
 const CommentList = ({ comments }) => (
@@ -102,55 +99,5 @@ class Comments extends Component {
         );
     }
 }
-const mapStateToProps = state => ({
-    userName: state.userReducer.userName,
-    userPosts: state.userReducer.userPosts,
-    description: state.userReducer.description,
-    timeline: state.userReducer.timeline,
-    comments: state.userReducer.comments,
-})
-const mapDispatchToProps = dispatch => {
-    return {
 
-        onCommentPost: async (v) => {
-            let value=v;
-            await axios.post('/addComment', {
-                token: localStorage.getItem("token"),
-                postId: value.postId,
-                comment: value.comment,
-            })
-                .then((res) => {
-                    if (res.data.success) {
-
-                        dispatch({
-                            type: "GETCOMMENTS",
-                            payload: res.data.comments,
-                        })
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-
-        },
-        onGetComments: async (value) => {
-            let v = value;
-            await axios.get(`/getComments/${v}`)
-                .then((res) => {
-                    if (res.data.success) {
-
-                        dispatch({
-                            type: "GETCOMMENTS",
-                            payload: res.data.data[0].comments,
-                        })
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-
-        },
-    }
-}
-export default (connect(mapStateToProps, mapDispatchToProps)(Comments));
-// export default Comments;
+export default Comments;

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { Button, Carousel, Card, message, } from 'antd';
+
+import { Button, Carousel, Card, message,Input, Skeleton  } from 'antd';
+
 import { Container } from 'reactstrap';
-import { Input, Skeleton } from 'antd';
-import UserInfo from './userInfo';
-import axios from '../../axios';
-import Comments from './comments';
+
+import UserInfo from '../../Containers/userContainers/userInfoContainer';
+import Comments from '../../Containers/userContainers/commentsContainer';
 
 
 import { HeartTwoTone, } from '@ant-design/icons';
 const { Meta } = Card;
-// const { Search } = Input;
+
 class SearchPost extends Component {
     constructor(props) {
         super(props);
@@ -27,9 +27,9 @@ class SearchPost extends Component {
     }
     componentDidUpdate = async (prevProps, prevState) => {
         if (prevProps.searchValue !== this.props.searchValue) {
-            let searchName = this.props.searchValue;
+            // let searchName = this.props.searchValue;
             // console.log(searchName)
-            await this.props.getUserPosts(searchName)
+            // await this.props.getUserPosts(searchName)
         }
     }
     newSearch = async (e) => {
@@ -143,113 +143,4 @@ class SearchPost extends Component {
             </div>);
     }
 }
-const mapStateToProps = state => ({
-    userName: state.userReducer.userName,
-    userPosts: state.userReducer.userPosts,
-    searchValue: state.userReducer.searchValue,
-    followRequests: state.userReducer.followRequests,
-    followers: state.userReducer.followers,
-    success: state.userReducer.success
-})
-const mapDispatchToProps = dispatch => {
-    return {
-        getUserPosts: async (value) => {
-            // console.log(value)
-            let id = value
-
-            await axios.get(`/getUserPosts/${id}`)
-                .then((res) => {
-                    // console.log(res)
-                    if (res.data.success) {
-                        // message.success("success is true")
-                        // console.log(res.data.data[0].posts);
-                        dispatch({
-                            type: "GETUSERPOSTS",
-                            payload: res.data.data[0].posts
-                        })
-                        dispatch({
-                            type: "SETGETUSERSUCCESS",
-                            payload: true
-                        })
-                    }
-                    else {
-                        dispatch({
-                            type: "SETGETUSERSUCCESS",
-                            payload: false
-                        })
-                        // message.error(" success is false at search get user posts")
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                    // message.error("error at search page get user posts dispatcher")
-                })
-
-        },
-        onNewSearch: (value) => {
-            dispatch({
-                type: "SEARCHUSERNAME",
-                payload: value,
-            })
-            dispatch({
-                type: "SETGETUSERSUCCESS",
-                payload: false
-            })
-        },
-        onLikePost: async (value) => {
-            await axios.post('/likeOrUnlikePost', {
-                loggedUserIdToken:localStorage.getItem("token"),
-                postId:value.postId
-            })
-                .then((res) => {
-                    if (res.data.success) {
-
-                        dispatch({
-                            type: "LIKEUSERPOST",
-                            payload: res.data.likes,
-                        })
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-
-        },
-        getUserFollowersAndFollowing: async (value) => {
-            let id = value
-            // message.info("entered get followers and following")
-            await axios.get(`/getFollowersAndFollowing/${id}`)
-                .then((res) => {
-                    // console.log(res)
-                    if (res.data.success) {
-                        // message.success("success is true")
-                        dispatch({
-                            type: "GETUSERFOLLOWERSANDFOLLOWING",
-                            payload: {
-                                following: (res.data.following[0].following),
-                                followers: (res.data.followers[0].followers)
-                            }
-                        })
-                        dispatch({
-                            type: "SETGETUSERSUCCESS",
-                            payload: true
-                        })
-                        // message.success(" followers and following recieved at search")
-                    }
-                    else {
-                        dispatch({
-                            type: "SETGETUSERSUCCESS",
-                            payload: false
-                        })
-                        // message.warn(" followers and following NOT recieved at search")
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                    // message.error("error at search page get user follower and following dispatcher")
-                })
-
-        },
-    }
-}
-export default (connect(mapStateToProps, mapDispatchToProps)(SearchPost));
+export default SearchPost

@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, } from 'reactstrap';
-import { Button } from 'reactstrap';
+
+import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Button} from 'reactstrap';
+ 
 import { Upload, Button as AntButton, message, Modal as AntModal, Card, Carousel, } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { HeartTwoTone, } from '@ant-design/icons';
-import axios from '../../axios';
-import Comments from './comments';
+
+import { HeartTwoTone,UploadOutlined, } from '@ant-design/icons';
+
+// import UserInfo from '../../Containers/userContainers/userInfoContainer';
+import Comments from '../../Containers/userContainers/commentsContainer';
 
 
-import { connect } from "react-redux";
 const { Meta } = Card;
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -70,8 +71,6 @@ class Timeline extends Component {
             fileList,
             description: this.props.description
         });
-
-
 
         await this.setState({
             fileList: [],
@@ -245,90 +244,6 @@ class Timeline extends Component {
         );
     }
 }
-const mapStateToProps = state => ({
-    userName: state.userReducer.userName,
-    userPosts: state.userReducer.userPosts,
-    description: state.userReducer.description,
-    timeline: state.userReducer.timeline,
-    comments: state.userReducer.comments,
-})
-const mapDispatchToProps = dispatch => {
-    return {
-        getTimeline: async (value) => {
-            let id = localStorage.getItem("token");
-            await axios.get(`/timeline/${id}`)
-                .then((res) => {
-                    if (res.data.success) {
-                        console.log(res.data.posts)
-                        dispatch({
-                            type: "GETTIMELINE",
-                            payload: res.data.posts
-                        })
-                    }
-                    else {
-                        message.warn("timeline not recieved")
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-        },
-        getUserPosts: (value) =>
-            dispatch({
-                type: "GETUSERPOSTS",
-                payload: value
-            }),
-        uploadPost: async (value) => {
 
-            axios.post('/uploadNewPost', {
-                token: localStorage.getItem("token"),
-                description: value.description,
-                imageList: value.fileList
-            })
-                .then((res) => {
-                    if (res.data.success) {
-                        message.success("successfully uploaded the post");
-                        dispatch({
-                            type: "UPLOADNEWPOST",
-                            payload: value.imageList
-                        })
-                    }
-                    else {
-                        message.warning("err uploading the post at BE");
-                    }
-                })
-                .catch((err) => {
 
-                    message.error("err at upload post dispatcher");
-                })
-
-        },
-        uploadDescription: (value) =>
-            dispatch({
-                type: "NEWDESCRIPTION",
-                payload: value
-            }),
-
-        onLikePost: async (value) => {
-            await axios.post('/likeOrUnlikePost', {
-                loggedUserIdToken: localStorage.getItem("token"),
-                postId: value.postId
-            })
-                .then((res) => {
-                    if (res.data.success) {
-
-                        // dispatch({
-                        //     type: "LIKEUSERPOST",
-                        //     payload: res.data.likes,
-                        // })
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-
-        },
-    }
-}
-export default (connect(mapStateToProps, mapDispatchToProps)(Timeline));
-// export default Timeline;
+export default Timeline;
