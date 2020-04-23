@@ -117,7 +117,7 @@ class UserInfo extends Component {
         return (
             <div>
                 <Container style={{ border: '2px solid' }}>
-                    {this.props.searchValue}
+                    {this.props.name}
                     {this.props.followers && this.props.following ? (
                         <Row gutter={16}>
                             <Col span={12}>

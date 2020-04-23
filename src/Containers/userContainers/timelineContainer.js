@@ -16,31 +16,40 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
     return {
         getTimeline: async (value) => {
-            let res = await GetTimelineAPI()
-            if (res.data.success) {
-                dispatch({
-                    type: "GETTIMELINE",
-                    payload: res.data.posts
-                })
+            try {
+                let res = await GetTimelineAPI()
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETTIMELINE",
+                        payload: res.data.posts
+                    })
+                }
+                else {
+                    message.warn("timeline not recieved")
+                }
+            } catch (error) {
+                console.log(error)
             }
-            else {
-                message.warn("timeline not recieved")
-            }
+
         },
 
         uploadPost: async (value) => {
+            try {
+                let res = await UploadPostAPI(value)
+                if (res.data.success) {
+                    message.success("successfully uploaded the post");
+                    dispatch({
+                        type: "UPLOADNEWPOST",
+                        payload: value.imageList
+                    })
+                }
+                else {
+                    message.warning("err uploading the post at timeline container");
+                }
+            } catch (error) {
+                console.log(error)
+            }
 
-            let res = await UploadPostAPI(value)
-            if (res.data.success) {
-                message.success("successfully uploaded the post");
-                dispatch({
-                    type: "UPLOADNEWPOST",
-                    payload: value.imageList
-                })
-            }
-            else {
-                message.warning("err uploading the post at timeline container");
-            }
         },
 
         uploadDescription: (value) =>
@@ -50,13 +59,18 @@ const mapDispatchToProps = dispatch => {
             }),
 
         onLikePost: async (value) => {
-            let res = await LikePostAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "LIKEUSERPOST",
-                    payload: res.data.likes,
-                })
+            try {
+                let res = await LikePostAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "LIKEUSERPOST",
+                        payload: res.data.likes,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
     }
 }

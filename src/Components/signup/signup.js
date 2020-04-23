@@ -27,29 +27,22 @@ class SignUp extends React.Component {
                 phone: this.props.phone,
                 accepted: false,
             }
-            console.log(this.props.success)
+
             await this.props.validate();
-            console.log(this.props.success)
             if (!this.props.success) {
                 message.error("not valid at 32");
                 return;
             }
             this.props.setItem(obj)
             message.success("signup successful");
-            this.setState({ submit: true, toggle: false })
+            this.setState({ submit: true,})
         }
         else {
             message.warn("enter username and password", 3000);
         }
+       await this.props.getItem();
     }
-    handleLogout = () => {
-        this.setState({
-            submit: false,
-            toggle: true
-        })
-        this.props.onLogout()
-        alert("logout successful", 1000);
-    }
+    
     handleEmail = (e) => {
         this.props.setEmail(e.target.value);
     }
@@ -99,6 +92,7 @@ class SignUp extends React.Component {
                             <Form.Item
                                 onChange={this.handleChange}
                                 label="Username"
+                                value={this.props.userName}
                                 validateStatus={this.props.userNameValidated}
                                 help="Should be between 4 to 30 characters"
                                 hasFeedback

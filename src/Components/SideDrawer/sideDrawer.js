@@ -6,6 +6,7 @@ import { Route, Link, Switch } from 'react-router-dom';
 
 import UserList from '../../Containers/adminContainers/userListContainer';
 import UserRequests from '../../Containers/adminContainers/userRequestsContainer';
+import UserPageAtAdmin from '../../Containers/adminContainers/userPageAtAdminContainer';
 
 import {
     InstagramOutlined,
@@ -52,44 +53,55 @@ class SideDrawer extends Component {
     sleep = async (time) => {
         await new Promise((resolve) => { setTimeout(resolve, time) })
     }
-    componentDidMount = async () => {
-        await this.props.setUserName(this.props.loggedUserName);
-        if (localStorage.getItem("role") === "user") {
-            await this.props.onGetFollowRequests(this.props.loggedUserName);
-            if (this.props.followRequests)
+    userNotifications=async()=>{
+        await this.props.onGetFollowRequests(this.props.loggedUserName);
+        if (this.props.followRequests)
 
-                await this.props.followRequests.map(async (el, key) => {
-                    return await this.sleep(2000).then(() =>
-                        notification.open({
-                            message: 'New follow Request  ',
-                            description:
-                                `from ${el.followRequestUserName}`,
-                            icon: <SmileOutlined style={{ color: '#308ee9' }} />,
-                        })
-                    );
+             this.props.followRequests.map(async (el, key) => {
+                return await this.sleep(2000).then(() =>
+                    notification.open({
+                        message: 'New follow Request  ',
+                        description:
+                            `from ${el.followRequestUserName}`,
+                        icon: <SmileOutlined style={{ color: '#308ee9' }} />,
+                    })
+                );
 
-                })
-        }
-        else {
-            await this.props.onGetSignUpRequests();
-            if (this.props.signUpRequests) {
-                this.props.signUpRequests.map((el, key) => {
-                    return (
-                        notification.open({
-                            message: 'New Sign Up Request  ',
-                            description:
-                                `from ${el["userName"]}`,
-                            icon: <SmileOutlined style={{ color: '#108ee9' }} />,
-                        }))
-                })
-            }
+            })
+    }
+
+    adminNotifications=async()=>{
+        await this.props.onGetSignUpRequests();
+        if (this.props.signUpRequests) {
+            this.props.signUpRequests.map((el, key) => {
+                return (
+                    notification.open({
+                        message: 'New Sign Up Request  ',
+                        description:
+                            `from ${el["userName"]}`,
+                        icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+                    }))
+            })
         }
     }
+    
+    componentDidMount =  () => {
+
+        if (localStorage.getItem("role") === "user") {
+            // await this.props.setUserUserName(this.props.loggedUserName);
+            this.userNotifications();
+        }
+        else {
+            // await this.props.setUserName(this.props.loggedUserName);
+           this.adminNotifications();
+    }
+}
     componentDidUpdate(prevProps, prevState) {
 
     }
     componentWillUnmount() {
     }
+    
     hideUserLinks = async () => {
         if (this.state.visible === this.props.toggle) {
             this.props.onChangeToggle();
@@ -142,12 +154,14 @@ class SideDrawer extends Component {
                 </Drawer>
                 <Route exact component={Logout} />
                 <Switch>
+                    <Route path="/admin/userList/:id" exact component={UserPageAtAdmin}/>
                     <Route path="/admin/userList" component={UserList} />
                     <Route path="/admin/userRequests" component={UserRequests}></Route>
                     <Route path="/user/:id/profile" component={Profile}></Route>
                     <Route path="/user/:id/search" component={Search}></Route>
                     <Route path="/user/:id/timeline" component={Timeline}></Route>
                     <Route path="/user/:id/followRequests" component={FollowRequests}></Route>
+
                 </Switch>
             </div>
         );

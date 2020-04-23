@@ -1,14 +1,16 @@
 import axios from '../axios';
-const uploadPostAPI = async (value) => {
-    try {
-        return axios.post('/uploadNewPost', {
-            token: localStorage.getItem("token"),
-            description: value.description,
-            imageList: value.fileList
-        })
-    } catch (error) {
-        console.log(error);
-    }
+const uploadPostAPI = (value) => {
+    // try {
+
+    return axios.post('/uploadNewPost', {
+        token: localStorage.getItem("token"),
+        description: value.description,
+        imageList: value.fileList
+    })
+
+    // } catch (error) {
+    //     console.log(error);
+    // }
     // axios.post('/uploadNewPost', {
     //     token: localStorage.getItem("token"),
     //     description: value.description,

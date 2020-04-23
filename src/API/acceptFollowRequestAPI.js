@@ -1,15 +1,15 @@
 import axios from '../axios';
-const acceptFollowRequestAPI = async (v) => {
-    try {
-        let value = v;
-        return await axios.put('/approveFollowRequest', {
-            accepted: value.value,
-            followRequestUserId: value.index,
-            loggedUserIdToken: localStorage.getItem('token'),
-        })
-    } catch (error) {
-        console.log(error);
-    }
+const acceptFollowRequestAPI = (v) => {
+    // try {
+    let value = v;
+    return axios.put('/approveFollowRequest', {
+        accepted: value.value,
+        followRequestUserId: value.index,
+        loggedUserIdToken: localStorage.getItem('token'),
+    })
+    // } catch (error) {
+    //     console.log(error);
+    // }
 
     // let value = v
     // await axios.put('/approveFollowRequest', {

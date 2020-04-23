@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import UserPageAtAdmin from '../../Components/admin/userPageAtAdmin';
 
 const mapStateToProps = state => ({
-    userName: state.loginReducer.userName,
+    userName: state.userReducer.userName,
 })
 const mapDispatchToProps = dispatch => {
     return {
@@ -11,6 +11,11 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: "GETUSERPOSTS",
 
+            }),
+            setUsersUserName: (value) =>
+            dispatch({
+                type: "SETUSERUSERNAME",
+                payload: value
             }),
         setUserName: (value) =>
             dispatch({

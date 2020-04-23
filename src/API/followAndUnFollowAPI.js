@@ -1,23 +1,23 @@
 import axios from '../axios';
-const followAndUnFollowAPI = async (v) => {
-    try {
-        let value = v;
-        if (value.followed) {
-            return await axios.post('/unFollow', {
-                loggedUserIdToken: localStorage.getItem("token"),
-                userName: value.userName
-            })
-        }
-        else {
-            return await axios.post("/follow", {
-                loggedUserIdToken: localStorage.getItem("token"),
-                userName: value.userName
-            })
-        }
-
-    } catch (error) {
-        console.log(error)
+const followAndUnFollowAPI = (v) => {
+    // try {
+    let value = v;
+    if (value.followed) {
+        return axios.post('/unFollow', {
+            loggedUserIdToken: localStorage.getItem("token"),
+            userName: value.userName
+        })
     }
+    else {
+        return axios.post("/follow", {
+            loggedUserIdToken: localStorage.getItem("token"),
+            userName: value.userName
+        })
+    }
+
+    // } catch (error) {
+    //     console.log(error)
+    // }
     // let value = v;
     // if (value.followed) {
     //     await axios.post('/unFollow', {

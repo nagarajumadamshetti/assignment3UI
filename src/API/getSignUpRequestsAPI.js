@@ -1,10 +1,11 @@
 import axios from '../axios';
-const getSignUpRequestsAPI = async () => {
-    try {
-        return await axios.get('/admin/userRequests')
-    } catch (error) {
-        console.log(error);
-    }
+const getSignUpRequestsAPI = () => {
+    // try {
+    return axios.get('/admin/userRequests')
+
+    // } catch (error) {
+    //     console.log(error);
+    // }
     // await axios.get('/admin/userRequests')
     //     .then((res) => {
     //         if (res.data.success) {

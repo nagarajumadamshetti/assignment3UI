@@ -18,30 +18,43 @@ const mapDispatchToProps = dispatch => {
             dispatch({
                 type: "TOGGLEUSER"
             }),
-
+        setUserUserName: (value) =>
+            dispatch({
+                type: "SETUSERUSERNAME",
+                payload: value
+            }),
         setUserName: (value) =>
             dispatch({
                 type: "SETUSERNAME",
                 payload: value
             }),
         onGetFollowRequests: async (value) => {
-            let v = value
+            try {
+                let v = value
 
-            let res = await GetFollowRequestsAPI(v);
-            if (res.data.success) {
-                dispatch({
-                    type: "GETFOLLOWREQUESTS",
-                    payload: res.data.followRequests,
-                })
+                let res = await GetFollowRequestsAPI(v);
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETFOLLOWREQUESTS",
+                        payload: res.data.followRequests,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
         onGetSignUpRequests: async () => {
-            let res = await GetSignUpRequestsAPI()
-            if (res.data.success) {
-                dispatch({
-                    type: "GETSIGNUPREQUESTS",
-                    payload: res.data.users
-                })
+            try {
+
+                let res = await GetSignUpRequestsAPI()
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETSIGNUPREQUESTS",
+                        payload: res.data.users
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
     }

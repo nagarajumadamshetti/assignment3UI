@@ -1,14 +1,14 @@
 import axios from '../axios';
-const declineSignUpRequestAPI = async (value) => {
-    try {
-        return await axios.delete('/admin/userRequests/decline', {
-            data: {
-                userName: value.userName,
-            }
-        })
-    } catch (error) {
-        console.log(error);
-    }
+const declineSignUpRequestAPI = (value) => {
+    // try {
+    return axios.delete('/admin/userRequests/decline', {
+        data: {
+            userName: value.userName,
+        }
+    })
+    // } catch (error) {
+    //     console.log(error);
+    // }
     // await axios.delete('/admin/userRequests/decline', {
     //     data: {
     //         userName: value.userName,

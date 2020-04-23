@@ -1,12 +1,12 @@
 import axios from '../axios';
-const deletePostAPI = async (value) => {
-    try {
-        return await axios.post('/deletePost', {
-            postId: value.postId
-        })
-    } catch (error) {
-        console.log(error)
-    }
+const deletePostAPI = (value) => {
+    // try {
+    return axios.post('/deletePost', {
+        postId: value.postId
+    })
+    // } catch (error) {
+    //     console.log(error)
+    // }
     // await axios.post('/deletePost', {
     //     postId: value.postId
     // })

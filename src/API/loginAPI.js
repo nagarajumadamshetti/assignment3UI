@@ -1,13 +1,15 @@
 import axios from '../axios';
-const loginAPI = async (value) => {
-    try {
-        return await axios.post('/login', {
-            userName: value.userName,
-            password: value.password
-        })
-    } catch (error) {
-        console.log(error);
-    }
+const loginAPI = (value) => {
+    // try {
+
+    return axios.post('/login', {
+        userName: value.userName,
+        password: value.password
+    })
+
+    // } catch (error) {
+    //     console.log(error);
+    // }
     // await axios.post('/login', {
     //     userName: value.userName,
     //     password: value.password

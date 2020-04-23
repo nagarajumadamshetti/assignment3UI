@@ -18,7 +18,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        
+
         case "USERNAMECHANGE": {
             return {
                 ...state,
@@ -42,6 +42,12 @@ const reducer = (state = initialState, action) => {
         }
 
         case "SUBMITSIGNUP": {
+            state.userName=''
+            state.password=''
+            state.email=''
+            // state.role=''
+            state.phone=''
+
             return {
                 ...state,
             }

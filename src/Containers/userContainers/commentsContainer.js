@@ -16,22 +16,32 @@ const mapDispatchToProps = dispatch => {
     return {
 
         onCommentPost: async (value) => {
-            let res = await CommentOnPostAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "GETCOMMENTS",
-                    payload: res.data.comments,
-                })
+            try {
+                let res = await CommentOnPostAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETCOMMENTS",
+                        payload: res.data.comments,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
         onGetComments: async (value) => {
-            let res = await GetCommentsAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "GETCOMMENTS",
-                    payload: res.data.data[0].comments,
-                })
+            try {
+                let res = await GetCommentsAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETCOMMENTS",
+                        payload: res.data.data[0].comments,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
     }
 }

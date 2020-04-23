@@ -33,7 +33,12 @@ class Profile extends Component {
     }
     
     componentDidMount = async () => {
-        await this.props.getUserPosts(this.props.userName);
+        // console.log(this.props.userName)
+        // console.log(this.props.u)
+        // if(this.props.userName)
+        let userName=this.props.userName//this.props.match.params.id;
+        console.log(userName)
+        await this.props.getUserPosts(userName);
 
     }
     
@@ -106,8 +111,8 @@ class Profile extends Component {
                                                     })
                                                 }
                                             </Carousel>
-                                            {console.log(el.description)}
-                                            <Meta title={el.description} description="www.instagram.com" />
+                                            {/* {console.log(el.description)} */}
+                                            <Meta title={el.description} description={el.description} />
 
                                         </Card>
                                         <Comments postId={el.postId} />

@@ -16,20 +16,25 @@ const mapDispatchToProps = dispatch => {
                 payload: value
             }),
         onSubmitLogin: async (value) => {
-            let res = await LoginAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "SUBMITLOGIN",
-                    payload: res.data
-                })
+            try {
+                let res = await LoginAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "SUBMITLOGIN",
+                        payload: res.data
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
-        
+
         setUserName: (value) =>
             dispatch({
                 type: "SETUSERNAME",
                 payload: value
             }),
+
         setUserUserName: (value) => {
             dispatch({
                 type: "SETUSERUSERNAME",

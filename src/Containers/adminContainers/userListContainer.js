@@ -1,7 +1,9 @@
 import UserList from '../../Components/admin/userList'
 import { message } from 'antd';
 import { connect } from "react-redux";
+
 import GetUserListAPI from '../../API/getUsersListAPI'
+
 const mapStateToProps = state => ({
     userList: state.adminReducer.userList,
     toggle: state.adminReducer.toggle,
@@ -9,18 +11,29 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => {
     return {
+
         onGetList: async () => {
-            let res = await GetUserListAPI()
-            if (res.data.success) {
-                dispatch({
-                    type: "GETUSERSLIST",
-                    payload: res.data.users
-                })
+            try {
+                let res = await GetUserListAPI()
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETUSERSLIST",
+                        payload: res.data.users
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
         onChangeToggle: () =>
             dispatch({
                 type: "TOGGLEUSER"
+            }),
+        setUsersUserName: (value) =>
+            dispatch({
+                type: "SETUSERUSERNAME",
+                payload: value
             }),
         setUserName: (value) =>
             dispatch({

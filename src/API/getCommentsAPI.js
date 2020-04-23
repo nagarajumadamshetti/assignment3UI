@@ -1,12 +1,12 @@
 import axios from '../axios';
-const getCommentsAPI = async (value) => {
-    try {
-        let v = value;
-        return await await axios.get(`/getComments/${v}`)
-        
-    } catch (error) {
-        console.log(error)
-    }
+const getCommentsAPI = (value) => {
+    // try {
+    let v = value;
+    return axios.get(`/getComments/${v}`)
+
+    // } catch (error) {
+    //     console.log(error)
+    // }
 
     // let v = value;
     // await axios.get(`/getComments/${v}`)

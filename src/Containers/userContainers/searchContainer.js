@@ -16,24 +16,29 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
     return {
         getUserPosts: async (value) => {
-            let v=value;
-            let res = await GetUserPostsAPI(v)
-            if (res.data.success) {
-                dispatch({
-                    type: "GETUSERPOSTS",
-                    payload: res.data.data[0].posts
-                })
-                dispatch({
-                    type: "SETGETUSERSUCCESS",
-                    payload: true
-                })
+            try {
+                let v = value;
+                let res = await GetUserPostsAPI(v)
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETUSERPOSTS",
+                        payload: res.data.data[0].posts
+                    })
+                    dispatch({
+                        type: "SETGETUSERSUCCESS",
+                        payload: true
+                    })
+                }
+                else {
+                    dispatch({
+                        type: "SETGETUSERSUCCESS",
+                        payload: false
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
-            else {
-                dispatch({
-                    type: "SETGETUSERSUCCESS",
-                    payload: false
-                })
-            }
+
         },
 
         onNewSearch: (value) => {
@@ -48,36 +53,46 @@ const mapDispatchToProps = dispatch => {
         },
 
         onLikePost: async (value) => {
-            let res = await LikePostAPI(value);
-            if (res.data.success) {
-                dispatch({
-                    type: "LIKEUSERPOST",
-                    payload: res.data.likes,
-                })
+            try {
+                let res = await LikePostAPI(value);
+                if (res.data.success) {
+                    dispatch({
+                        type: "LIKEUSERPOST",
+                        payload: res.data.likes,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
 
         getUserFollowersAndFollowing: async (value) => {
-            let res = await GetFollowersAndFollowingAPI(value);
-            if (res.data.success) {
-                dispatch({
-                    type: "GETUSERFOLLOWERSANDFOLLOWING",
-                    payload: {
-                        following: (res.data.following[0].following),
-                        followers: (res.data.followers[0].followers)
-                    }
-                })
-                dispatch({
-                    type: "SETGETUSERSUCCESS",
-                    payload: true
-                })
+            try {
+                let res = await GetFollowersAndFollowingAPI(value);
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETUSERFOLLOWERSANDFOLLOWING",
+                        payload: {
+                            following: (res.data.following[0].following),
+                            followers: (res.data.followers[0].followers)
+                        }
+                    })
+                    dispatch({
+                        type: "SETGETUSERSUCCESS",
+                        payload: true
+                    })
+                }
+                else {
+                    dispatch({
+                        type: "SETGETUSERSUCCESS",
+                        payload: false
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
-            else {
-                dispatch({
-                    type: "SETGETUSERSUCCESS",
-                    payload: false
-                })
-            }
+
         },
     }
 }

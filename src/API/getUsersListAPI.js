@@ -1,10 +1,12 @@
 import axios from '../axios';
-const getUsersListAPI = async () => {
-    try {
-        return await axios.get('/admin/userList');
-    } catch (error) {
-        console.log(error)
-    }
+const getUsersListAPI = () => {
+    // try {
+
+    return axios.get('/admin/userList');
+
+    // } catch (error) {
+    //     console.log(error)
+    // }
     // await axios.get('/admin/userList')
     //     .then((res) => {
     //         if (res.data.success) {

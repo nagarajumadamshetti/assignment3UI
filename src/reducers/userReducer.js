@@ -105,7 +105,7 @@ const reducer = (state = initialState, action) => {
             }
         }
         case "SETUSERUSERNAME": {
-            
+            console.log(action.payload)
             state.userName = action.payload;
             return {
                 ...state

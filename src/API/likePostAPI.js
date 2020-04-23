@@ -1,13 +1,15 @@
 import axios from '../axios';
-const likePostAPI = async (value) => {
-    try {
-        return await axios.post('/likeOrUnlikePost', {
-            loggedUserIdToken: localStorage.getItem("token"),
-            postId: value.postId
-        })
-    } catch (error) {
-        console.log(error);
-    }
+const likePostAPI = (value) => {
+    // try {
+
+    return axios.post('/likeOrUnlikePost', {
+        loggedUserIdToken: localStorage.getItem("token"),
+        postId: value.postId
+    })
+
+    // } catch (error) {
+    //     console.log(error);
+    // }
 
     // await axios.post('/likeOrUnlikePost', {
     //     loggedUserIdToken: localStorage.getItem("token"),

@@ -55,7 +55,7 @@ const validateFunction = async (state) => {
     if (!state.userName) {
         return false
     }
-    
+
     if (!state.email) {
         return false
     }
@@ -87,7 +87,7 @@ const validateFunction = async (state) => {
     if (state.password.length < 8) {
         return false
     }
-    
+
     return true
 }
 const mapDispatchToProps = dispatch => {
@@ -117,24 +117,28 @@ const mapDispatchToProps = dispatch => {
                 type: "GET",
             }),
         setItem: async (value) => {
-            let res = await SignUpAPI(value);
-            if (res.data.success) {
-                message.success("signUp successful");
-                dispatch({
-                    type: "SUBMITSIGNUP",
-                    payload: res.data
-                })
+            try {
+                let res = await SignUpAPI(value);
+                if (res.data.success) {
+                    message.success("signUp successful");
+                    dispatch({
+                        type: "SUBMITSIGNUP",
+                        payload: res.data
+                    })
+                }
+                else {
+                    message.warn("signUp unsuccessful");
+                }
+            } catch (error) {
+                console.log(error)
             }
-            else {
-                message.warn("signUp unsuccessful");
-            }
+
         },
-        validate:async  () => {
+        validate: async () => {
 
             await dispatch(async (dispatch, getState) => {
                 let signUpStates = await getState().signUpReducer
                 let success = await validateFunction(signUpStates)
-                 console.log(success)
                 dispatch({
                     type: "VALIDATE",
                     payload: success

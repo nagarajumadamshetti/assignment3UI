@@ -1,13 +1,13 @@
 import axios from '../axios';
-const getFollowersAndFollowingAPI = async (value) => {
-    try {
+const getFollowersAndFollowingAPI = (value) => {
+    // try {
 
-        let id = value;
-        return await axios.get(`/getFollowersAndFollowing/${id}`)
+    let id = value;
+    return axios.get(`/getFollowersAndFollowing/${id}`)
 
-    } catch (error) {
-        console.log(error)
-    }
+    // } catch (error) {
+    //     console.log(error)
+    // }
     // let id = value;
     // await axios.get(`/getFollowersAndFollowing/${id}`)
     //     .then((res) => {

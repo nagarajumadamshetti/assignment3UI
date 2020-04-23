@@ -16,33 +16,43 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
     return {
         getUserFollowersAndFollowing: async (value) => {
-            let res = await GetFollowersAndFollowingAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "GETUSERFOLLOWERSANDFOLLOWING",
-                    payload: {
-                        following: (res.data.following[0].following),
-                        followers: (res.data.followers[0].followers)
-                    }
-                })
+            try {
+                let res = await GetFollowersAndFollowingAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETUSERFOLLOWERSANDFOLLOWING",
+                        payload: {
+                            following: (res.data.following[0].following),
+                            followers: (res.data.followers[0].followers)
+                        }
+                    })
+                }
+                else {
+                    message.warn(" followers and following NOT recieved at userinfo container")
+                }
+            } catch (error) {
+                console.log(error)
             }
-            else {
-                message.warn(" followers and following NOT recieved at userinfo container")
-            }
+
         },
 
         followAndUnFollow: async (value) => {
-            let res =await  FollowAndUnFollowAPI(value);
+            try {
+                let res = await FollowAndUnFollowAPI(value);
 
-            if (res.data.success) {
-                dispatch({
-                    type: "FOLLOWANDUNFOLLOW",
-                    payload: {
-                        following: (res.data.following),
-                        followers: (res.data.followers)
-                    }
-                })
+                if (res.data.success) {
+                    dispatch({
+                        type: "FOLLOWANDUNFOLLOW",
+                        payload: {
+                            following: (res.data.following),
+                            followers: (res.data.followers)
+                        }
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
 
         onNewSearch: (value) =>
@@ -52,17 +62,19 @@ const mapDispatchToProps = dispatch => {
             }),
 
         onGetFollowRequests: async (v) => {
-            console.log(v)
-            let value=v
-            console.log(value)
-            let res = await GetFollowRequestsAPI(value)
-            console.log(res);
-            if (res.data.success) {
-                dispatch({
-                    type: "GETFOLLOWREQUESTS",
-                    payload: res.data.followRequests,
-                })
+            try {
+                let value = v
+                let res = await GetFollowRequestsAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETFOLLOWREQUESTS",
+                        payload: res.data.followRequests,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
     }
 }

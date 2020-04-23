@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import Profile from '../user/profile';
+import Profile from '../../Containers/userContainers/profileContainer';
 
 class UserPageAtAdmin extends Component {
     constructor(props) {
@@ -10,11 +10,12 @@ class UserPageAtAdmin extends Component {
         })
     }
     componentDidMount = async () => {
-        // console.log("=================");
-        // await this.props.setUserName(this.props.match.params.id)
-        console.log(this.props.userName)
+        console.log("=================");
+        console.log(this.props.match.params.id)
+        await this.props.setUsersUserName(this.props.match.params.id)
+        // console.log(this.props.userName)
         // return(<Profile/>)
-        await this.setState({ display: true })
+        this.setState({ display: true })
     }
     componentWillUnmount = async () => {
         this.setState({ display: false })
@@ -28,6 +29,7 @@ class UserPageAtAdmin extends Component {
             </div>
         )
     }
+
 }
 
 export default UserPageAtAdmin;

@@ -1,11 +1,13 @@
 import axios from '../axios';
-const getTimelineAPI = async () => {
-    try {
-        let id = localStorage.getItem("token");
-        return await axios.get(`/timeline/${id}`)
-    } catch (error) {
-        console.log(error)
-    }
+const getTimelineAPI = () => {
+    // try {
+
+    let id = localStorage.getItem("token");
+    return axios.get(`/timeline/${id}`)
+
+    // } catch (error) {
+    //     console.log(error)
+    // }
     // let id = localStorage.getItem("token");
     // await axios.get(`/timeline/${id}`)
     //     .then((res) => {

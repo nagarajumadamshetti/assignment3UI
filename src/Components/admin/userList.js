@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from "react-redux";
 
-import { Route, Link, } from 'react-router-dom';
+import { Route, Link, Switch } from 'react-router-dom';
 import UserPageAtAdmin from '../../Containers/adminContainers/userPageAtAdminContainer';
-import axios from '../../axios'
-import { message } from 'antd'
+// import UserPageAtAdmin from './userPageAtAdmin'
+
 class UserList extends Component {
     constructor(props) {
         super(props);
@@ -29,9 +28,15 @@ class UserList extends Component {
         }
     }
     hideUserLinks = async (e) => {
-        await this.props.setUserName(e.target.id)
-        this.props.onChangeToggle();
-        this.setState({ toggle: !this.state.toggle })
+        e.preventDefault();
+        console.log(e.target.id)
+        let name = e.target.id;
+        await this.props.setUsersUserName(name)
+        await this.props.setUserName(name)
+        await this.props.onChangeToggle();
+        console.log("toggle changed")
+        console.log(this.props.toggle)
+        // this.setState({ toggle: !this.state.toggle })
 
     }
     render() {
@@ -47,14 +52,18 @@ class UserList extends Component {
                                     this.props.userList.map((el, key) => {
                                         return (
                                             <div key={key}>
-                                                {/* <Link to={`/admin/userList/${el}`} >{el}</Link> */}
+                                                <Link
+                                                //  onClick={this.hideUserLinks} 
+                                                 id={el.userName} 
+                                                 to={`/admin/userList/${el.userName}`} >{el.userName}</Link>
                                                 <br />
-                                                {console.log(el)}
-                                                <Link onClick={this.hideUserLinks} id={el.userName} to={{
+                                                {/* {console.log(el.userName)} */}
+                                                {/* <Link onClick={this.hideUserLinks} id={el.userName} to={{
                                                     pathname: `/admin/userList/${el.userName}`,
                                                 }}>
                                                     {el.userName}
-                                                </Link>
+                                                </Link> */}
+                                                {/* <Route path="/admin/userList/:id" exact component={UserPageAtAdmin} /> */}
                                             </div>
                                         )
                                     })
@@ -62,11 +71,19 @@ class UserList extends Component {
                                     : null
                                 }
                             </div>
-                        ) : (
+                        )
+                        :
+                        (
                             <div>
-                                <Route path="/admin/userList/:id" exact component={UserPageAtAdmin} />
+                                {/* <Switch> */}
+                                <h3>hello</h3>
+                                {/* {console.log("entered upad routes")} */}
+                                {/* <Route path="/admin/userList/:id" exact component={UserPageAtAdmin} /> */}
+                                {/* {console.log("routed")} */}
+                                {/* </Switch> */}
                             </div>
-                        )}
+                        )
+                }
             </div>
         );
     }

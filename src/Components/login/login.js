@@ -31,10 +31,12 @@ class Login extends Component {
             message.warning("admin didn't accept");
             return;
         }
-
         this.props.setUserName(this.props.userName);
         if (this.props.role === "user") {
             this.props.setUserUserName(this.props.userName);
+        }
+        else {
+            // this.props.setUserName(this.props.userName);
         }
     };
 

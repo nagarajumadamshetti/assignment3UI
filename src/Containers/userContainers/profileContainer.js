@@ -6,43 +6,59 @@ import LikePostAPI from '../../API/likePostAPI';
 import DeletePostAPI from '../../API/deletePostAPI';
 
 const mapStateToProps = state => ({
-    userName: state.loginReducer.userName,
+    userName: state.userReducer.userName,
+    // u: state.userReducer.userName,
     userPosts: state.userReducer.userPosts,
     searchValue: state.userReducer.searchValue,
     comments: state.userReducer.comments,
 });
+
 const mapDispatchToProps = dispatch => {
     return {
         getUserPosts: async (value) => {
-            console.log(value)
-            let id = value
+            try {
+                let id = value
 
-            let res = await GetUserPostsAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "GETUSERPOSTS",
-                    payload: res.data.data[0].posts
-                })
+                let res = await GetUserPostsAPI(id)
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETUSERPOSTS",
+                        payload: res.data.data[0].posts
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
 
         onDeletePost: async (value) => {
-            let res = await DeletePostAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "DELETEUSERPOST",
-                    payload: res.data.posts,
-                })
+            try {
+                let res = await DeletePostAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "DELETEUSERPOST",
+                        payload: res.data.posts,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
         onLikePost: async (value) => {
-            let res = await LikePostAPI(value);
-            if (res.data.success) {
-                dispatch({
-                    type: "LIKEUSERPOST",
-                    payload: res.data.likes,
-                })
+            try {
+                let res = await LikePostAPI(value);
+                if (res.data.success) {
+                    dispatch({
+                        type: "LIKEUSERPOST",
+                        payload: res.data.likes,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
+
         },
         setUserName: (value) =>
             dispatch({

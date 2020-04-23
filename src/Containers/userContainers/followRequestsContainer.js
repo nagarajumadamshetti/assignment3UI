@@ -7,32 +7,44 @@ import DeclineFollowRequestAPI from '../../API/declineFollowRequestAPI';
 const mapDispatchToProps = dispatch => {
     return {
         onGetFollowRequests: async (value) => {
-            let res = await GetFollowRequestsAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "GETFOLLOWREQUESTS",
-                    payload: res.data.followRequests,
-                })
+            try {
+                let res = await GetFollowRequestsAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "GETFOLLOWREQUESTS",
+                        payload: res.data.followRequests,
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
 
         accept: async (value) => {
-            let res = await AcceptFollowRequestAPI(value);
-            if (res.data.success) {
-                dispatch({
-                    type: "ACCEPTFOLLOW",
-                    payload: res.data.followRequests
-                })
+            try {
+                let res = await AcceptFollowRequestAPI(value);
+                if (res.data.success) {
+                    dispatch({
+                        type: "ACCEPTFOLLOW",
+                        payload: res.data.followRequests
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
 
         decline: async (value) => {
-            let res = await DeclineFollowRequestAPI(value)
-            if (res.data.success) {
-                dispatch({
-                    type: "DECLINEFOLLOW",
-                    payload: value
-                })
+            try {
+                let res = await DeclineFollowRequestAPI(value)
+                if (res.data.success) {
+                    dispatch({
+                        type: "DECLINEFOLLOW",
+                        payload: value
+                    })
+                }
+            } catch (error) {
+                console.log(error)
             }
         },
     }

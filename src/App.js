@@ -15,6 +15,7 @@ import FollowRequest from './Containers/userContainers/followRequestsContainer';
 
 import UserList from './Containers/adminContainers/userListContainer'
 import UserRequests from './Containers/adminContainers/userRequestsContainer';
+import UserPageAtAdmin from './Containers/adminContainers/userPageAtAdminContainer';
 
 
 import { Provider } from 'react-redux';
@@ -52,6 +53,7 @@ class App extends Component {
               {/* path='/admin' exact */}
               <Route path="/admin/userList" exact component={UserList} />
               <Route path="/admin/userRequests" exact component={UserRequests} />
+              {/* <Route path="/admin/userList/:id" exact  component={UserPageAtAdmin} /> */}
               {/* <UserRoutes />
               <AdminRoutes /> */}
             </Switch>

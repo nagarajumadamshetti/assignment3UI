@@ -1,16 +1,16 @@
 import axios from '../axios';
-const commentOnPostAPI = async (v) => {
-    try {
-        let value = v;
-        return await axios.post('/addComment', {
-            token: localStorage.getItem("token"),
-            postId: value.postId,
-            comment: value.comment,
-        })
-    } catch (error) {
-        console.log(error)
-    }
-    
+const commentOnPostAPI = (v) => {
+    // try {
+    let value = v;
+    return axios.post('/addComment', {
+        token: localStorage.getItem("token"),
+        postId: value.postId,
+        comment: value.comment,
+    })
+    // } catch (error) {
+    //     console.log(error)
+    // }
+
     // let value=v;
     // await axios.post('/addComment', {
     //     token: localStorage.getItem("token"),
