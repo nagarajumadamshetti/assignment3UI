@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Button} from 'reactstrap';
- 
-import { Upload, Button as AntButton, message, Modal as AntModal, Card, Carousel, } from 'antd';
+import { Container, Modal, ModalFooter, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 
-import { HeartTwoTone,UploadOutlined, } from '@ant-design/icons';
+import { Upload, Button as AntButton, message, Modal as AntModal, Card, Carousel, Pagination } from 'antd';
+
+import { HeartTwoTone, UploadOutlined, } from '@ant-design/icons';
 
 // import UserInfo from '../../Containers/userContainers/userInfoContainer';
 import Comments from '../../Containers/userContainers/commentsContainer';
@@ -29,14 +29,25 @@ class Timeline extends Component {
             uploading: false,
             previewImage: '',
             previewVisible: false,
+            minValue: 0,
+            maxValue: 3,
         }
     }
+
+    handleChangePagination = async value => {
+        if (value > 0)
+            await this.props.setPageNumber(value);
+        await this.props.getTimeline(this.props.page);
+
+    };
     componentDidMount = async () => {
-        await this.props.getTimeline(this.props.userName);
+        await this.props.getTimelinePagesCount();
+        await this.props.getTimeline(this.props.page);
+
     }
-    componentDidUpdate=async(prevProps, prevState)=> {
+    componentDidUpdate = async (prevProps, prevState) => {
         if (prevProps.comments !== this.props.comments) {
-           await this.props.getTimeline(this.props.userName);
+            await this.props.getTimeline(this.props.page);
         }
     }
     handlePreview = async file => {
@@ -111,7 +122,7 @@ class Timeline extends Component {
             postId: e.target.id,
         }
         await this.props.onLikePost(obj);
-        await this.props.getTimeline(this.props.userName);
+        await this.props.getTimeline(this.props.page);
 
     }
     render() {
@@ -232,13 +243,20 @@ class Timeline extends Component {
                                         <Meta title={el.description} description="www.instagram.com" />
 
                                     </Card>
-                                    <Comments postId={el.id}/>
+                                    <Comments postId={el.id} />
 
                                 </div>
 
                             )
+
                         })
                         : null}
+                    <Pagination
+                        defaultCurrent={1}
+                        defaultPageSize={3}
+                        onChange={this.handleChangePagination}
+                        total={this.props.totalPostsCount}
+                    />
                 </Container>
             </div>
         );

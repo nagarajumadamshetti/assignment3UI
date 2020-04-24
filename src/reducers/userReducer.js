@@ -11,11 +11,24 @@ let initialState = {
     success: false,
     timeline:'',
     comments:'',
+    page:1,
+    totalPostsCount:''
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-
+        case "SETTIMELINEPAGESCOUNT":{
+            state.totalPostsCount=action.payload;
+            return{
+                ...state
+            }
+        }
+        case "SETPAGENUMBER":{
+            state.page=action.payload;
+            return{
+                ...state
+            }
+        }
         case "SETGETUSERSUCCESS": {
             state.success = action.payload
             return {
