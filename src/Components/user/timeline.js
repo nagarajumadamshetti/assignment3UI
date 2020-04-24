@@ -159,9 +159,17 @@ class Timeline extends Component {
 
                 <Container style={{
                     border: '2px solid black',
+                    // display: 'flex',
+                    // overflowY: 'scroll',
+                    // width: '70%',
+                    // maxHeight: '150px'
+                }}
+                >
+                    <Container style={{
+                    border: '2px solid black',
                     display: 'flex',
                     overflowX: 'scroll',
-                    width: '70%',
+                    width: '100%',
                     maxHeight: '150px'
                 }}
                 >
@@ -208,9 +216,9 @@ class Timeline extends Component {
                         border: '2px solid black',
                         // display: 'flex',
                         overflowY: 'scroll',
-                        // width: '70%',
-                        height: '950px',
-                        // maxHeight: '950px'
+                        width: '100%',
+                        height: '450px',
+                        maxHeight: '450px'
                     }}
                 >
                     {this.props.timeline ?
@@ -257,6 +265,7 @@ class Timeline extends Component {
                         onChange={this.handleChangePagination}
                         total={this.props.totalPostsCount}
                     />
+                </Container>
                 </Container>
             </div>
         );

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Button, Carousel, Card, message,Input, Skeleton  } from 'antd';
+import { Button, Carousel, Card, message, Input, Skeleton } from 'antd';
 
 import { Container } from 'reactstrap';
 
@@ -88,45 +88,57 @@ class SearchPost extends Component {
                             >
 
                                 <UserInfo from={"search"} name={this.props.searchValue}></UserInfo>
-                                {
-                                    (this.props.followers.find(el => el.followersUserName === this.props.userName) || this.props.searchValue === this.props.userName) ?
-                                        this.props.userPosts.map((el, key) => {
-                                            return (
-                                                <div key={key} style={{ width: 240 }}>
-                                                    {/* <Carousel autoplay> */}
-                                                    <Card hoverable title={this.props.searchValue} bordered={true} style={{ width: 240 }}
-                                                        actions={[
-                                                            <Button onClick={this.handleLikePost} id={el.postId} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likes.length}</Button>,
+                                <br/>
+                                <Container
+                                    style={{
+                                        border: '2px solid black',
+                                        // display: 'flex',
+                                        overflowY: 'scroll',
+                                        width: '100%',
+                                        height: '350px',
+                                        maxHeight: '350px'
+                                    }}
+                                >
+                                    {
+                                        (this.props.followers.find(el => el.followersUserName === this.props.userName) || this.props.searchValue === this.props.userName) ?
+                                            this.props.userPosts.map((el, key) => {
+                                                return (
+                                                    <div key={key} style={{ width: 240 }}>
+                                                        {/* <Carousel autoplay> */}
+                                                        <Card hoverable title={this.props.searchValue} bordered={true} style={{ width: 240 }}
+                                                            actions={[
+                                                                <Button onClick={this.handleLikePost} id={el.postId} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likes.length}</Button>,
 
-                                                        ]} >
-                                                        {/* {console.log(el)} */}
-                                                        <Carousel autoplay>
-                                                            {
-                                                                (el.images).map((el2, key2) => {
-                                                                    // if (el2 !== "lastModified" && el2 !== "post_id"&& el2 !== "image_id")
-                                                                    return (
-                                                                        <div key={key2}>
-                                                                            <img
-                                                                                alt="example"
-                                                                                src={`${el2.imageUrl}`}
-                                                                            />
-                                                                        </div>
-                                                                    )
-                                                                })
-                                                            }
-                                                        </Carousel>
+                                                            ]} >
+                                                            {/* {console.log(el)} */}
+                                                            <Carousel autoplay>
+                                                                {
+                                                                    (el.images).map((el2, key2) => {
+                                                                        // if (el2 !== "lastModified" && el2 !== "post_id"&& el2 !== "image_id")
+                                                                        return (
+                                                                            <div key={key2}>
+                                                                                <img
+                                                                                    alt="example"
+                                                                                    src={`${el2.imageUrl}`}
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </Carousel>
 
-                                                        <Meta title={el.description} description="www.instagram.com" />
-                                                        {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
-                                                    </Card>
-                                                    <Comments postId={el.postId}/>
-                                                    {/* </Carousel> */}
-                                                </div>
+                                                            <Meta title={el.description} description="www.instagram.com" />
+                                                            {/* <AntButton className="Twotone"><HeartTwoTone className="TwoTone"/></AntButton> */}
+                                                        </Card>
+                                                        <Comments postId={el.postId} />
+                                                        {/* </Carousel> */}
+                                                    </div>
 
-                                            )
-                                        })
-                                        : null
-                                }
+                                                )
+                                            })
+                                            : null
+                                    }
+                                </Container>
                             </Container>
                         ) : (
                                 <div>

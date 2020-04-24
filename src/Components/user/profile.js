@@ -85,7 +85,19 @@ class Profile extends Component {
                     >
                         
                         <UserInfo from={"profile"} name={this.props.userName}></UserInfo>
+                        <br/>
+                        <Container
+                    style={{
+                        border: '2px solid black',
+                        // display: 'flex',
+                        overflowY: 'scroll',
+                        width: '100%',
+                        height: '450px',
+                        maxHeight: '450px'
+                    }}
+                >
                         {
+                            
                             this.props.userPosts.map((el, key) => {
                                 return (
                                     <div key={key} style={{ width: 240 }}>
@@ -122,7 +134,8 @@ class Profile extends Component {
                                 )
                             })
                         }
-                        <Pagination defaultCurrent={1} total={50} />
+                        </Container>
+                        {/* <Pagination defaultCurrent={1} total={50} /> */}
                     </Container>
                 ) : <Skeleton active ></Skeleton>}
 
