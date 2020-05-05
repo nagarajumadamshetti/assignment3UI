@@ -4,9 +4,9 @@ import { Button, Drawer, notification, } from 'antd';
 
 import { Route, Link, Switch } from 'react-router-dom';
 
-import UserList from '../../Containers/adminContainers/userListContainer';
-import UserRequests from '../../Containers/adminContainers/userRequestsContainer';
-import UserPageAtAdmin from '../../Containers/adminContainers/userPageAtAdminContainer';
+import UserList from '../admin/userList';
+import UserRequests from '../admin/userRequests';
+import UserPageAtAdmin from '../admin/userPageAtAdmin';
 
 import {
     InstagramOutlined,

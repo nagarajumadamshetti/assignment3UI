@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import SignUp from './Containers/signUpContainer'
 
-import Login from './Containers/loginContainer';
+import Login from './Components/login/login';
 
 import SideDrawer from './Containers/sideDrawercontainer';
 
@@ -13,17 +13,20 @@ import Profile from './Containers/userContainers/profileContainer';
 import Timeline from './Containers/userContainers/timelineContainer';
 import FollowRequest from './Containers/userContainers/followRequestsContainer';
 
-import UserList from './Containers/adminContainers/userListContainer'
-import UserRequests from './Containers/adminContainers/userRequestsContainer';
-import UserPageAtAdmin from './Containers/adminContainers/userPageAtAdminContainer';
+import UserList from './Components/admin/userList'
+import UserRequests from './Components/admin/userRequests';
+import UserPageAtAdmin from './Components/admin/userPageAtAdmin';
 
 
 import { Provider } from 'react-redux';
 
 import reducer from './reducers/index';
 import thunk from 'redux-thunk'
-import { createStore,applyMiddleware } from 'redux';
-const store = createStore(reducer,applyMiddleware(thunk));
+import { createStore, applyMiddleware } from 'redux';
+const store = createStore(
+  reducer,
+  applyMiddleware(thunk)
+);
 
 class App extends Component {
   render() {

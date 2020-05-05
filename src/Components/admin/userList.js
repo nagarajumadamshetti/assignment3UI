@@ -1,91 +1,56 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { Link, } from 'react-router-dom';
+import { onGetList } from '../../Containers/adminContainers/userListContainer';
+import { getUserList } from '../../Actions/adminActions';
 
-import { Route, Link, Switch } from 'react-router-dom';
-import UserPageAtAdmin from '../../Containers/adminContainers/userPageAtAdminContainer';
-// import UserPageAtAdmin from './userPageAtAdmin'
+const UserList = () => {
+    const dispatch = useDispatch();
+    const userList = useSelector((state) => state.adminReducer.userList);
+    const toggle = useSelector((state) => state.adminReducer.toggle);
+    const userName = useSelector((state) => state.adminReducer.userName);
 
-class UserList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            toggle: false
-        }
-    }
-    componentDidMount() {
+    useEffect(() => {
+        onGetList()
+            .then(async (list) => {
+                await dispatch(getUserList(list));
+            })
 
-        this.props.onGetList();
+    }, [dispatch]);
 
-    }
-    componentWillUnmount() {
-        console.log("unmounted")
-    }
-
-    componentDidUpdate = async (prevProps, prevState) => {
-        if (prevState.toggle === true) {
-            // this.props.onGetList();
-            // await this.hideUserLinks()  
-            //   this.setState({ toggle: false })
-        }
-    }
-    hideUserLinks = async (e) => {
-        e.preventDefault();
-        console.log(e.target.id)
-        let name = e.target.id;
-        await this.props.setUsersUserName(name)
-        await this.props.setUserName(name)
-        await this.props.onChangeToggle();
-        console.log("toggle changed")
-        console.log(this.props.toggle)
-        // this.setState({ toggle: !this.state.toggle })
-
-    }
-    render() {
-        return (
-            <div>
-                {
-                    !this.props.toggle
-                        ?
-                        (
-                            <div>
-                                <h1>User List</h1>
-                                {this.props.userList ? (
-                                    this.props.userList.map((el, key) => {
+    return (
+        <div>
+            {
+                !toggle
+                    ?
+                    (
+                        <div>
+                            <h1>User List</h1>
+                            {
+                                userList ? (
+                                    userList.map((el, key) => {
                                         return (
                                             <div key={key}>
                                                 <Link
-                                                //  onClick={this.hideUserLinks} 
-                                                 id={el.userName} 
-                                                 to={`/admin/userList/${el.userName}`} >{el.userName}</Link>
-                                                <br />
-                                                {/* {console.log(el.userName)} */}
-                                                {/* <Link onClick={this.hideUserLinks} id={el.userName} to={{
-                                                    pathname: `/admin/userList/${el.userName}`,
-                                                }}>
+                                                    id={el.userName}
+                                                    to={`/admin/userList/${el.userName}`}
+                                                >
                                                     {el.userName}
-                                                </Link> */}
-                                                {/* <Route path="/admin/userList/:id" exact component={UserPageAtAdmin} /> */}
+                                                </Link>
+                                                <br />
                                             </div>
                                         )
                                     })
                                 )
                                     : null
-                                }
-                            </div>
-                        )
-                        :
-                        (
-                            <div>
-                                {/* <Switch> */}
-                                <h3>hello</h3>
-                                {/* {console.log("entered upad routes")} */}
-                                {/* <Route path="/admin/userList/:id" exact component={UserPageAtAdmin} /> */}
-                                {/* {console.log("routed")} */}
-                                {/* </Switch> */}
-                            </div>
-                        )
-                }
-            </div>
-        );
-    }
+                            }
+                        </div>
+                    )
+                    :
+                    null
+            }
+        </div>
+    );
 }
+
 export default UserList;

@@ -1,35 +1,24 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import Profile from '../../Containers/userContainers/profileContainer';
+import { setUsersUserNameAction } from '../../Actions/adminActions';
+import { useParams, Route } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-class UserPageAtAdmin extends Component {
-    constructor(props) {
-        super(props);
-        this.state = ({
-            display: false,
-        })
-    }
-    componentDidMount = async () => {
-        console.log("=================");
-        console.log(this.props.match.params.id)
-        await this.props.setUsersUserName(this.props.match.params.id)
-        // console.log(this.props.userName)
-        // return(<Profile/>)
-        this.setState({ display: true })
-    }
-    componentWillUnmount = async () => {
-        this.setState({ display: false })
-        // await this.props.setUserName(null);
-    }
-    render() {
-        // console.log("=================");
-        return (
-            <div>
-                {this.state.display ? <Profile /> : null}
-            </div>
-        )
-    }
+function UserPageAtAdmin() {
 
+    const dispatch = useDispatch();
+    const name  = useParams();
+    const userName = useSelector((state) => state.userReducer.userName);
+
+    useEffect(() => {
+        dispatch(setUsersUserNameAction(name.id))
+    },[name])
+    return (
+        <div>
+            <Profile />
+        </div>
+    )
 }
-
-export default UserPageAtAdmin;
+export default withRouter(UserPageAtAdmin);
