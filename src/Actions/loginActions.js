@@ -12,7 +12,7 @@ export const onPasswordChangeAction = (value) => {
     }
 }
 
-export const onSubmitLoginAction = async (data) => {
+export const onSubmitLoginAction =  (data) => {
     return {
         type: "SUBMITLOGIN",
         payload: data

@@ -30,6 +30,7 @@ const reducer = (state = initialState, action) => {
         }
 
         case "GETSIGNUPREQUESTS": {
+            console.log("get signup requests at admin reducer")
             state.requests = action.payload
             return {
                 ...state

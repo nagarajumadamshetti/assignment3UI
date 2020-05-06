@@ -6,7 +6,7 @@ import SignUp from './Containers/signUpContainer'
 
 import Login from './Components/login/login';
 
-import SideDrawer from './Containers/sideDrawercontainer';
+import SideDrawer from './Components/SideDrawer/sideDrawer';
 
 import Search from './Containers/userContainers/searchContainer';
 import Profile from './Containers/userContainers/profileContainer';

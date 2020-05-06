@@ -11,6 +11,7 @@ const UserList = () => {
     const userName = useSelector((state) => state.adminReducer.userName);
 
     useEffect(() => {
+        console.log("userList useEffect")
         onGetList()
             .then(async (list) => {
                 await dispatch(getUserList(list));

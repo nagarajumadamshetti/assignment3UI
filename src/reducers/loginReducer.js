@@ -3,8 +3,8 @@ const initialState = {
     password: '',
     localStorageData: '',
     success: false,
-    // uSuccess:'',
-    // pSuccess:'',
+    uSuccess:false,
+    pSuccess:false,
     role: '',
 }
 
@@ -33,16 +33,17 @@ const reducer = (state = initialState, action) => {
             }
         }
         case "SUBMITLOGIN": {
+            if(action.payload)
             state.role = action.payload.role;
             localStorage.setItem("role", state.role);
+            if(action.payload){
             localStorage.setItem("token", action.payload.token);
             return {
                 ...state,
                 uSuccess: action.payload.uSuccess,
                 pSuccess: action.payload.pSuccess,
                 success: action.payload.success,
-                role: action.payload.role
-            }
+                }}
         }
 
         default: return state;

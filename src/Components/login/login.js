@@ -13,32 +13,40 @@ const useLogin = () => {
     const uSuccess = useSelector((state) => state.loginReducer.uSuccess);
     const pSuccess = useSelector((state) => state.loginReducer.pSuccess);
     const role = useSelector((state) => state.loginReducer.role);
+    const [redirect,SetRedirect]=useState(false);
+    useEffect(() => {
+        // console.log(uSuccess,pSuccess,success)
+    }, [uSuccess,pSuccess,success])
 
-    const onFinish = (values) => {
-        
-        onSubmitLogin({
+    const useOnFinish = async (values) => {
+
+        let res = await onSubmitLogin({
             userName: userName,
             password: password
         })
-            .then((res) => {
-                dispatch(onSubmitLoginAction(res));
-            })
 
-        if (!uSuccess) {
+
+ 
+        if (!res.uSuccess) {
             message.warning("username doesnot exist");
             return;
         }
-        if (!pSuccess) {
+
+        if (!res.pSuccess) {
             message.warn("password incorrect");
             return;
         }
-        if (!success) {
+        if (!res.success) {
             message.warning("admin didn't accept");
             return;
         }
-        dispatch(setUserNameAction(userName));
-        if (role === "user") {
-            dispatch(setUserUserNameAction(userName));
+        await dispatch(onSubmitLoginAction(res));
+        SetRedirect(true);
+
+        console.log(userName)
+        await dispatch(setUserNameAction(userName));
+        if (res.role === "user") {
+            await dispatch(setUserUserNameAction(userName));
         }
     };
 
@@ -69,7 +77,7 @@ const useLogin = () => {
     };
     return (
         <div >
-            {success ? (
+            {redirect ? (
                 role === "admin" ?
                     <Redirect to="/admin"></Redirect>
                     :
@@ -91,7 +99,7 @@ const useLogin = () => {
                             initialValues={{
                                 remember: true,
                             }}
-                            onFinish={onFinish}
+                            onFinish={useOnFinish}
                             onFinishFailed={onFinishFailed}
                         >
                             <h1>Sign In</h1>
