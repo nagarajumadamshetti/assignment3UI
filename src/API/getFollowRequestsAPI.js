@@ -1,6 +1,6 @@
 import axios from '../axios';
 const getFollowRequestsAPI = (v) => {
     let value = v;
-    return axios.get(`/getFollowRequests/${value}`);
+    return axios.get(`/user/getFollowRequests/${value}`);
 }
 export default getFollowRequestsAPI;

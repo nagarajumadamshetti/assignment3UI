@@ -1,5 +1,5 @@
 import axios from '../axios';
 const getSignUpRequestsAPI = () => {
-    return axios.get('/admin/userRequests');
+    return axios.get('/user/admin/userRequests');
 }
 export default getSignUpRequestsAPI;
