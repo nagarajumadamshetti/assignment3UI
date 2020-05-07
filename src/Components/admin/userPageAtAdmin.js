@@ -9,15 +9,25 @@ import { withRouter } from 'react-router-dom';
 function UserPageAtAdmin() {
 
     const dispatch = useDispatch();
-    const name  = useParams();
+    const name = useParams();
     const userName = useSelector((state) => state.userReducer.userName);
-
+    const [toggleProfile, ChangeToggleProfile] = useState(false);
     useEffect(() => {
-        dispatch(setUsersUserNameAction(name.id))
-    },[name])
+        const myFun = async () => {
+            console.log("useEffect at userPageAtAdmin")
+            await dispatch(setUsersUserNameAction(name.id))
+            ChangeToggleProfile(true);
+        }
+        myFun();
+    })
     return (
         <div>
-            <Profile />
+            {
+                (toggleProfile) ?
+                    (<Profile />)
+                    :
+                    null
+            }
         </div>
     )
 }
