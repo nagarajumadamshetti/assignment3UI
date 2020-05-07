@@ -4,6 +4,6 @@ const declineSignUpRequestAPI = (value) => {
         data: {
             userName: value.userName,
         }
-    })
+    });
 }
 export default declineSignUpRequestAPI;

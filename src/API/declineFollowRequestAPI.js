@@ -6,13 +6,6 @@ const declineFollowRequestAPI = (v) => {
             accepted: value.value,
             followRequestUserId: value.index,
         }
-    }
-        ,
-        {
-            headers: {
-                'Content-Type': 'application/json',
-                'token': localStorage.getItem('token'),
-            }
-        })
+    });
 }
 export default declineFollowRequestAPI;
