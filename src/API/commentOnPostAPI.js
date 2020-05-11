@@ -1,6 +1,5 @@
 import axios from '../axios';
-const commentOnPostAPI = (v) => {
-    let value = v;
+const commentOnPostAPI = (value) => {
     return axios.post('/user/addComment', {
         postId: value.postId,
         comment: value.comment,

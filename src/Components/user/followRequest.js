@@ -5,12 +5,7 @@ import { Table } from 'reactstrap';
 class FollowRequests extends Component {
 
     componentDidMount() {
-        this.props.onGetFollowRequests(this.props.userName);
-    }
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.followRequests !== this.props.followRequests) {
-            // this.props.onGetFollowRequests(this.props.userName);
-        }
+        this.props.onGetFollowRequests(this.props.userName.userName);
     }
 
     onAcceptChange = (e) => {
@@ -21,7 +16,7 @@ class FollowRequests extends Component {
         }
 
         this.props.accept(obj);
-        this.props.onGetFollowRequests(this.props.userName);
+        this.props.onGetFollowRequests(this.props.userName.userName);
     }
     onDeclineChange = (e) => {
         let obj = {
@@ -30,7 +25,7 @@ class FollowRequests extends Component {
         }
 
         this.props.decline(obj);
-        this.props.onGetFollowRequests(this.props.userName);
+        this.props.onGetFollowRequests(this.props.userName.userName);
 
     }
     render() {

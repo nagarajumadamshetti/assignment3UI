@@ -31,30 +31,27 @@ class Profile extends Component {
             previewVisible: false,
         }
     }
-    
+
     componentDidMount = async () => {
-        // console.log(this.props.userName)
-        // console.log(this.props.u)
-        // if(this.props.userName)
-        let userName=this.props.userName//this.props.match.params.id;
+        let userName = this.props.userName//this.props.match.params.id;
         console.log(userName)
-        await this.props.getUserPosts(userName);
+        await this.props.getUserPosts(userName.id);
 
     }
-    
+
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.comments !== this.props.comments) {
-            this.props.getUserPosts(this.props.userName);
+            this.props.getUserPosts(this.props.userName.id);
         }
     }
-    
+
     handleLikePost = async (e) => {
         e.preventDefault();
         let obj = {
             postId: e.target.id,
         }
         await this.props.onLikePost(obj);
-        await this.props.getUserPosts(this.props.userName);
+        await this.props.getUserPosts(this.props.userName.id);
     }
 
     handleDeletePost = async (e) => {
@@ -63,9 +60,9 @@ class Profile extends Component {
             postId: e.target.id,
         }
         await this.props.onDeletePost(obj);
-        await this.props.getUserPosts(this.props.userName);
+        await this.props.getUserPosts(this.props.userName.id);
     }
-    
+
     render() {
         return (
             <div>
@@ -83,57 +80,57 @@ class Profile extends Component {
                             // maxHeight: '250px'
                         }}
                     >
-                        
-                        <UserInfo from={"profile"} name={this.props.userName}></UserInfo>
-                        <br/>
+
+                        <UserInfo from={"profile"} name={this.props.userName.userName}></UserInfo>
+                        <br />
                         <Container
-                    style={{
-                        border: '2px solid black',
-                        // display: 'flex',
-                        overflowY: 'scroll',
-                        width: '100%',
-                        height: '450px',
-                        maxHeight: '450px'
-                    }}
-                >
-                        {
-                            
-                            this.props.userPosts.map((el, key) => {
-                                return (
-                                    <div key={key} style={{ width: 240 }}>
-                                        <Card hoverable title={this.props.userName} bordered={true} style={{ width: 240 }}
-                                            actions={[
-                                                <AntButton onClick={this.handleLikePost} id={el.postId} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likes.length}</AntButton>,
-                                                <AntButton
-                                                    onClick={this.handleDeletePost} id={el.postId} color="danger" type="danger"><DeleteOutlined /></AntButton>
+                            style={{
+                                border: '2px solid black',
+                                // display: 'flex',
+                                overflowY: 'scroll',
+                                width: '100%',
+                                height: '450px',
+                                maxHeight: '450px'
+                            }}
+                        >
+                            {
 
-                                            ]} >
+                                this.props.userPosts.map((el, key) => {
+                                    return (
+                                        <div key={key} style={{ width: 240 }}>
+                                            <Card hoverable title={this.props.userName.userName} bordered={true} style={{ width: 240 }}
+                                                actions={[
+                                                    <AntButton onClick={this.handleLikePost} id={el.postId} type='primary' color="primary"><HeartTwoTone className="TwoTone" key={key} />{el.likes.length}</AntButton>,
+                                                    <AntButton
+                                                        onClick={this.handleDeletePost} id={el.postId} color="danger" type="danger"><DeleteOutlined /></AntButton>
 
-                                            <Carousel autoplay>
-                                                {
-                                                    (el.images).map((el2, key2) => {
-                                                        return (
-                                                            <div key={key2}>
-                                                                <img
-                                                                    alt="example"
-                                                                    src={`${el2.imageUrl}`}
-                                                                />
-                                                            </div>
-                                                        )
-                                                    })
-                                                }
-                                            </Carousel>
-                                            {/* {console.log(el.description)} */}
-                                            <Meta title={el.description} description={el.description} />
+                                                ]} >
 
-                                        </Card>
-                                        <Comments postId={el.postId} />
-                                        <br />
-                                    </div>
+                                                <Carousel autoplay>
+                                                    {
+                                                        (el.images).map((el2, key2) => {
+                                                            return (
+                                                                <div key={key2}>
+                                                                    <img
+                                                                        alt="example"
+                                                                        src={`${el2.imageUrl}`}
+                                                                    />
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+                                                </Carousel>
+                                                {/* {console.log(el.description)} */}
+                                                <Meta title={el.description} description={el.description} />
 
-                                )
-                            })
-                        }
+                                            </Card>
+                                            <Comments postId={el.postId} />
+                                            <br />
+                                        </div>
+
+                                    )
+                                })
+                            }
                         </Container>
                         {/* <Pagination defaultCurrent={1} total={50} /> */}
                     </Container>

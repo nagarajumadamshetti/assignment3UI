@@ -84,7 +84,7 @@ class UserInfo extends Component {
         console.log(myName)
         // await this.props.onGetFollowRequests(this.props.searchValue);
         // if (!this.props.followRequests.find(element => element.followRequestUserName === this.props.userName))
-        if (!this.props.followers.find(element => element.followersUserName === this.props.userName)||(this.props.followRequests.find(element => element.followRequestUserName === this.props.userName))) {
+        if (!this.props.followers.find(element => element.followersUserName === this.props.userName.userName)||(this.props.followRequests.find(element => element.followRequestUserName === this.props.userName.userName))) {
             await this.props.followAndUnFollow({ userName: myName, followed: false });
             console.log("follow")
         }
@@ -139,16 +139,16 @@ class UserInfo extends Component {
                                 </Dropdown>
 
                                 {
-                                    (this.props.from === "search" && (this.props.userName !== this.props.searchValue)) ? (
+                                    (this.props.from === "search" && (this.props.userName.userName !== this.props.searchValue)) ? (
                                         <Button style={{ marginTop: 16 }} type="primary" onClick={() => this.handleFollow(this.props.searchValue)}>
                                             {
-                                                this.props.followers.find(element => element.followersUserName === this.props.userName)
+                                                this.props.followers.find(element => element.followersUserName === this.props.userName.userName)
                                                     // false
                                                     ?
                                                     "Unfolow"
                                                     :
                                                     // "Follow"
-                                                    (this.props.followRequests ? (this.props.followRequests.find(element => element.followRequestUserName === this.props.userName) ? "Requested" : "Follow") : <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />)
+                                                    (this.props.followRequests ? (this.props.followRequests.find(element => element.followRequestUserName === this.props.userName.userName) ? "Requested" : "Follow") : <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />)
                                             }
                                         </Button>
                                     )

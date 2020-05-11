@@ -1,50 +1,49 @@
-import React, {  useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Checkbox, Skeleton, } from 'antd';
 import { Table } from 'reactstrap';
 import { getSignUpRequests } from '../../Actions/adminActions';
 import { onGetRequests, accept, decline, } from '../../Containers/adminContainers/userRequestsContainer';
+import { ToolFilled } from '@ant-design/icons';
 
 
 const UserRequests = () => {
     const dispatch = useDispatch();
-    const requests = useSelector((state) => state.adminReducer.requests);
-
+    let [requests, ChangeRequests] = useState([]);
+    let [toggle, ChangeToggle] = useState(false)
     useEffect(() => {
         onGetRequests()
             .then((users) => {
-                dispatch(getSignUpRequests(users));
+                ChangeRequests(users);
+                requests = users;
+                ChangeToggle(true);
             });
-    },[])
+    }, [toggle]);
 
     const onAcceptChange = async (e) => {
         let obj = {
-            userName: e.target.id,
+            id: e.target.id,
             value: e.target.checked
         }
+
         await accept(obj);
-        onGetRequests()
-        .then((users) => {
-            dispatch(getSignUpRequests(users));
-        });
+        ChangeToggle(false)
     }
 
     const onDeclineChange = async (e) => {
         let obj = {
-            userName: e.target.id,
+            id: e.target.id,
             value: e.target.checked
         }
         await decline(obj);
-        onGetRequests()
-        .then((users) => {
-            dispatch(getSignUpRequests(users));
-        });
+        toggle = false
+        ChangeToggle(false);
     }
 
     return (
         <div>
             {
-                requests ? (<div>
+                (requests && toggle) ? (<div>
                     <Table dark bordered striped >
                         <thead>
                             <tr>
@@ -58,12 +57,13 @@ const UserRequests = () => {
                                 requests.map((el, key) => {
                                     return (
                                         <tr key={key}>
-                                            <td><Checkbox onChange={ onAcceptChange} id={el.userName}></Checkbox></td>
-                                            <td><Checkbox onChange={ onDeclineChange} id={el.userName}></Checkbox></td>
+                                            <td><Checkbox onChange={onAcceptChange} id={el.id}></Checkbox></td>
+                                            <td><Checkbox onChange={onDeclineChange} id={el.id}></Checkbox></td>
                                             <td>{el.userName}</td>
                                         </tr>
                                     )
                                 })
+
                             }
                         </tbody>
                     </Table>

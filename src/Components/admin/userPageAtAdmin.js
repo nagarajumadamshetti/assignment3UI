@@ -10,12 +10,10 @@ function UserPageAtAdmin() {
 
     const dispatch = useDispatch();
     const name = useParams();
-    const userName = useSelector((state) => state.userReducer.userName);
     const [toggleProfile, ChangeToggleProfile] = useState(false);
     useEffect(() => {
         const myFun = async () => {
-            console.log("useEffect at userPageAtAdmin")
-            await dispatch(setUsersUserNameAction(name.id))
+            await dispatch(setUsersUserNameAction(name))
             ChangeToggleProfile(true);
         }
         myFun();

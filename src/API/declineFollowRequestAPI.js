@@ -1,6 +1,5 @@
 import axios from '../axios';
-const declineFollowRequestAPI = (v) => {
-    let value = v;
+const declineFollowRequestAPI = (value) => {
     return axios.delete('/user/declineFollowRequest', {
         data: {
             accepted: value.value,

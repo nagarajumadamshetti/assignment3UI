@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import { connect } from "react-redux";
 import Profile from '../../Components/user/profile';
-import GetUserPostsAPI from '../../API/getUserPostsAPI';
+import GetUserPostsWithIdAPI from '../../API/getUserPostsWithIdAPI';
 import LikePostAPI from '../../API/likePostAPI';
 import DeletePostAPI from '../../API/deletePostAPI';
 
@@ -19,7 +19,7 @@ const mapDispatchToProps = dispatch => {
             try {
                 let id = value
 
-                let res = await GetUserPostsAPI(id)
+                let res = await GetUserPostsWithIdAPI(id)
                 if (res.data.success) {
                     dispatch({
                         type: "GETUSERPOSTS",

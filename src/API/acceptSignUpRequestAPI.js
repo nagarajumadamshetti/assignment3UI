@@ -1,7 +1,7 @@
 import axios from '../axios';
 const acceptSignUpRequestAPI = (value) => {
     return axios.put('/admin/userRequests/accept', {
-        userName: value.userName,
+        id: value.id,
         accepted: value.value
     });
 }

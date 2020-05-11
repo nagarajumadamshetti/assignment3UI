@@ -1,6 +1,5 @@
 import axios from '../axios';
-const followAndUnFollowAPI = (v) => {
-    let value = v;
+const followAndUnFollowAPI = (value) => {
     if (value.followed) {
         return axios.post('/user/unFollow', {
             userName: value.userName

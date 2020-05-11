@@ -9,14 +9,8 @@ const useLogin = () => {
     const dispatch = useDispatch();
     const userName = useSelector((state) => state.loginReducer.userName);
     const password = useSelector((state) => state.loginReducer.password);
-    const success = useSelector((state) => state.loginReducer.success);
-    const uSuccess = useSelector((state) => state.loginReducer.uSuccess);
-    const pSuccess = useSelector((state) => state.loginReducer.pSuccess);
     const role = useSelector((state) => state.loginReducer.role);
-    const [redirect,SetRedirect]=useState(false);
-    useEffect(() => {
-        // console.log(uSuccess,pSuccess,success)
-    }, [uSuccess,pSuccess,success])
+    const [redirect, SetRedirect] = useState(false);
 
     const useOnFinish = async (values) => {
 
@@ -26,7 +20,7 @@ const useLogin = () => {
         })
 
 
- 
+
         if (!res.uSuccess) {
             message.warning("username doesnot exist");
             return;
@@ -36,17 +30,19 @@ const useLogin = () => {
             message.warn("password incorrect");
             return;
         }
+
         if (!res.success) {
             message.warning("admin didn't accept");
             return;
         }
+
         await dispatch(onSubmitLoginAction(res));
         SetRedirect(true);
 
         console.log(userName)
-        await dispatch(setUserNameAction(userName));
+        await dispatch(setUserNameAction(res.users));
         if (res.role === "user") {
-            await dispatch(setUserUserNameAction(userName));
+            await dispatch(setUserUserNameAction(res.users));
         }
     };
 

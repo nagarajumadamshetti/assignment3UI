@@ -7,20 +7,14 @@ import { getUserList, changeToggle } from '../../Actions/adminActions';
 const UserList = () => {
     const dispatch = useDispatch();
     const [userList,ChangeUserList]=useState([])
-    // const userList = useSelector((state) => state.adminReducer.userList);
     const toggle = useSelector((state) => state.adminReducer.toggle);
-    const userName = useSelector((state) => state.adminReducer.userName);
     const [toggleNow,ChangeToggleNow]=useState(false);
     useEffect(() => {
-        console.log("userList useEffect")
         const myFun=async()=>{
            await onGetList()
             .then(async(list) => {
-                // userList=list
                 await ChangeUserList(list)
                await ChangeToggleNow(true)
-                // ChangeUserList(list)
-                // await dispatch(getUserList(list));
             })
         }
         myFun()
@@ -40,8 +34,8 @@ const UserList = () => {
                                         return (
                                             <div key={key}>
                                                 <Link
-                                                    id={el.userName}
-                                                    to={`/admin/userList/${el.userName}`}
+                                                    id={el.id}
+                                                    to={`/admin/userList/${el.id}`}
                                                 >
                                                     {el.userName}
                                                 </Link>

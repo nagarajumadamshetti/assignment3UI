@@ -17,7 +17,6 @@ export const onGetRequests = async () => {
 
 export const accept = async (value) => {
     try {
-        console.log("entered accept")
         return await AcceptSignUpRequest(value)
     } catch (error) {
         console.log(error)

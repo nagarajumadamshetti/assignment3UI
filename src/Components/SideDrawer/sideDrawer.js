@@ -32,18 +32,16 @@ import { onGetFollowRequests, onGetSignUpRequests } from '../../Containers/sideD
 import { onChangeToggleAction, setUserUserNameAction, setUserNameAction, onGetFollowRequestsAction, onGetSignUpRequestsAction } from '../../Actions/sideDrawerActions';
 
 const SideDrawer = () => {
+    const dispatch = useDispatch();
+
     const [collapsed, ChangeCollapsed] = useState(false);
     const [visible, ChangeVisible] = useState(false);
-    const [placement, ChangePlacement] = useState('left');
-    const userList = useSelector((state) => state.adminReducer.userList)
+
     const toggle = useSelector((state) => state.adminReducer.toggle);
     let [signUpRequests, ChangeSignUpRequests] = useState([])
-    let [followRequests,ChangeFollowRequests]=useState([]);
-    //  useSelector((state) => state.adminReducer.requests);
-    const loggedUserName = useSelector((state) => state.loginReducer.userName);
-    // const followRequests = useSelector((state) => state.userReducer.followRequests);
-    const userName = useSelector((state) => state.loginReducer.userName);
-    const dispatch = useDispatch();
+    let [followRequests, ChangeFollowRequests] = useState([]);
+    const loggedUser = useSelector((state) => state.loginReducer.userName);
+
 
     useEffect(() => {
         console.log("sideDrawer useEffect")
@@ -51,47 +49,38 @@ const SideDrawer = () => {
             userNotifications();
         }
         else {
-            console.log("admin Notifications")
             adminNotifications();
         }
-    }, [])
+    }, []);
 
-    useEffect(() => {
-        console.log(signUpRequests,followRequests)
-    }, [signUpRequests,followRequests])
-
-    // state = {
-    //     collapsed: false,
-    //     visible: false,
-    //     placement: 'left'
-    // };
+    // useEffect(() => {
+    //     // Should not ever set state during rendering, so do this in useEffect instead.
+    //     // onGetFollowRequests(loggedUserName).then((res)=>{
+    //     //     ChangeFollowRequests(res);
+    //     // });
+    //     console.log("adfadadfaf")
+    //     onGetSignUpRequests().then((res) => {
+    //         ChangeSignUpRequests(signUpRequests.concat(res));
+    //         console.log(res)
+    //     })
+    // }, []);
 
     const showDrawer = () => {
         ChangeVisible(true);
-        // this.setState({
-        //     visible: true,
-        // });
     };
 
     const onClose = () => {
         ChangeVisible(false);
-        // this.setState({
-        //     visible: false,
-        // });
     };
     const toggleCollapsed = () => {
         ChangeCollapsed(!collapsed);
-        // this.setState({
-        //     collapsed: !this.state.collapsed,
-        // });
     };
 
     const userNotifications = async () => {
-        let res = await onGetFollowRequests(loggedUserName);
-        followRequests=res;
-        // await dispatch(async () => await onGetFollowRequestsAction(res))
+        let res = await onGetFollowRequests(loggedUser);
+        // ChangeFollowRequests(res)
+        followRequests = res;
         if (followRequests)
-
             followRequests.map(async (el, key) => {
                 return await sleep(2000).then(() =>
                     notification.open({
@@ -101,23 +90,19 @@ const SideDrawer = () => {
                         icon: <SmileOutlined style={{ color: '#308ee9' }} />,
                     })
                 );
-
             })
     }
-  const  sleep = async (time) => {
+    const sleep = async (time) => {
         await new Promise((resolve) => { setTimeout(resolve, time) })
     }
     const adminNotifications = async () => {
-        console.log("admin notifi p1")
         let res = await onGetSignUpRequests();
-        console.log(res);
-        await ChangeSignUpRequests(res)
-        // await dispatch(async()=>await onGetSignUpRequestsAction(res)); 
-        //   console.log(signUpRequests)
-        signUpRequests = res
+        console.log(signUpRequests);
+        // ChangeSignUpRequests(res)
+        signUpRequests = res;
         if (signUpRequests) {
             await signUpRequests.map((el, key) => {
-                return  sleep(2000).then(() =>
+                return sleep(2000).then(() =>
                     notification.open({
                         message: 'New Sign Up Request  ',
                         description:
@@ -128,17 +113,6 @@ const SideDrawer = () => {
         }
     }
 
-    // componentDidMount = () => {
-
-    //     if (localStorage.getItem("role") === "user") {
-    //         // await this.props.setUserUserName(this.props.loggedUserName);
-    //         this.userNotifications();
-    //     }
-    //     else {
-    //         // await this.props.setUserName(this.props.loggedUserName);
-    //         this.adminNotifications();
-    //     }
-    // }
 
     const hideUserLinks = async () => {
         if (visible === toggle) {
@@ -175,16 +149,16 @@ const SideDrawer = () => {
                         :
                         (
                             <div>
-                                <Link to={`/user/${loggedUserName}/profile`}><InstagramOutlined />Profile</Link>
+                                <Link to={`/user/${loggedUser.id}/profile`}><InstagramOutlined />Profile</Link>
                                 <br></br>
                                 <br></br>
-                                <Link to={`/user/${loggedUserName}/search`}><UserOutlined />Search</Link>
+                                <Link to={`/user/${loggedUser.id}/search`}><UserOutlined />Search</Link>
                                 <br></br>
                                 <br></br>
-                                <Link to={`/user/${loggedUserName}/timeline`}><ContainerOutlined />Timeline</Link>
+                                <Link to={`/user/${loggedUser.id}/timeline`}><ContainerOutlined />Timeline</Link>
                                 <br></br>
                                 <br></br>
-                                <Link to={`/user/${loggedUserName}/followRequests`}><MenuOutlined />FollowRequests</Link>
+                                <Link to={`/user/${loggedUser.id}/followRequests`}><MenuOutlined />FollowRequests</Link>
                             </div>
                         )}
             </Drawer>
